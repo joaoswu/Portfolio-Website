@@ -7,6 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBar = document.getElementById('progress-bar');
     const progressContainer = document.getElementById('progress-container');
     const loadingText = document.getElementById('loading-text');
+    const visualizerCanvas = document.getElementById('music-visualizer');
+
+    // Audio Visualizer Variables
+    let audioCtx;
+    let analyser;
+    let source;
+    let dataArray;
+    let animationId;
 
     // Typewriter Utility
     async function typeText(element, text, speed = 40) {
@@ -37,6 +45,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Play Audio early so it loads during the fake loading bar
             if (bgMusic) {
+                // Initialize AudioContext
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioCtx.createAnalyser();
+                    source = audioCtx.createMediaElementSource(bgMusic);
+                    source.connect(analyser);
+                    analyser.connect(audioCtx.destination);
+                    analyser.fftSize = 64; // Small for sharp bars
+                    const bufferLength = analyser.frequencyBinCount;
+                    dataArray = new Uint8Array(bufferLength);
+
+                    // Start drawing loop but only visually active when playing
+                    drawVisualizer();
+                }
+
                 bgMusic.volume = 0.5; // Start at reasonable volume
                 bgMusic.play().then(() => {
                     // Update the bento box icon to show it is playing
@@ -105,6 +128,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }, 100); // update every 100ms
         });
+    }
+
+    // --- 1.6 AUDIO VISUALIZER DRAWING ---
+    function drawVisualizer() {
+        if (!visualizerCanvas) return;
+        const ctx = visualizerCanvas.getContext('2d');
+        const bufferLength = analyser.frequencyBinCount;
+
+        function draw() {
+            animationId = requestAnimationFrame(draw);
+            analyser.getByteFrequencyData(dataArray);
+
+            // Resize canvas to its element size (CSS controlled)
+            const width = visualizerCanvas.clientWidth;
+            const height = visualizerCanvas.clientHeight;
+            if (visualizerCanvas.width !== width || visualizerCanvas.height !== height) {
+                visualizerCanvas.width = width;
+                visualizerCanvas.height = height;
+            }
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Only draw bars if audio is actually playing (to keep it clean)
+            if (bgMusic.paused) {
+                // Optional: Gentle flat line or nothing
+                return;
+            }
+
+            const barWidth = (width / bufferLength) * 2.5;
+            let barHeight;
+            let x = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                barHeight = (dataArray[i] / 255) * height;
+
+                // Color based on light/dark mode
+                const isLight = document.body.classList.contains('light-mode');
+                // Use a subtle white glow in dark and gray in light
+                ctx.fillStyle = isLight ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.5)';
+
+                // Draw mirrored bars or just standard frequency bars
+                ctx.fillRect(x, height - barHeight, barWidth - 2, barHeight);
+                x += barWidth;
+            }
+        }
+        draw();
     }
 
     // --- 1.5 SYSTEM LOG WIDGET ---
@@ -378,6 +447,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         musicToggleBtn.addEventListener('click', () => {
             if (bgMusic.paused) {
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
                 bgMusic.play().catch(e => console.log("Audio play failed:", e));
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
