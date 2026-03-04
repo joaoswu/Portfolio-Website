@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     analyser.fftSize = isMobile ? 128 : 256;
                     analyser.smoothingTimeConstant = 0.85;
 
-                    gainNode.gain.value = 0.5; // Start at 50%
+                    gainNode.gain.value = 0.8; // Set default gain louder
 
                     const bufferLength = analyser.frequencyBinCount;
                     dataArray = new Uint8Array(bufferLength);
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     drawVisualizer();
                 }
 
-                bgMusic.volume = 0.5; // Start at reasonable volume
+                bgMusic.volume = 0.8; // Set default volume louder
                 bgMusic.play().then(() => {
                     // Update the bento box icon to show it is playing
                     const playIcon = document.getElementById('play-icon');
