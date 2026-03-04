@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Audio Visualizer Variables
     let audioCtx;
     let analyser;
+    let gainNode;
     let source;
     let dataArray;
     let animationId;
@@ -49,11 +50,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!audioCtx) {
                     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                     analyser = audioCtx.createAnalyser();
+                    gainNode = audioCtx.createGain(); // For cleaner hardware volume control
+
                     source = audioCtx.createMediaElementSource(bgMusic);
+
+                    // Route: source -> analyser -> gainNode -> destination
                     source.connect(analyser);
-                    analyser.connect(audioCtx.destination);
-                    analyser.fftSize = 256; // High frequency resolution
-                    analyser.smoothingTimeConstant = 0.85; // Smoother transitions
+                    analyser.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+
+                    // Mobile optimization: lower FFT size for less CPU strain
+                    const isMobile = window.innerWidth <= 768;
+                    analyser.fftSize = isMobile ? 128 : 256;
+                    analyser.smoothingTimeConstant = 0.85;
+
+                    gainNode.gain.value = 0.5; // Start at 50%
+
                     const bufferLength = analyser.frequencyBinCount;
                     dataArray = new Uint8Array(bufferLength);
 
@@ -377,12 +389,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Volume control
         if (volumeSlider) {
-            bgMusic.volume = volumeSlider.value / 100;
-            volumeSlider.addEventListener('change', (e) => {
-                const vol = Math.round(e.target.value);
-            });
+            // Volume slider now controls the GainNode instead of element volume
             volumeSlider.addEventListener('input', (e) => {
-                bgMusic.volume = e.target.value / 100;
+                const vol = e.target.value / 100;
+                if (gainNode) {
+                    // Smooth volume transition to prevent "popping"
+                    gainNode.gain.setTargetAtTime(vol, audioCtx.currentTime, 0.05);
+                } else {
+                    bgMusic.volume = vol;
+                }
             });
         }
     }
