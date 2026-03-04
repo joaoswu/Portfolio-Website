@@ -748,18 +748,16 @@ body.light-mode .bento-item[data-tooltip]::before {
     letter-spacing: 2px;
 }
 
-.music-visualizer-container {
-    width: 100%;
-    height: 40px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: flex-end;
-}
-
 #music-visualizer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+    height: 60px;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0.6;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.1));
 }
 
 .play-pause-btn {
