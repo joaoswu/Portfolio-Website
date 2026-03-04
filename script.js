@@ -185,17 +185,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // View Count
     const viewCountEl = document.getElementById('view-count');
     if (viewCountEl) {
-        // Using countapi.xyz as it has highly reliable CORS support for Vercel/Github Pages
-        fetch('https://api.countapi.xyz/hit/joaowebsite_views/page_hits')
+        // Switching to counterapi.dev which is currently more stable than countapi.xyz
+        fetch('https://api.counterapi.dev/v1/joao-portfolio-unique/views/up')
             .then(res => res.json())
             .then(data => {
-                if (data.value) {
-                    viewCountEl.textContent = data.value;
+                if (data.count !== undefined) {
+                    viewCountEl.textContent = data.count;
                 }
             })
             .catch(err => {
                 console.error("View count error", err);
-                viewCountEl.textContent = "Error"; // Fallback to Error initially, but we could also just leave it blank
+                // If the API fails, show a slightly more graceful placeholder
+                viewCountEl.textContent = "Offline";
             });
     }
 
