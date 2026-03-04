@@ -425,8 +425,8 @@ body {
 .bento-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(5, 125px);
-    /* changed to 5 rows to allow wide skills marquee */
+    grid-template-rows: repeat(6, 125px);
+    /* 6 rows for full-width action log and skills */
     gap: 12px;
     /* reduced space between cards */
     width: 100%;
@@ -727,6 +727,8 @@ body.light-mode .bento-item[data-tooltip]::before {
 
 .music-card {
     grid-column: span 2;
+    grid-row: span 1;
+    grid-row: span 1;
     /* Increased span */
     grid-row: span 1;
     display: flex;
@@ -991,7 +993,8 @@ body.light-mode .bento-item[data-tooltip]::before {
 
 /* Interactive Action Log Card */
 .action-log-card {
-    grid-column: span 2;
+    grid-column: span 4;
+    grid-row: span 1;
     background: var(--log-bg);
     border: 1px solid var(--border-color);
     display: flex;
