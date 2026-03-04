@@ -7,7 +7,10 @@
     --text-secondary: #888888;
     --text-muted: #666666;
     --log-bg: #0a0a0a;
-    --container-padding: 15px;
+    --container-padding: 20px;
+    --grid-gap: 16px;
+    --card-padding: 24px;
+    --row-height: 145px;
     --font-heading: 'Orbitron', sans-serif;
     --font-body: 'Inter', sans-serif;
     --font-mono: 'Share Tech Mono', monospace;
@@ -408,8 +411,8 @@ body {
     align-items: center;
     width: 100%;
     min-height: 100vh;
-    padding: 80px 15px;
-    /* Added side padding for mobile safety */
+    padding: 60px 20px;
+    /* Balanced padding */
 }
 
 /* Theme Toggler */
@@ -444,9 +447,9 @@ body {
     grid-template-rows: repeat(5, var(--row-height));
     gap: var(--grid-gap);
     width: 100%;
-    max-width: 850px;
+    max-width: 1100px;
     padding: var(--container-padding);
-    perspective: 1200px;
+    perspective: 1500px;
 }
 
 .bento-item {
@@ -454,8 +457,7 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 16px;
     /* smaller card rounding */
-    padding: 18px;
-    /* tighter padding inside cards */
+    padding: var(--card-padding);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1172,7 +1174,7 @@ h3 {
     .bento-grid {
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: auto;
-        max-width: 600px;
+        max-width: 100%;
         transform: scale(1);
     }
 
