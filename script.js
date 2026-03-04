@@ -138,53 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 1.6 AUDIO VISUALIZER DRAWING ---
-    function drawVisualizer() {
-        if (!visualizerCanvas) return;
-        const ctx = visualizerCanvas.getContext('2d');
-        const bufferLength = analyser.frequencyBinCount;
-
-        function draw() {
-            animationId = requestAnimationFrame(draw);
-            analyser.getByteFrequencyData(dataArray);
-
-            // Resize canvas to its element size (CSS controlled)
-            const width = visualizerCanvas.clientWidth;
-            const height = visualizerCanvas.clientHeight;
-            if (visualizerCanvas.width !== width || visualizerCanvas.height !== height) {
-                visualizerCanvas.width = width;
-                visualizerCanvas.height = height;
-            }
-
-            ctx.clearRect(0, 0, width, height);
-
-            // Only draw bars if audio is actually playing (to keep it clean)
-            if (bgMusic.paused) {
-                // Optional: Gentle flat line or nothing
-                return;
-            }
-
-            const barWidth = (width / bufferLength);
-            let barHeight;
-            let x = 0;
-
-            for (let i = 0; i < bufferLength; i++) {
-                barHeight = (dataArray[i] / 255) * height;
-
-                // Color based on light/dark mode
-                const isLight = document.body.classList.contains('light-mode');
-                // Use a subtle white glow in dark and gray in light
-                ctx.fillStyle = isLight ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.5)';
-
-                // Draw mirrored bars or just standard frequency bars
-                ctx.fillRect(x, height - barHeight, barWidth - 1, barHeight);
-                x += barWidth;
-            }
-        }
-        draw();
-    }
-
-
     const cursor = document.getElementById('cursor');
     const cursorShape = document.getElementById('cursor-shape');
     const reticle = document.getElementById('target-reticle');
@@ -772,7 +725,27 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < bufferLength; i++) {
                 barHeight = visualizerDataArray[i] / 2;
                 const isLightMode = document.body.classList.contains('light-mode');
-                visualizerCtx.fillStyle = isLightMode ? `rgba(0, 0, 0, ${barHeight / 150})` : `rgba(255, 255, 255, ${barHeight / 150})`;
+
+                if (!isTouchDevice) {
+                    // Enhanced PC Rendering: Gradients and Glow
+                    const gradient = visualizerCtx.createLinearGradient(0, visualizerCanvas.height, 0, visualizerCanvas.height - barHeight);
+                    if (isLightMode) {
+                        gradient.addColorStop(0, `rgba(0, 0, 0, 0.6)`);
+                        gradient.addColorStop(1, `rgba(0, 0, 0, 0.05)`);
+                    } else {
+                        gradient.addColorStop(0, `rgba(255, 255, 255, 0.5)`);
+                        gradient.addColorStop(1, `rgba(255, 255, 255, 0)`);
+                    }
+                    visualizerCtx.fillStyle = gradient;
+                    // Add subtle glow on PC
+                    visualizerCtx.shadowBlur = 10;
+                    visualizerCtx.shadowColor = isLightMode ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)';
+                } else {
+                    // Standard Mobile Rendering: Solid but dynamic
+                    visualizerCtx.fillStyle = isLightMode ? `rgba(0, 0, 0, ${barHeight / 150})` : `rgba(255, 255, 255, ${barHeight / 150})`;
+                    visualizerCtx.shadowBlur = 0;
+                }
+
                 visualizerCtx.fillRect(x, visualizerCanvas.height - barHeight, barWidth, barHeight);
                 x += barWidth + 2;
             }
