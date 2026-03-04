@@ -147,15 +147,18 @@ document.addEventListener('DOMContentLoaded', () => {
             while (diff < -180) diff += 360;
             while (diff > 180) diff -= 360;
             currentAngle += diff * 0.2;
-
-            cursor.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg)`;
         }
+
+        // Always apply transform to ensure it stays centered
+        cursor.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg)`;
 
         lastX = mouseX;
         lastY = mouseY;
 
         requestAnimationFrame(animateCursor);
     }
+    // Initialize position
+    cursor.style.transform = `translate(-50%, -50%) rotate(0deg)`;
     animateCursor();
 
     // Hover states for cursor
