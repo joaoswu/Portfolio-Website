@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // CUSTOMIZATION SECTION
     // ==========================================
-    const MY_QUOTE = "Consistency is the DNA of mastery.";
+    const MY_MOOD = "Consistency is the DNA of mastery.";
     // ==========================================
 
     // --- 1. ENTRY SCREEN LOGIC ---
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dailyQuoteEl = document.getElementById('daily-quote');
     const quoteContainer = document.querySelector('.quote-container');
     if (dailyQuoteEl) {
-        dailyQuoteEl.setAttribute('data-text', MY_QUOTE);
+        dailyQuoteEl.setAttribute('data-text', MY_MOOD);
         dailyQuoteEl.textContent = ''; // Clear for typing effect
     }
 
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (quoteContainer) {
                             quoteContainer.classList.add('animate-in');
                             setTimeout(() => {
-                                if (dailyQuoteEl) typeText(dailyQuoteEl, MY_QUOTE);
+                                if (dailyQuoteEl) typeText(dailyQuoteEl, MY_MOOD);
                             }, 300);
                         }
 
