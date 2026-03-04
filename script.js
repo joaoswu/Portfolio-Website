@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // ==========================================
+    // CUSTOMIZATION SECTION
+    // ==========================================
+    const MY_QUOTE = "Consistency is the DNA of mastery.";
+    // ==========================================
+
     // --- 1. ENTRY SCREEN LOGIC ---
     const enterScreen = document.getElementById('enter-screen');
     const enterBtn = document.getElementById('enter-btn');
@@ -9,6 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressContainer = document.getElementById('progress-container');
     const loadingText = document.getElementById('loading-text');
     const visualizerCanvas = document.getElementById('music-visualizer');
+
+    // Quote Setup
+    const dailyQuoteEl = document.getElementById('daily-quote');
+    const quoteContainer = document.querySelector('.quote-container');
+    if (dailyQuoteEl) {
+        dailyQuoteEl.setAttribute('data-text', MY_QUOTE);
+        dailyQuoteEl.textContent = ''; // Clear for typing effect
+    }
 
     // --- GLOBAL SELECTORS & STATE ---
     const bentoItems = document.querySelectorAll('.bento-item');
@@ -126,6 +140,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Apply Performance Optimizations
                         if (isOptimized) {
                             document.body.classList.add('optimized-mode');
+                        }
+
+                        // Animate Quote Container First
+                        if (quoteContainer) {
+                            quoteContainer.classList.add('animate-in');
+                            setTimeout(() => {
+                                if (dailyQuoteEl) typeText(dailyQuoteEl, MY_QUOTE);
+                            }, 300);
                         }
 
                         // --- START ADVANCED BOOT SEQUENCE ---
