@@ -261,6 +261,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 cursor.classList.remove('hovering');
             });
         });
+
+        // --- Q&A SIDEBAR LOGIC ---
+        const qaTrigger = document.getElementById('qa-trigger');
+        const qaSidebar = document.getElementById('qa-sidebar');
+        let qaHoverTimeout;
+
+        if (qaTrigger && qaSidebar) {
+            const openSidebar = () => {
+                clearTimeout(qaHoverTimeout);
+                qaSidebar.classList.add('active');
+            };
+
+            const closeSidebar = () => {
+                qaHoverTimeout = setTimeout(() => {
+                    qaSidebar.classList.remove('active');
+                }, 300); // Small delay to allow moving mouse to sidebar
+            };
+
+            qaTrigger.addEventListener('mouseenter', openSidebar);
+            qaTrigger.addEventListener('mouseleave', closeSidebar);
+
+            qaSidebar.addEventListener('mouseenter', openSidebar);
+            qaSidebar.addEventListener('mouseleave', closeSidebar);
+        }
     }
 
 
@@ -585,6 +609,81 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // --- Q&A WEBHOOK LOGIC ---
+    const qaForm = document.getElementById('qa-form');
+    const qaStatus = document.getElementById('qa-status');
+    const qaSubmitBtn = document.getElementById('qa-submit');
+
+    // Configured Webhook
+    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1478894660360470682/H4Am2jgJwl6ADaJcERG2WbpnZKbWdGmAhobrBCGEdIsu29bsExDRQIrs6wEXM0XToCa2';
+
+    if (qaForm) {
+        qaForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (qaSubmitBtn.disabled) return;
+
+            const nameValue = document.getElementById('qa-name').value.trim() || 'Anonymous';
+            const questionValue = document.getElementById('qa-question').value.trim();
+
+            if (!questionValue) return;
+
+            qaSubmitBtn.disabled = true;
+            qaSubmitBtn.textContent = 'Sending...';
+            qaStatus.textContent = '';
+            qaStatus.className = 'qa-status';
+
+            const payload = {
+                embeds: [{
+                    color: 0x43b581, // Discord Green
+                    title: "New Anonymous Question!",
+                    fields: [
+                        {
+                            name: "Question:",
+                            value: questionValue,
+                            inline: false
+                        },
+                        {
+                            name: "Username ( optional ):",
+                            value: nameValue,
+                            inline: false
+                        }
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    qaStatus.textContent = "Message sent successfully! \u2713";
+                    qaStatus.classList.add('success');
+                    qaForm.reset();
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            } catch (error) {
+                console.error('Webhook Error:', error);
+                qaStatus.textContent = "Failed to send message. Please try again.";
+                qaStatus.classList.add('error');
+            } finally {
+                qaSubmitBtn.disabled = false;
+                qaSubmitBtn.textContent = 'Send Message';
+
+                // Clear status after 5 seconds
+                setTimeout(() => {
+                    qaStatus.textContent = '';
+                    qaStatus.className = 'qa-status';
+                }, 5000);
+            }
+        });
+    }
+
     // Network Canvas
     const canvas = document.getElementById('network-canvas');
     const ctx_net = canvas.getContext('2d');
@@ -801,5 +900,32 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(animateTitle, typeSpeed);
     }
     animateTitle();
+
+    // --- 8. SECRET ADMIN LOGIN (KONAMI CODE) ---
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let konamiIndex = 0;
+    const adminModal = document.getElementById('admin-log-modal');
+    const closeAdminBtn = document.getElementById('close-admin');
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === konamiCode[konamiIndex] || e.key.toLowerCase() === konamiCode[konamiIndex].toLowerCase()) {
+            konamiIndex++;
+            if (konamiIndex === konamiCode.length) {
+                // KONAMI CODE ENTERED
+                if (adminModal) {
+                    adminModal.classList.remove('hidden');
+                }
+                konamiIndex = 0; // reset
+            }
+        } else {
+            konamiIndex = 0; // reset on wrong key
+        }
+    });
+
+    if (closeAdminBtn) {
+        closeAdminBtn.addEventListener('click', () => {
+            if (adminModal) adminModal.classList.add('hidden');
+        });
+    }
 
 });
