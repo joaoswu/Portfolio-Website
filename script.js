@@ -113,13 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 2. CUSTOM CYBER CURSOR ---
     const cursor = document.getElementById('cursor');
-    const cursorRing = document.getElementById('cursor-ring');
+    const cursorRingInner = document.getElementById('cursor-ring-inner');
+    const cursorRingOuter = document.getElementById('cursor-ring-outer');
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
-    // Smooth trailing ring
-    let ringX = mouseX;
-    let ringY = mouseY;
+    // Smooth trailing rings with different speeds
+    let innerX = mouseX;
+    let innerY = mouseY;
+    let outerX = mouseX;
+    let outerY = mouseY;
 
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
@@ -130,22 +133,31 @@ document.addEventListener('DOMContentLoaded', () => {
         cursor.style.top = mouseY + 'px';
     });
 
-    function animateCursorRing() {
-        ringX += (mouseX - ringX) * 0.2;
-        ringY += (mouseY - ringY) * 0.2;
+    function animateCursorRings() {
+        // Inner ring: Fast lag
+        innerX += (mouseX - innerX) * 0.2;
+        innerY += (mouseY - innerY) * 0.2;
 
-        cursorRing.style.left = ringX + 'px';
-        cursorRing.style.top = ringY + 'px';
+        // Outer ring: Slow, "heavy" lag
+        outerX += (mouseX - outerX) * 0.08;
+        outerY += (mouseY - outerY) * 0.08;
 
-        requestAnimationFrame(animateCursorRing);
+        cursorRingInner.style.left = innerX + 'px';
+        cursorRingInner.style.top = innerY + 'px';
+
+        cursorRingOuter.style.left = outerX + 'px';
+        cursorRingOuter.style.top = outerY + 'px';
+
+        requestAnimationFrame(animateCursorRings);
     }
-    animateCursorRing();
+    animateCursorRings();
 
     // Hover states for cursor
     const interactables = document.querySelectorAll('.interactable, .card');
     interactables.forEach(el => {
         el.addEventListener('mouseenter', () => {
-            cursorRing.classList.add('hovering');
+            cursorRingInner.classList.add('hovering');
+            cursorRingOuter.classList.add('hovering');
 
             // Log hover actions
             let targetName = "element";
@@ -184,10 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 glowColor = "rgba(255, 255, 0, 0.1)"; // Yellowish
             }
 
-            // Update mouse glow color
-            if (mouseGlow) {
-                mouseGlow.style.setProperty('--glow-color', glowColor);
-            }
 
             if (targetName !== "element") {
                 document.dispatchEvent(new CustomEvent('siteAction', {
@@ -196,26 +204,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         el.addEventListener('mouseleave', () => {
-            cursorRing.classList.remove('hovering');
-            if (mouseGlow) {
-                mouseGlow.style.setProperty('--glow-color', 'rgba(255, 255, 255, 0.04)');
-            }
+            cursorRingInner.classList.remove('hovering');
+            cursorRingOuter.classList.remove('hovering');
         });
     });
 
-    // --- 3. AMBIENT MOUSE GLOW ---
-    const mouseGlow = document.querySelector('.mouse-glow');
-    let glowX = mouseX;
-    let glowY = mouseY;
-
-    function animateGlow() {
-        glowX += (mouseX - glowX) * 0.1;
-        glowY += (mouseY - glowY) * 0.1;
-        mouseGlow.style.left = glowX + 'px';
-        mouseGlow.style.top = glowY + 'px';
-        requestAnimationFrame(animateGlow);
-    }
-    animateGlow();
 
     // --- 4. BENTO WIDGETS LOGIC ---
 
