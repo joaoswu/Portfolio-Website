@@ -658,4 +658,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.setupVisualizer = setupVisualizer; // Expose to the enter click handler
 
+    // --- 11. BROWSER TAB TITLE ANIMATION ---
+    const titleText = "> joao.sw";
+    let titleIndex = 0;
+    let titleIsDeleting = false;
+
+    function animateTitle() {
+        // Build the current string: the typed portion plus a blinking cursor if typing
+        const currentText = titleText.substring(0, titleIndex);
+        const cursorChar = (titleIndex < titleText.length && !titleIsDeleting) ? "_" : "";
+        document.title = currentText + cursorChar;
+
+        let typeSpeed = titleIsDeleting ? 100 : 250;
+
+        if (!titleIsDeleting && titleIndex === titleText.length) {
+            // Pause at the end before deleting
+            typeSpeed = 3000;
+            titleIsDeleting = true;
+        } else if (titleIsDeleting && titleIndex === 0) {
+            titleIsDeleting = false;
+            // Brief pause before re-typing
+            typeSpeed = 500;
+        } else {
+            if (titleIsDeleting) {
+                titleIndex--;
+            } else {
+                titleIndex++;
+            }
+        }
+        setTimeout(animateTitle, typeSpeed);
+    }
+    animateTitle();
+
 });
