@@ -1,0 +1,1064 @@
+:root {
+    --bg-color: #050505;
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --hover-bg: rgba(255, 255, 255, 0.06);
+    --text-primary: #ffffff;
+    --text-secondary: #888888;
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+}
+
+/* Light Mode Overrides */
+body.light-mode {
+    --bg-color: #f0f0f5;
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --border-color: rgba(0, 0, 0, 0.1);
+    --hover-bg: rgba(255, 255, 255, 0.9);
+    --text-primary: #111111;
+    --text-secondary: #555555;
+    background-image: none;
+}
+
+body.light-mode .scanlines::before {
+    background: linear-gradient(rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.3) 50%);
+    background-size: 100% 2px, 3px 100%;
+}
+
+body.light-mode .background-grid {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    box-shadow: inset 0 0 150px #fff;
+}
+
+body.light-mode .cursor {
+    background: #000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+body.light-mode .cursor-ring {
+    border-color: rgba(0, 0, 0, 0.3);
+}
+
+body.light-mode .mouse-glow {
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.01) 40%, transparent 70%);
+}
+
+body.light-mode .bento-item {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .profile-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 100%);
+}
+
+/* Light Mode Overrides */
+body.light-mode {
+    --bg-color: #f0f0f5;
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --border-color: rgba(0, 0, 0, 0.1);
+    --hover-bg: rgba(255, 255, 255, 0.9);
+    --text-primary: #111111;
+    --text-secondary: #555555;
+}
+
+body.light-mode .scanlines::before {
+    background: linear-gradient(rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.3) 50%);
+    background-size: 100% 2px, 3px 100%;
+}
+
+body.light-mode .background-grid {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    box-shadow: inset 0 0 150px #fff;
+}
+
+body.light-mode .cursor {
+    background: #000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+body.light-mode .cursor-ring {
+    border-color: rgba(0, 0, 0, 0.3);
+}
+
+body.light-mode .mouse-glow {
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.01) 40%, transparent 70%);
+}
+
+body.light-mode .bento-item {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .profile-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 100%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: none !important;
+    /* Hide default cursor */
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    background-image: radial-gradient(circle at center, #0a0a14 0%, #000 100%);
+}
+
+/* Custom Cursor Elements */
+.cursor,
+.cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 10000;
+    mix-blend-mode: screen;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+}
+
+.cursor {
+    width: 6px;
+    height: 6px;
+    background: var(--text-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.cursor-ring {
+    width: 35px;
+    height: 35px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transition: width 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        background 0.2s, border-color 0.2s;
+}
+
+body:hover .cursor,
+body:hover .cursor-ring {
+    opacity: 1;
+}
+
+/* Interaction State */
+.cursor-ring.hovering {
+    width: 45px;
+    height: 45px;
+    border-color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.05);
+    animation: none;
+}
+
+/* Click to Enter Screen */
+.enter-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #030304;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 1s ease;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+
+.enter-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+}
+
+.enter-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.glitch-text {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 5px;
+    position: relative;
+    text-transform: uppercase;
+}
+
+.enter-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    padding: 16px 45px;
+    letter-spacing: 4px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.enter-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+}
+
+.enter-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
+.enter-btn:hover::before {
+    left: 200%;
+}
+
+/* Loading Progress Bar */
+.progress-container {
+    width: 250px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: -10px;
+    position: relative;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--text-primary);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    transition: width 0.1s linear;
+}
+
+
+/* Network Canvas Interactive Background */
+#network-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* CRT Scanlines */
+.scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0.15));
+    background-size: 100% 4px;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.scanlines::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.03));
+    z-index: 100;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+}
+
+/* 3D Moving Base Grid */
+.background-grid {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    transform: perspective(600px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+    animation: gridMove 15s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 150px #000;
+}
+
+@keyframes gridMove {
+    0% {
+        transform: perspective(600px) rotateX(60deg) translateY(0) translateZ(-200px);
+    }
+
+    100% {
+        transform: perspective(600px) rotateX(60deg) translateY(60px) translateZ(-200px);
+    }
+}
+
+/* Ambient Mouse Glow */
+.mouse-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 40%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    transition: left 0.1s ease-out, top 0.1s ease-out;
+}
+
+.container {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Theme Toggler */
+.theme-toggler {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.theme-toggler:hover {
+    transform: scale(1.1);
+    background: var(--hover-bg);
+}
+
+/* Bento Grid System */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 125px);
+    /* reduced heights to compress overall size */
+    gap: 12px;
+    /* reduced space between cards */
+    width: 100%;
+    max-width: 850px;
+    /* overall width scale down */
+    padding: 15px;
+    transform: scale(0.95);
+}
+
+.bento-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    /* smaller card rounding */
+    padding: 18px;
+    /* tighter padding inside cards */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+    color: var(--text-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.bento-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.0);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.bento-item:hover {
+    transform: translateY(-4px) scale(1.02);
+    background: var(--hover-bg);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6);
+}
+
+.bento-item:hover::after {
+    box-shadow: inset 0 0 20px 2px rgba(255, 255, 255, 0.05);
+}
+
+/* Specific Bento Cards */
+.profile-card {
+    grid-column: span 2;
+    grid-row: span 1;
+    /* Changed to 1 row */
+    display: flex;
+    flex-direction: row;
+    /* Horizontal layout for 1 row */
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+}
+
+.profile-card .name {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    /* smaller main title */
+    font-weight: 700;
+    margin-bottom: 0px;
+    letter-spacing: 1px;
+}
+
+.profile-card .subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    /* smaller subtitle */
+    font-family: var(--font-mono);
+    text-align: right;
+}
+
+.social-card {
+    grid-column: span 1;
+    grid-row: span 1;
+    align-items: center;
+    text-align: center;
+}
+
+.social-card .icon {
+    font-style: normal;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.views-card {
+    grid-column: span 1;
+    grid-row: span 1;
+    align-items: center;
+    text-align: center;
+}
+
+.views-card .view-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.views-card .view-count {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.discord-status-card {
+    grid-column: span 2;
+    grid-row: span 1;
+    justify-content: center;
+}
+
+.discord-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.avatar-container {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.discord-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #747f8d;
+    /* Default offline */
+    border: 3px solid var(--bg-color);
+    transition: all 0.3s ease;
+}
+
+.status-indicator.online {
+    background: #43b581;
+    box-shadow: 0 0 10px rgba(67, 181, 129, 0.8);
+}
+
+.status-indicator.idle {
+    background: #faa61a;
+    box-shadow: 0 0 10px rgba(250, 166, 26, 0.8);
+}
+
+.status-indicator.dnd {
+    background: #f04747;
+    box-shadow: 0 0 10px rgba(240, 71, 71, 0.8);
+}
+
+.discord-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.status-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.custom-status {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-style: italic;
+}
+
+.spotify-card {
+    grid-column: span 2;
+    grid-row: span 1;
+    justify-content: center;
+}
+
+.spotify-label {
+    color: #1DB954;
+    /* Subtle Spotify Green */
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.spotify-song {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.spotify-artist {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.music-card {
+    grid-column: span 2;
+    /* Increased span */
+    grid-row: span 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.music-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.music-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.play-pause-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.play-pause-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.audio-progress-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.audio-time {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    min-width: 35px;
+}
+
+#audio-progress,
+#volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    outline: none;
+    transition: background 0.2s;
+}
+
+#audio-progress::-webkit-slider-thumb,
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--text-primary);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    transition: transform 0.1s;
+}
+
+#audio-progress::-webkit-slider-thumb:hover,
+#volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-secondary);
+}
+
+/* New Clock Widget */
+.clock-card {
+    grid-column: span 1;
+    grid-row: span 1;
+    align-items: center;
+    text-align: center;
+}
+
+.clock-label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.clock-time {
+    font-family: var(--font-mono);
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.clock-timezone {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+/* New Weather Widget */
+.weather-card {
+    grid-column: span 1;
+    grid-row: span 1;
+    align-items: center;
+    text-align: center;
+}
+
+.weather-label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.weather-temp {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.weather-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    text-transform: capitalize;
+}
+
+/* New GitHub Commits Widget */
+.github-commits-card {
+    grid-column: span 2;
+    grid-row: span 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.github-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.commit-message {
+    font-size: 1.1rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.commit-repo {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 6px;
+}
+
+/* WakaTime Card */
+.wakatime-card {
+    grid-column: span 2;
+    background: var(--card-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    /* Reduced from 20px */
+    gap: 12px;
+    /* Reduced from 15px */
+}
+
+.wakatime-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-heading);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    /* Reduced */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.wakatime-stats {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    /* Reduced */
+}
+
+.wakatime-skeleton {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+.waka-lang-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.waka-lang-info {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    /* Reduced */
+    color: var(--text-primary);
+}
+
+.waka-bar-container {
+    width: 100%;
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.waka-bar-fill {
+    height: 100%;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: width 1s ease-out;
+}
+
+/* Interactive Action Log Card */
+.action-log-card {
+    grid-column: span 2;
+    background: #0a0a0a;
+    /* True black background for terminal feel */
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    gap: 10px;
+    font-family: var(--font-mono);
+}
+
+.log-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+}
+
+.log-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow-y: hidden;
+    height: 100%;
+    justify-content: flex-end;
+    /* Keep newest at bottom */
+}
+
+.log-entry {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.3;
+    word-break: break-word;
+    animation: typeLog 0.3s ease-out forwards;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.log-entry.highlight {
+    color: var(--text-primary);
+}
+
+.log-entry.code-green {
+    color: #4ade80;
+    /* Hacker green */
+}
+
+@keyframes typeLog {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* New Skills Marquee Widget */
+.skills-card {
+    grid-column: span 4;
+    grid-row: span 1;
+    min-height: 80px;
+    /* Give the marquee room to breathe */
+    padding: 0;
+    overflow: hidden;
+    align-items: center;
+    background: transparent;
+    border: none !important;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.skills-card:hover {
+    background: transparent;
+    border-color: transparent !important;
+    box-shadow: none;
+    transform: none;
+}
+
+.skills-card::after,
+.skills-card:hover::after {
+    display: none;
+}
+
+.skills-marquee {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    /* Proper feathering using a CSS mask instead of solid blocks */
+    -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.marquee-content {
+    display: flex;
+    width: max-content;
+    animation: marquee 20s linear infinite;
+}
+
+.marquee-content span {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+    /* Tighter items */
+    padding: 10px 24px;
+    /* Reduced padding */
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    /* Reduced from 1.2rem */
+    letter-spacing: 1px;
+    /* Reduced */
+    color: var(--text-primary);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5) inset;
+    transition: transform 0.2s ease, text-shadow 0.2s ease, background 0.2s ease;
+    cursor: default;
+}
+
+.marquee-content span:hover {
+    transform: translateY(-2px);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    background: var(--border-color);
+    /* Slight highlight */
+}
+
+@keyframes marquee {
+
+    /* Translate exactly half the width which contains one full copy of the word set */
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Responsive Grid */
+@media (max-width: 900px) {
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+        max-width: 600px;
+        transform: scale(1);
+    }
+
+    .profile-card {
+        grid-column: span 2;
+        grid-row: span 2;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .spotify-card,
+    .discord-status-card,
+    .music-card,
+    .github-commits-card,
+    .skills-card {
+        grid-column: span 2;
+    }
+
+    body.light-mode .scanlines::before {
+        background: transparent;
+    }
+}
+
+@media (max-width: 500px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-card,
+    .social-card,
+    .views-card,
+    .discord-status-card,
+    .spotify-card,
+    .music-card,
+    .clock-card,
+    .weather-card,
+    .github-commits-card,
+    .skills-card {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+
+    .profile-card {
+        padding: 40px 24px;
+    }
+}
