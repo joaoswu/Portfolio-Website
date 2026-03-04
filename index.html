@@ -87,24 +87,17 @@
                 <p class="subtitle">My Information</p>
             </div>
 
-            <!-- Socials -->
-            <a href="https://www.tiktok.com/@joao.sw" target="_blank" class="bento-item social-card tiktok interactable"
-                data-tooltip="Follow on TikTok">
-                <i class="icon">TikTok</i>
-            </a>
-            <a href="https://github.com/joaoswu" target="_blank" class="bento-item social-card github interactable"
-                data-tooltip="View GitHub Profile">
-                <i class="icon">GitHub</i>
-            </a>
-            <a href="https://discord.gg/bd5GhG43" target="_blank"
-                class="bento-item social-card discord-invite interactable" data-tooltip="Add me on Discord">
-                <i class="icon">Discord</i>
-            </a>
-
             <!-- View Count -->
             <div class="bento-item views-card interactable" data-tooltip="Total Profile Views">
                 <div class="view-label">Views</div>
                 <div class="view-count" id="view-count">...</div>
+            </div>
+
+            <!-- Weather -->
+            <div class="bento-item weather-card interactable" data-tooltip="Current Weather">
+                <div class="weather-label">Currently</div>
+                <div class="weather-temp" id="weather-temp">--°C</div>
+                <div class="weather-desc" id="weather-desc">Loading...</div>
             </div>
 
             <!-- Discord Status (Lanyard) -->
@@ -132,13 +125,6 @@
                 </div>
             </div>
 
-            <!-- Weather -->
-            <div class="bento-item weather-card interactable" data-tooltip="Current Weather">
-                <div class="weather-label">Currently</div>
-                <div class="weather-temp" id="weather-temp">--°C</div>
-                <div class="weather-desc" id="weather-desc">Loading...</div>
-            </div>
-
             <!-- WakaTime Stats -->
             <div class="bento-item wakatime-card interactable" data-tooltip="Coding Statistics">
                 <div class="wakatime-header">
@@ -150,6 +136,29 @@
                 <div class="wakatime-stats" id="wakatime-stats">
                     <div class="wakatime-skeleton">Fetching data...</div>
                 </div>
+            </div>
+
+            <!-- Socials -->
+            <a href="https://www.tiktok.com/@joao.sw" target="_blank" class="bento-item social-card tiktok interactable"
+                data-tooltip="Follow on TikTok">
+                <i class="icon">TikTok</i>
+            </a>
+            <a href="https://github.com/joaoswu" target="_blank" class="bento-item social-card github interactable"
+                data-tooltip="View GitHub Profile">
+                <i class="icon">GitHub</i>
+            </a>
+
+            <!-- Social Discord -->
+            <a href="https://discord.gg/bd5GhG43" target="_blank"
+                class="bento-item social-card discord-invite interactable" data-tooltip="Add me on Discord">
+                <i class="icon">Discord</i>
+            </a>
+
+            <!-- Live Clock -->
+            <div class="bento-item clock-card interactable" data-tooltip="Local Time (GMT-3)">
+                <div class="clock-label" id="clock-date">Loading...</div>
+                <div class="clock-time" id="clock-time">00:00:00</div>
+                <div class="clock-timezone">Local Time</div>
             </div>
 
             <!-- Audio Control -->
@@ -185,13 +194,6 @@
                     </svg>
                     <input type="range" id="volume-slider" min="0" max="100" value="50" class="interactable">
                 </div>
-            </div>
-
-            <!-- Live Clock -->
-            <div class="bento-item clock-card interactable" data-tooltip="Local Time (GMT-3)">
-                <div class="clock-label" id="clock-date">Loading...</div>
-                <div class="clock-time" id="clock-time">00:00:00</div>
-                <div class="clock-timezone">Local Time</div>
             </div>
 
             <!-- Interactive Action Log -->

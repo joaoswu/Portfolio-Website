@@ -555,31 +555,29 @@ body.light-mode .bento-item[data-tooltip]::before {
 .profile-card {
     grid-column: span 2;
     grid-row: span 1;
-    /* Changed to 1 row */
     display: flex;
-    flex-direction: row;
-    /* Horizontal layout for 1 row */
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 30px;
+    justify-content: center;
+    padding: 20px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    text-align: center;
 }
 
 .profile-card .name {
     font-family: var(--font-heading);
-    font-size: 2.2rem;
-    /* smaller main title */
+    font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 0px;
-    letter-spacing: 1px;
+    margin-bottom: 5px;
+    letter-spacing: 2px;
 }
 
 .profile-card .subtitle {
     color: var(--text-secondary);
-    font-size: 0.95rem;
-    /* smaller subtitle */
+    font-size: 0.8rem;
     font-family: var(--font-mono);
-    text-align: right;
+    text-transform: uppercase;
+    letter-spacing: 3px;
 }
 
 .social-card {
@@ -832,10 +830,13 @@ body.light-mode .bento-item[data-tooltip]::before {
 
 /* New Clock Widget */
 .clock-card {
-    grid-column: span 2;
+    grid-column: span 1;
     grid-row: span 1;
     align-items: center;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .clock-label {
