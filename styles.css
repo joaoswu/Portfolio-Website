@@ -1137,72 +1137,16 @@ body.light-mode .bento-item[data-tooltip]::before {
     }
 }
 
-/* Quote Card (Daily Instruction) */
-.quote-card {
+/* Action Log Card */
+.action-log-card {
     grid-column: span 2;
     grid-row: span 1;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
 }
 
-.quote-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    font-family: var(--font-mono);
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-}
-
-.quote-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.quote-text {
-    font-size: 1.2rem;
-    line-height: 1.4;
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 12px;
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.quote-author {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    font-family: var(--font-mono);
-    opacity: 0.8;
-}
-
-.quote-author::before {
-    content: "// ORIGIN: ";
-}
-
-.quote-footer {
-    margin-top: 15px;
-    font-size: 0.65rem;
-    font-family: var(--font-mono);
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.status-blink {
-    width: 6px;
-    height: 6px;
-    background: var(--text-primary);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
+/* Skills Card */
+.skills-card {
+    grid-column: span 2;
+    grid-row: span 1;
 }
 
 /* Responsive Grid */
@@ -1225,6 +1169,7 @@ body.light-mode .bento-item[data-tooltip]::before {
     .discord-status-card,
     .music-card,
     .github-commits-card,
+    .action-log-card,
     .skills-card {
         grid-column: span 2;
     }
@@ -1245,9 +1190,7 @@ body.light-mode .bento-item[data-tooltip]::before {
     .discord-status-card,
     .spotify-card,
     .music-card,
-    .clock-card,
-    .weather-card,
-    .telemetry-card,
+    .action-log-card,
     .skills-card {
         grid-column: span 1;
         grid-row: span 1;
