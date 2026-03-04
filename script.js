@@ -1011,6 +1011,90 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animateTitle();
 
+    // --- 7. TIKTOK LIVE STATS SCRAPING (CORS PROXY) ---
+    const tiktokSection = document.getElementById('tiktok-section');
+    const tiktokFollowersEl = document.getElementById('tiktok-followers');
+    const tiktokLikesEl = document.getElementById('tiktok-likes');
+    const tiktokVideosEl = document.getElementById('tiktok-videos');
+    let hasFetchedTikTok = false;
+
+    async function fetchTikTokStats() {
+        if (hasFetchedTikTok) return;
+        hasFetchedTikTok = true;
+
+        try {
+            // Use allorigins as a free CORS proxy
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.tiktok.com/@joao.sw')}`;
+            const response = await fetch(proxyUrl);
+            const data = await response.json();
+
+            // The HTML string is in data.contents
+            const html = data.contents;
+            if (!html) throw new Error("No HTML returned");
+
+            // Extract the Universal Data JSON from the script tag
+            const match = html.match(/<script id="__UNIVERSAL_DATA_FOR_REHYDRATION__"[^>]*>([^<]+)<\/script>/);
+            if (match && match[1]) {
+                const universalData = JSON.parse(match[1]);
+
+                // Navigate TikTok's deeply nested JSON structure
+                const userObjKey = Object.keys(universalData.__DEFAULT_SCOPE__).find(k => k.includes('user-detail'));
+                if (userObjKey) {
+                    const stats = universalData.__DEFAULT_SCOPE__[userObjKey].userInfo.stats;
+
+                    if (stats.followerCount !== undefined) animateTikTokCounter(tiktokFollowersEl, stats.followerCount);
+                    if (stats.heartCount !== undefined) animateTikTokCounter(tiktokLikesEl, stats.heartCount);
+                    if (stats.videoCount !== undefined) animateTikTokCounter(tiktokVideosEl, stats.videoCount);
+                    return;
+                }
+            }
+            throw new Error("Could not parse TikTok data");
+        } catch (error) {
+            console.error("TikTok Fetch Error:", error);
+            if (tiktokFollowersEl) tiktokFollowersEl.textContent = 'N/A';
+            if (tiktokLikesEl) tiktokLikesEl.textContent = 'N/A';
+            if (tiktokVideosEl) tiktokVideosEl.textContent = 'N/A';
+        }
+    }
+
+    function animateTikTokCounter(el, target) {
+        if (!el || isNaN(target)) return;
+        let current = 0;
+        const duration = 2000;
+        const steps = 60;
+        const increment = target / steps;
+        const intervalTime = duration / steps;
+
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            if (current >= 1000000) {
+                el.textContent = (current / 1000000).toFixed(1) + 'M';
+            } else if (current >= 10000) {
+                el.textContent = (current / 1000).toFixed(1) + 'K';
+            } else {
+                el.textContent = Math.floor(current).toLocaleString();
+            }
+        }, intervalTime);
+    }
+
+    if (tiktokSection) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('scrolled-in');
+                    fetchTikTokStats();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        observer.observe(tiktokSection);
+    }
+
     // --- 8. SECRET ADMIN LOGIN (KONAMI CODE) ---
     const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
     let konamiIndex = 0;
