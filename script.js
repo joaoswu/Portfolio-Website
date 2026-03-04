@@ -308,11 +308,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateLanyardData(data) {
         const status = data.discord_status;
 
-        // Avatar
-        if (discordAvatar && data.discord_user) {
-            const ext = data.discord_user.avatar && data.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
-            discordAvatar.src = `https://cdn.discordapp.com/avatars/${data.discord_user.id}/${data.discord_user.avatar}.${ext}?size=128`;
-            discordAvatar.style.display = 'block';
+        // Avatar and Favicon
+        if (data.discord_user) {
+            const avatar = data.discord_user.avatar;
+            const ext = avatar && avatar.startsWith('a_') ? 'gif' : 'png';
+            const avatarUrl = `https://cdn.discordapp.com/avatars/${data.discord_user.id}/${avatar}.${ext}?size=128`;
+
+            if (discordAvatar) {
+                discordAvatar.src = avatarUrl;
+                discordAvatar.style.display = 'block';
+            }
+
+            const favicon = document.getElementById('favicon');
+            if (favicon) {
+                favicon.href = avatarUrl;
+            }
         }
 
         // Status Indicator
