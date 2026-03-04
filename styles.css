@@ -713,7 +713,12 @@ body.light-mode .bento-item[data-tooltip]::before {
 .spotify-card {
     grid-column: span 2;
     grid-row: span 1;
-    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    gap: 15px;
 }
 
 .spotify-label {
@@ -741,6 +746,27 @@ body.light-mode .bento-item[data-tooltip]::before {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.album-art-container {
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.album-art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.spotify-card:hover .album-art {
+    box-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
+    border-color: rgba(29, 185, 84, 0.4);
 }
 
 .music-card {

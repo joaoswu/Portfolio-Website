@@ -478,15 +478,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Spotify
+        const spotifyAlbumArt = document.getElementById('spotify-album-art');
+        const albumArtContainer = document.getElementById('album-art-container');
+
         if (data.spotify && data.listening_to_spotify) {
             if (spotifySong && spotifyArtist) {
                 spotifySong.textContent = data.spotify.song;
                 spotifyArtist.textContent = data.spotify.artist;
             }
+            if (spotifyAlbumArt && albumArtContainer) {
+                spotifyAlbumArt.src = data.spotify.album_art_url;
+                albumArtContainer.style.display = 'block';
+            }
         } else {
             if (spotifySong && spotifyArtist) {
                 spotifySong.textContent = 'Not playing';
                 spotifyArtist.textContent = '-';
+            }
+            if (albumArtContainer) {
+                albumArtContainer.style.display = 'none';
             }
         }
     }
