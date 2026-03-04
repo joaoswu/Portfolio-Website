@@ -95,70 +95,47 @@ body {
     position: relative;
 }
 
-/* Custom Cursor Elements */
-.cursor,
-.cursor-ring-inner,
-.cursor-ring-outer {
+/* Custom Cyber Cursor */
+.cursor {
     position: fixed;
     top: 0;
     left: 0;
     pointer-events: none;
     z-index: 10000;
     mix-blend-mode: exclusion;
-    /* Changed for better visibility on both themes */
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transform: translate(-50%, -50%);
-    transition: opacity 0.3s ease;
 }
 
-.cursor {
-    width: 4px;
-    height: 4px;
+.cursor-shape {
+    width: 14px;
+    height: 14px;
     background: var(--text-primary);
-    border-radius: 50%;
-    z-index: 10001;
+    /* Minimalist Triangle/Arrow */
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.cursor-ring-inner {
-    width: 20px;
-    height: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
+/* Hover States - Morph to Square */
+.cursor.hovering .cursor-shape {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: 1.5px solid var(--text-primary);
+    animation: cursorRotate 4s linear infinite;
 }
 
-.cursor-ring-outer {
-    width: 40px;
-    height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-}
-
-/* Hover States */
-.cursor-ring-inner.hovering {
-    width: 30px;
-    height: 30px;
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.8);
-    animation: ringPulse 1.5s infinite ease-in-out;
-}
-
-.cursor-ring-outer.hovering {
-    width: 60px;
-    height: 60px;
-    border-color: rgba(255, 255, 255, 0.05);
-    background: rgba(255, 255, 255, 0.02);
-}
-
-@keyframes ringPulse {
-
-    0%,
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.8;
+@keyframes cursorRotate {
+    0% {
+        transform: rotate(0deg);
     }
 
-    50% {
-        transform: translate(-50%, -50%) scale(1.1);
-        opacity: 0.4;
+    100% {
+        transform: rotate(360deg);
     }
 }
 

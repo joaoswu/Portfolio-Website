@@ -113,51 +113,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 2. CUSTOM CYBER CURSOR ---
     const cursor = document.getElementById('cursor');
-    const cursorRingInner = document.getElementById('cursor-ring-inner');
-    const cursorRingOuter = document.getElementById('cursor-ring-outer');
+    const cursorShape = document.getElementById('cursor-shape');
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
-    // Smooth trailing rings with different speeds
-    let innerX = mouseX;
-    let innerY = mouseY;
-    let outerX = mouseX;
-    let outerY = mouseY;
+    // Movement tracking for velocity rotation
+    let lastX = mouseX;
+    let lastY = mouseY;
+    let currentAngle = 0;
 
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
 
-        // Exact dot follows perfectly
+        // Follow perfectly
         cursor.style.left = mouseX + 'px';
         cursor.style.top = mouseY + 'px';
     });
 
-    function animateCursorRings() {
-        // Inner ring: Fast lag
-        innerX += (mouseX - innerX) * 0.2;
-        innerY += (mouseY - innerY) * 0.2;
+    function animateCursor() {
+        // Calculate velocity components
+        const dx = mouseX - lastX;
+        const dy = mouseY - lastY;
+        const velocity = Math.sqrt(dx * dx + dy * dy);
 
-        // Outer ring: Slow, "heavy" lag
-        outerX += (mouseX - outerX) * 0.08;
-        outerY += (mouseY - outerY) * 0.08;
+        // Only rotate if moving fast enough (deadzone to prevent jitter)
+        if (velocity > 1) {
+            // Target angle (90 degrees offset to align the triangle top)
+            const targetAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
 
-        cursorRingInner.style.left = innerX + 'px';
-        cursorRingInner.style.top = innerY + 'px';
+            // Smoothly interpolate angle
+            let diff = targetAngle - currentAngle;
+            while (diff < -180) diff += 360;
+            while (diff > 180) diff -= 360;
+            currentAngle += diff * 0.2;
 
-        cursorRingOuter.style.left = outerX + 'px';
-        cursorRingOuter.style.top = outerY + 'px';
+            cursor.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg)`;
+        }
 
-        requestAnimationFrame(animateCursorRings);
+        lastX = mouseX;
+        lastY = mouseY;
+
+        requestAnimationFrame(animateCursor);
     }
-    animateCursorRings();
+    animateCursor();
 
     // Hover states for cursor
     const interactables = document.querySelectorAll('.interactable, .card');
     interactables.forEach(el => {
         el.addEventListener('mouseenter', () => {
-            cursorRingInner.classList.add('hovering');
-            cursorRingOuter.classList.add('hovering');
+            cursor.classList.add('hovering');
 
             // Log hover actions
             let targetName = "element";
@@ -204,8 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         el.addEventListener('mouseleave', () => {
-            cursorRingInner.classList.remove('hovering');
-            cursorRingOuter.classList.remove('hovering');
+            cursor.classList.remove('hovering');
         });
     });
 
