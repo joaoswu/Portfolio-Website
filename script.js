@@ -217,7 +217,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- 4. BENTO WIDGETS LOGIC ---
+    // --- 4. 3D TILT INTERACTION ---
+    const bentoItems = document.querySelectorAll('.bento-item');
+
+    bentoItems.forEach(item => {
+        item.addEventListener('mousemove', (e) => {
+            const rect = item.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            // Calculate rotation (max 15 degrees)
+            const rotateX = ((y - centerY) / centerY) * -15;
+            const rotateY = ((x - centerX) / centerX) * 15;
+
+            item.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+        });
+
+        item.addEventListener('mouseleave', () => {
+            item.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+        });
+    });
+
+    // --- 5. BENTO WIDGETS LOGIC ---
 
     // View Count
     const viewCountEl = document.getElementById('view-count');
@@ -414,6 +438,12 @@ document.addEventListener('DOMContentLoaded', () => {
         themeToggler.classList.add('interactable'); // Make sure it works with cursor hover logging
 
         themeToggler.addEventListener('click', () => {
+            // Trigger Glitch Effect
+            document.body.classList.add('glitch-active');
+            setTimeout(() => {
+                document.body.classList.remove('glitch-active');
+            }, 400);
+
             document.body.classList.toggle('light-mode');
             const isLight = document.body.classList.contains('light-mode');
 
