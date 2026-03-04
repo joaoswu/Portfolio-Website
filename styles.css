@@ -1132,99 +1132,108 @@ body.light-mode .bento-item[data-tooltip]::before {
         transform: translateX(0);
     }
 
-    100% {}
+    100% {
+        transform: translateX(-50%);
+    }
+}
 
-    .telemetry-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: var(--text-secondary);
-        font-size: 0.75rem;
-        font-family: var(--font-mono);
-        letter-spacing: 1px;
-        margin-bottom: 15px;
+/* Telemetry Card */
+.telemetry-card {
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+.telemetry-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.telemetry-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 10px;
+}
+
+.tele-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.tele-label {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.tele-value {
+    font-size: 0.9rem;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.tele-value small {
+    font-size: 0.6rem;
+    opacity: 0.5;
+}
+
+/* Responsive Grid */
+@media (max-width: 900px) {
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+        max-width: 600px;
+        transform: scale(1);
     }
 
-    .telemetry-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px 10px;
-    }
-
-    .tele-item {
-        display: flex;
+    .profile-card {
+        grid-column: span 2;
+        grid-row: span 2;
         flex-direction: column;
+        justify-content: center;
     }
 
-    .tele-label {
-        font-size: 0.6rem;
-        color: var(--text-muted);
-        font-family: var(--font-mono);
-        letter-spacing: 1px;
-        margin-bottom: 4px;
+    .spotify-card,
+    .discord-status-card,
+    .music-card,
+    .github-commits-card,
+    .skills-card {
+        grid-column: span 2;
     }
 
-    .tele-value {
-        font-size: 0.9rem;
-        font-family: var(--font-mono);
-        color: var(--text-primary);
-        text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+    body.light-mode .scanlines::before {
+        background: transparent;
+    }
+}
+
+@media (max-width: 500px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
     }
 
-    .tele-value small {
-        font-size: 0.6rem;
-        opacity: 0.5;
+    .profile-card,
+    .social-card,
+    .views-card,
+    .discord-status-card,
+    .spotify-card,
+    .music-card,
+    .clock-card,
+    .weather-card,
+    .telemetry-card,
+    .skills-card {
+        grid-column: span 1;
+        grid-row: span 1;
     }
 
-    /* Responsive Grid */
-    @media (max-width: 900px) {
-        .bento-grid {
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: auto;
-            max-width: 600px;
-            transform: scale(1);
-        }
-
-        .profile-card {
-            grid-column: span 2;
-            grid-row: span 2;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .spotify-card,
-        .discord-status-card,
-        .music-card,
-        .github-commits-card,
-        .skills-card {
-            grid-column: span 2;
-        }
-
-        body.light-mode .scanlines::before {
-            background: transparent;
-        }
+    .profile-card {
+        padding: 40px 24px;
     }
-
-    @media (max-width: 500px) {
-        .bento-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .profile-card,
-        .social-card,
-        .views-card,
-        .discord-status-card,
-        .spotify-card,
-        .music-card,
-        .clock-card,
-        .weather-card,
-        .telemetry-card,
-        .skills-card {
-            grid-column: span 1;
-            grid-row: span 1;
-        }
-
-        .profile-card {
-            padding: 40px 24px;
-        }
-    }
+}
