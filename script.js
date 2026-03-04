@@ -10,13 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const GRAVEYARD_PAGE_VISITS = 686;
     const GRAVEYARD_PROFILE_HOVERS = 362;
-    const GRAVEYARD_SKILL_HOVERS = 335;
     const GRAVEYARD_SOCIAL_HOVERS = 129;
     const GRAVEYARD_DISCORD_CLICKS = 7;
     const GRAVEYARD_PC_HOVERS = 491;
 
     // Use a bullet point (•) to separate spec items
-    const PC_SPECS_TEXT = "• RTX 4090 • INTEL CORE i9-14900K • 64GB DDR5 RAM • 4TB NVME SSD • CUSTOM LIQUID COOLING";
+    const PC_SPECS_TEXT = "• RTX 4070 • INTEL CORE i9-14900K • 32GB DDR5 RAM • 2TB NVME SSD • LIQUID COOLING • 900W PSU";
     // ==========================================
 
     // --- LOAD CUSTOM THEME ---
@@ -1078,7 +1077,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const graveyardSection = document.getElementById('graveyard-section');
     const elPageVisits = document.getElementById('stats-page-visits');
     const elProfileHovers = document.getElementById('stats-profile-hovers');
-    const elSkillHovers = document.getElementById('stats-skill-hovers');
     const elSocialHovers = document.getElementById('stats-social-hovers');
     const elDiscordClicks = document.getElementById('stats-discord-clicks');
     const elPcHovers = document.getElementById('stats-pc-hovers');
@@ -1094,7 +1092,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Reusing the TikTok animation logic for graveyard numbers
                         animateTikTokCounter(elPageVisits, GRAVEYARD_PAGE_VISITS);
                         animateTikTokCounter(elProfileHovers, GRAVEYARD_PROFILE_HOVERS);
-                        animateTikTokCounter(elSkillHovers, GRAVEYARD_SKILL_HOVERS);
                         animateTikTokCounter(elSocialHovers, GRAVEYARD_SOCIAL_HOVERS);
                         animateTikTokCounter(elDiscordClicks, GRAVEYARD_DISCORD_CLICKS);
                         animateTikTokCounter(elPcHovers, GRAVEYARD_PC_HOVERS);
