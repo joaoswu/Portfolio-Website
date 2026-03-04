@@ -127,7 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             }, index * 80); // 80ms stagger
                         });
 
-
+                        // Start Bottom Visualizer
+                        if (window.setupVisualizer) window.setupVisualizer();
                     }, 400); // small pause at 100% before entering
                 }
             }, 100); // update every 100ms
@@ -292,8 +293,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- 4. 3D TILT INTERACTION ---
-    const bentoItems = document.querySelectorAll('.bento-item');
-
     if (!isTouchDevice) {
         bentoItems.forEach(item => {
             item.addEventListener('mousemove', (e) => {
@@ -726,6 +725,60 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: "Python", percent: 24.0, color: "#3572A5" }
         ]);
     }
+
+    // --- 7. BOTTOM AUDIO VISUALIZER ---
+    function setupVisualizer() {
+        const visualizerCanvas = document.getElementById('music-visualizer');
+        if (!visualizerCanvas || !bgMusic || window.audioVisualizerInitialized) return;
+
+        const visualizerCtx = visualizerCanvas.getContext('2d');
+        window.audioVisualizerInitialized = true;
+
+        function resizeVisualizer() {
+            visualizerCanvas.width = window.innerWidth;
+            visualizerCanvas.height = 150;
+        }
+        window.addEventListener('resize', resizeVisualizer);
+        resizeVisualizer();
+
+        // AudioContext is already initialized in the enter logic
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioCtx.createAnalyser();
+            const source = audioCtx.createMediaElementSource(bgMusic);
+            source.connect(analyser);
+            analyser.connect(audioCtx.destination);
+        }
+
+        analyser.fftSize = 256;
+        const bufferLength = analyser.frequencyBinCount;
+        const visualizerDataArray = new Uint8Array(bufferLength);
+
+        function drawVisualizer() {
+            requestAnimationFrame(drawVisualizer);
+            if (bgMusic.paused) {
+                visualizerCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+                return;
+            }
+
+            analyser.getByteFrequencyData(visualizerDataArray);
+            visualizerCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+
+            const barWidth = (visualizerCanvas.width / bufferLength) * 2.5;
+            let barHeight;
+            let x = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                barHeight = visualizerDataArray[i] / 2;
+                const isLightMode = document.body.classList.contains('light-mode');
+                visualizerCtx.fillStyle = isLightMode ? `rgba(0, 0, 0, ${barHeight / 150})` : `rgba(255, 255, 255, ${barHeight / 150})`;
+                visualizerCtx.fillRect(x, visualizerCanvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 2;
+            }
+        }
+        drawVisualizer();
+    }
+    window.setupVisualizer = setupVisualizer;
 
     // Tab Title Animation
     const titleText = "> joao.sw";
