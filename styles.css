@@ -10,6 +10,12 @@
     --font-heading: 'Orbitron', sans-serif;
     --font-body: 'Inter', sans-serif;
     --font-mono: 'Share Tech Mono', monospace;
+
+    /* Responsive Tokens */
+    --grid-gap: 12px;
+    --card-padding: 18px;
+    --row-height: 125px;
+    --container-padding: 15px;
 }
 
 /* Light Mode Overrides */
@@ -425,16 +431,12 @@ body {
 .bento-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(5, 125px);
-    /* 5 rows (Profile+Live, Dev+Social, Social+Clock+Audio, Skills) */
-    gap: 12px;
-    /* reduced space between cards */
+    grid-template-rows: repeat(5, var(--row-height));
+    gap: var(--grid-gap);
     width: 100%;
     max-width: 850px;
-    /* overall width scale down */
-    padding: 15px;
+    padding: var(--container-padding);
     perspective: 1200px;
-    /* Added for 3D Tilt */
 }
 
 .bento-item {
