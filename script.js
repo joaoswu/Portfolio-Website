@@ -914,79 +914,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animateTitle();
 
-    // --- 12. SYSTEM TELEMETRY LOGIC ---
-    const globalClicksEl = document.getElementById('global-clicks');
-    const sessionClicksEl = document.getElementById('session-clicks');
-    const teleUptime = document.getElementById('tele-uptime');
-    const teleOS = document.getElementById('tele-os');
+    // --- 12. DAILY QUOTE LOGIC (ENCRYPTION DECODING) ---
 
-    let sessionClicks = 0;
-    const sessionStartTime = Date.now();
-    const COUNTER_URL = 'https://api.counterapi.dev/v1/joao-portfolio-global-clicks/interactions';
+    const quoteTextEl = document.getElementById('quote-text');
+    const quoteAuthorEl = document.getElementById('quote-author');
 
-    // 1. Load Global Clicks
-    async function loadGlobalStats() {
+    async function fetchDailyQuote() {
         try {
-            const res = await fetch(`${COUNTER_URL}/up`); // Increment once per visit too as "pulse"
-            const data = await res.json();
-            if (data && data.count !== undefined) {
-                if (globalClicksEl) globalClicksEl.textContent = data.count.toString().padStart(5, '0');
+            const response = await fetch('https://api.allorigins.win/raw?url=https://zenquotes.io/api/today');
+            const data = await response.json();
+
+            if (data && data[0]) {
+                const quote = data[0].q;
+                const author = data[0].a;
+
+                if (quoteTextEl) {
+                    await typeText(quoteTextEl, quote, 30);
+                }
+                if (quoteAuthorEl) {
+                    quoteAuthorEl.textContent = author;
+                }
             }
-        } catch (e) {
-            console.error("Global stats error", e);
+        } catch (error) {
+            console.error('Failed to fetch quote:', error);
+            if (quoteTextEl) quoteTextEl.textContent = 'STAY HUNGRY, STAY FOOLISH.';
+            if (quoteAuthorEl) quoteAuthorEl.textContent = 'STEVE JOBS';
         }
     }
-    loadGlobalStats();
 
-    // 2. Click Tracking
-    document.addEventListener('click', async (e) => {
-        sessionClicks++;
-        if (sessionClicksEl) sessionClicksEl.textContent = sessionClicks.toString().padStart(4, '0');
+    setTimeout(fetchDailyQuote, 2500);
 
-        // Push to global API every few clicks or immediately if preferred. 
-        // Here we just increment it on every click to see it move.
-        try {
-            const res = await fetch(`${COUNTER_URL}/up`);
-            const data = await res.json();
-            if (globalClicksEl && data.count !== undefined) {
-                globalClicksEl.textContent = data.count.toString().padStart(5, '0');
-            }
-        } catch (e) { /* silent fail for global stats */ }
-
-        // Log deep interaction
-        const target = e.target.closest('.interactable, button, a');
-        if (target) {
-            document.dispatchEvent(new CustomEvent('siteAction', {
-                detail: { message: `> INTERACTION: [${target.tagName}] ${target.textContent.trim().substring(0, 10)}...` }
-            }));
-        }
-    });
-
-    // 3. Session Uptime
-    function updateUptime() {
-        if (!teleUptime) return;
-        const diff = Math.floor((Date.now() - sessionStartTime) / 1000);
-        const mins = Math.floor(diff / 60);
-        const secs = diff % 60;
-        teleUptime.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-    setInterval(updateUptime, 1000);
-
-    // 4. OS Detection
-    if (teleOS) {
-        let os = "OS_UNKNOWN";
-        const platform = window.navigator.platform.toLowerCase();
-        if (platform.includes('win')) os = "WIN_KERNEL_6.X";
-        if (platform.includes('mac')) os = "DARWIN_X86";
-        if (platform.includes('linux')) os = "GNU_LINUX";
-        if (/android/i.test(navigator.userAgent)) os = "ANDROID_VM";
-        if (/iphone|ipad|ipod/i.test(navigator.userAgent)) os = "IOS_CORE";
-
-        teleOS.textContent = os;
-    }
-
-    // --- 8. FINALIZE ---
+    // --- 13. FINALIZE ---
     document.dispatchEvent(new CustomEvent('siteAction', {
-        detail: { message: '> Global Data Sync: COMPLETE.' }
+        detail: { message: '> DAILY_TRANSMISSION: DECODED.' }
     }));
 });
