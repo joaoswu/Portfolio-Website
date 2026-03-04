@@ -382,7 +382,41 @@ body {
     overflow: hidden;
     transform-style: preserve-3d;
     /* Enable 3D transforms on children */
-    will-change: transform;
+    will-change: transform, opacity;
+    opacity: 0;
+    /* Hidden by default for boot sequence */
+    transform: translateY(30px) scale(0.9);
+}
+
+.bento-item.animate-in {
+    animation: bentoEntrance 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes bentoEntrance {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.bento-item * {
+    transition: opacity 0.3s ease;
+}
+
+.typing-active::after {
+    content: '|';
+    animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
 }
 
 .bento-item::after {

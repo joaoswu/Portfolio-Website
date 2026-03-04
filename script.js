@@ -1,30 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. CLICK TO ENTER & LOADING ---
-    const enterScreen = document.getElementById('enter-screen');
+    // --- 1. ENTRY SCREEN LOGIC ---
+    const entryScreen = document.getElementById('entry-screen');
     const enterBtn = document.getElementById('enter-btn');
     const bgMusic = document.getElementById('bg-music');
 
-    const progressBar = document.getElementById('progress-bar');
-    const progressContainer = document.getElementById('progress-container');
-    const loadingText = document.getElementById('loading-text');
+    // Typewriter Utility
+    async function typeText(element, text, speed = 40) {
+        element.textContent = '';
+        element.classList.add('typing-active');
+        for (let i = 0; i < text.length; i++) {
+            element.textContent += text[i];
+            await new Promise(resolve => setTimeout(resolve, speed));
+        }
+        element.classList.remove('typing-active');
+    }
 
-    if (enterBtn) {
+    if (enterBtn && entryScreen) {
         enterBtn.addEventListener('click', () => {
-            // Hide the button
-            enterBtn.style.display = 'none';
-
-            // Show loading text and progress bar
-            if (loadingText) {
-                loadingText.textContent = 'LOADING';
-                loadingText.setAttribute('data-text', 'LOADING');
-            }
-            if (progressContainer) {
-                progressContainer.style.display = 'block';
-                void progressContainer.offsetWidth; // trigger reflow
-                progressContainer.style.opacity = '1';
-            }
-
             // Play Audio early so it loads during the fake loading bar
             if (bgMusic) {
                 bgMusic.volume = 0.5; // Start at reasonable volume
@@ -57,8 +50,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     setTimeout(() => {
                         // Enter the site
-                        enterScreen.classList.add('hidden');
+                        entryScreen.classList.add('hidden');
                         document.body.classList.remove('loading');
+
+                        // --- START ADVANCED BOOT SEQUENCE ---
+                        const bentoItems = document.querySelectorAll('.bento-item');
+                        bentoItems.forEach((item, index) => {
+                            // Staggered Entrance
+                            setTimeout(() => {
+                                item.classList.add('animate-in');
+
+                                // Start Typewriter for specific elements inside
+                                const textEls = item.querySelectorAll('h1, h2, h3, p, .icon, span:not(.no-type)');
+                                textEls.forEach(el => {
+                                    const originalText = el.getAttribute('data-text') || el.textContent;
+                                    if (!el.getAttribute('data-text')) el.setAttribute('data-text', originalText);
+                                    el.textContent = ''; // Clear for typing
+
+                                    setTimeout(() => {
+                                        typeText(el, originalText);
+                                    }, 400); // Wait for card to settle slightly
+                                });
+                            }, index * 80); // 80ms stagger
+                        });
 
                         // Dispatch event for the logger
                         document.dispatchEvent(new CustomEvent('siteAction', {
