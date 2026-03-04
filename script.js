@@ -914,4 +914,79 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animateTitle();
 
+    // --- 12. SYSTEM TELEMETRY LOGIC ---
+    const globalClicksEl = document.getElementById('global-clicks');
+    const sessionClicksEl = document.getElementById('session-clicks');
+    const teleUptime = document.getElementById('tele-uptime');
+    const teleOS = document.getElementById('tele-os');
+
+    let sessionClicks = 0;
+    const sessionStartTime = Date.now();
+    const COUNTER_URL = 'https://api.counterapi.dev/v1/joao-portfolio-global-clicks/interactions';
+
+    // 1. Load Global Clicks
+    async function loadGlobalStats() {
+        try {
+            const res = await fetch(`${COUNTER_URL}/up`); // Increment once per visit too as "pulse"
+            const data = await res.json();
+            if (data && data.count !== undefined) {
+                if (globalClicksEl) globalClicksEl.textContent = data.count.toString().padStart(5, '0');
+            }
+        } catch (e) {
+            console.error("Global stats error", e);
+        }
+    }
+    loadGlobalStats();
+
+    // 2. Click Tracking
+    document.addEventListener('click', async (e) => {
+        sessionClicks++;
+        if (sessionClicksEl) sessionClicksEl.textContent = sessionClicks.toString().padStart(4, '0');
+
+        // Push to global API every few clicks or immediately if preferred. 
+        // Here we just increment it on every click to see it move.
+        try {
+            const res = await fetch(`${COUNTER_URL}/up`);
+            const data = await res.json();
+            if (globalClicksEl && data.count !== undefined) {
+                globalClicksEl.textContent = data.count.toString().padStart(5, '0');
+            }
+        } catch (e) { /* silent fail for global stats */ }
+
+        // Log deep interaction
+        const target = e.target.closest('.interactable, button, a');
+        if (target) {
+            document.dispatchEvent(new CustomEvent('siteAction', {
+                detail: { message: `> INTERACTION: [${target.tagName}] ${target.textContent.trim().substring(0, 10)}...` }
+            }));
+        }
+    });
+
+    // 3. Session Uptime
+    function updateUptime() {
+        if (!teleUptime) return;
+        const diff = Math.floor((Date.now() - sessionStartTime) / 1000);
+        const mins = Math.floor(diff / 60);
+        const secs = diff % 60;
+        teleUptime.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    setInterval(updateUptime, 1000);
+
+    // 4. OS Detection
+    if (teleOS) {
+        let os = "OS_UNKNOWN";
+        const platform = window.navigator.platform.toLowerCase();
+        if (platform.includes('win')) os = "WIN_KERNEL_6.X";
+        if (platform.includes('mac')) os = "DARWIN_X86";
+        if (platform.includes('linux')) os = "GNU_LINUX";
+        if (/android/i.test(navigator.userAgent)) os = "ANDROID_VM";
+        if (/iphone|ipad|ipod/i.test(navigator.userAgent)) os = "IOS_CORE";
+
+        teleOS.textContent = os;
+    }
+
+    // --- 8. FINALIZE ---
+    document.dispatchEvent(new CustomEvent('siteAction', {
+        detail: { message: '> Global Data Sync: COMPLETE.' }
+    }));
 });

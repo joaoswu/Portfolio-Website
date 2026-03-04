@@ -182,25 +182,25 @@
             </div>
 
             <!-- System Telemetry Dashboard -->
-            <div class="bento-item telemetry-card interactable" data-tooltip="Live System Metrics">
+            <div class="bento-item telemetry-card interactable" data-tooltip="Global Site Metrics">
                 <div class="telemetry-header">
                     <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                     </svg>
-                    <span>SYSTEM.TELEMETRY</span>
+                    <span>SYSTEM.TELEMETRY // GLOBAL_SYNC</span>
                 </div>
                 <div class="telemetry-grid">
                     <div class="tele-item">
-                        <div class="tele-label">INTERACTIONS</div>
-                        <div class="tele-value" id="tele-clicks">0000</div>
+                        <div class="tele-label">GLOBAL_INTERACTIONS</div>
+                        <div class="tele-value" id="global-clicks">00000</div>
                     </div>
                     <div class="tele-item">
-                        <div class="tele-label">UPTIME</div>
+                        <div class="tele-label">SESSION_CLICKS</div>
+                        <div class="tele-value" id="session-clicks">0000</div>
+                    </div>
+                    <div class="tele-item">
+                        <div class="tele-label">SYSTEM_UPTIME</div>
                         <div class="tele-value" id="tele-uptime">00:00</div>
-                    </div>
-                    <div class="tele-item">
-                        <div class="tele-label">THROUGHPUT</div>
-                        <div class="tele-value"><span id="tele-traffic">0.0</span> <small>KB/s</small></div>
                     </div>
                     <div class="tele-item">
                         <div class="tele-label">OS_KERNEL</div>

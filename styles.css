@@ -1139,7 +1139,7 @@ body.light-mode .bento-item[data-tooltip]::before {
 
 /* Telemetry Card */
 .telemetry-card {
-    grid-column: span 1;
+    grid-column: span 2;
     grid-row: span 1;
 }
 
