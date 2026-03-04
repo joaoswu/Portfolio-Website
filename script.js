@@ -914,38 +914,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animateTitle();
 
-    // --- 12. DAILY QUOTE LOGIC (ENCRYPTION DECODING) ---
-
-    const quoteTextEl = document.getElementById('quote-text');
-    const quoteAuthorEl = document.getElementById('quote-author');
-
-    async function fetchDailyQuote() {
-        try {
-            const response = await fetch('https://api.allorigins.win/raw?url=https://zenquotes.io/api/today');
-            const data = await response.json();
-
-            if (data && data[0]) {
-                const quote = data[0].q;
-                const author = data[0].a;
-
-                if (quoteTextEl) {
-                    await typeText(quoteTextEl, quote, 30);
-                }
-                if (quoteAuthorEl) {
-                    quoteAuthorEl.textContent = author;
-                }
-            }
-        } catch (error) {
-            console.error('Failed to fetch quote:', error);
-            if (quoteTextEl) quoteTextEl.textContent = 'STAY HUNGRY, STAY FOOLISH.';
-            if (quoteAuthorEl) quoteAuthorEl.textContent = 'STEVE JOBS';
-        }
-    }
-
-    setTimeout(fetchDailyQuote, 2500);
-
-    // --- 13. FINALIZE ---
-    document.dispatchEvent(new CustomEvent('siteAction', {
-        detail: { message: '> DAILY_TRANSMISSION: DECODED.' }
-    }));
 });
