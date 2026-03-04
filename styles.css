@@ -1137,13 +1137,17 @@ body.light-mode .bento-item[data-tooltip]::before {
     }
 }
 
-/* Telemetry Card */
-.telemetry-card {
+/* Quote Card (Daily Instruction) */
+.quote-card {
     grid-column: span 2;
     grid-row: span 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
 }
 
-.telemetry-header {
+.quote-header {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1151,38 +1155,54 @@ body.light-mode .bento-item[data-tooltip]::before {
     font-size: 0.75rem;
     font-family: var(--font-mono);
     letter-spacing: 1px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
-.telemetry-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px 10px;
-}
-
-.tele-item {
+.quote-content {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
-.tele-label {
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-}
-
-.tele-value {
-    font-size: 0.9rem;
-    font-family: var(--font-mono);
+.quote-text {
+    font-size: 1.2rem;
+    line-height: 1.4;
+    font-weight: 500;
     color: var(--text-primary);
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.tele-value small {
-    font-size: 0.6rem;
-    opacity: 0.5;
+.quote-author {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    opacity: 0.8;
+}
+
+.quote-author::before {
+    content: "// ORIGIN: ";
+}
+
+.quote-footer {
+    margin-top: 15px;
+    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-blink {
+    width: 6px;
+    height: 6px;
+    background: var(--text-primary);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
 }
 
 /* Responsive Grid */

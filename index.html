@@ -181,31 +181,20 @@
                 <div class="weather-desc" id="weather-desc">Loading...</div>
             </div>
 
-            <!-- System Telemetry Dashboard -->
-            <div class="bento-item telemetry-card interactable" data-tooltip="Global Site Metrics">
-                <div class="telemetry-header">
+            <!-- Daily Instruction (Quote Card) -->
+            <div class="bento-item quote-card interactable" data-tooltip="Daily Decrypted Transmission">
+                <div class="quote-header">
                     <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
-                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
-                    <span>SYSTEM.TELEMETRY // GLOBAL_SYNC</span>
+                    <span>SECURE.TRANSMISSION // DAILY_QUOTIDIAN</span>
                 </div>
-                <div class="telemetry-grid">
-                    <div class="tele-item">
-                        <div class="tele-label">GLOBAL_INTERACTIONS</div>
-                        <div class="tele-value" id="global-clicks">00000</div>
-                    </div>
-                    <div class="tele-item">
-                        <div class="tele-label">SESSION_CLICKS</div>
-                        <div class="tele-value" id="session-clicks">0000</div>
-                    </div>
-                    <div class="tele-item">
-                        <div class="tele-label">SYSTEM_UPTIME</div>
-                        <div class="tele-value" id="tele-uptime">00:00</div>
-                    </div>
-                    <div class="tele-item">
-                        <div class="tele-label">OS_KERNEL</div>
-                        <div class="tele-value" id="tele-os">DETECTING...</div>
-                    </div>
+                <div class="quote-content">
+                    <div class="quote-text" id="quote-text">DECRYPTING...</div>
+                    <div class="quote-author" id="quote-author"></div>
+                </div>
+                <div class="quote-footer">
+                    <span class="status-blink"></span> ENCRYPTION_ACTIVE
                 </div>
             </div>
 
