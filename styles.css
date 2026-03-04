@@ -1179,7 +1179,7 @@ h3 {
     grid-row: span 1;
 }
 
-/* Responsive Grid */
+/* Responsive Grid & Mobile Optimization */
 @media (max-width: 900px) {
     .bento-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1190,8 +1190,6 @@ h3 {
 
     .profile-card {
         grid-column: span 2;
-        grid-row: span 1;
-        /* Shorter for better mobile flow */
     }
 
     .spotify-card,
@@ -1205,32 +1203,6 @@ h3 {
     .github-commits-card {
         grid-column: span 2;
     }
-}
-
-/* Single Column earlier for ALL small devices */
-@media (max-width: 650px) {
-    .bento-grid {
-        grid-template-columns: 1fr !important;
-        grid-template-rows: auto !important;
-    }
-
-    .bento-item {
-        grid-column: span 1 !important;
-        grid-row: span 1 !important;
-        min-height: 140px;
-    }
-
-    .profile-card {
-        padding: 40px 24px !important;
-        min-height: auto;
-    }
-
-    .name {
-        font-size: 2.8rem !important;
-    }
-}
-
-@media (max-width: 900px) {
 
     /* Hide custom UI elements that interfere with touch */
     .cursor,
@@ -1241,5 +1213,116 @@ h3 {
 
     * {
         cursor: auto !important;
+    }
+}
+
+/* Single Column & Enhanced Mobile Adjustments */
+@media (max-width: 650px) {
+    .container {
+        padding: 40px 10px;
+    }
+
+    .bento-grid {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto !important;
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .bento-item {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+        min-height: auto !important;
+        padding: 24px 20px;
+    }
+
+    .bento-item[data-tooltip]::before {
+        display: none !important;
+        /* Disable hover tooltips on mobile */
+    }
+
+    .profile-card {
+        padding: 35px 20px !important;
+    }
+
+    .name {
+        font-size: 2.4rem !important;
+    }
+
+    /* Internal Flex container adjustments for better mobile fit */
+    .discord-status-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 45px 20px 20px 20px;
+    }
+
+    .card-overlay-stats {
+        top: 15px;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .discord-profile {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .status-text.name {
+        font-size: 2rem;
+    }
+
+    .spotify-card {
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 15px;
+        padding: 25px 20px;
+    }
+
+    .music-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .wakatime-card,
+    .skills-card {
+        padding: 20px;
+    }
+
+    .waka-lang-info {
+        font-size: 0.75rem;
+    }
+}
+
+/* Tiny screens (iPhone SE, old devices) */
+@media (max-width: 400px) {
+    .container {
+        padding: 20px 5px;
+    }
+
+    .bento-grid {
+        padding: 5px;
+        gap: 10px;
+    }
+
+    .bento-item {
+        padding: 20px 15px;
+    }
+
+    .name {
+        font-size: 2rem !important;
+    }
+
+    .status-text.name {
+        font-size: 1.6rem;
+    }
+
+    .spotify-song {
+        font-size: 1.1rem;
+    }
+
+    .weather-temp,
+    .clock-time {
+        font-size: 1.6rem;
     }
 }
