@@ -88,6 +88,11 @@ body:not(.light-mode) {
     /* Hide default cursor */
 }
 
+html {
+    overflow-x: hidden;
+    width: 100%;
+}
+
 body {
     background-color: var(--bg-color);
     color: var(--text-primary);
@@ -95,7 +100,6 @@ body {
     margin: 0;
     overflow-x: hidden;
     overflow-y: auto;
-    /* Enable scrolling */
     transition: background-color 0.4s ease, color 0.4s ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -104,9 +108,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    /* Better for flowing content */
     justify-content: flex-start;
-    /* Reset from center to allow scroll start at top */
     align-items: center;
     position: relative;
 }
@@ -401,12 +403,13 @@ body {
     position: relative;
     z-index: 10;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
     min-height: 100vh;
-    padding: 80px 0;
-    /* Add top/bottom space for toggler and marquee */
+    padding: 80px 15px;
+    /* Added side padding for mobile safety */
 }
 
 /* Theme Toggler */
