@@ -81,6 +81,38 @@
         </form>
     </aside>
 
+    <!-- Customization Settings Sidebar (Desktop Only) -->
+    <div id="settings-trigger" class="settings-trigger interactable">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </div>
+    <aside id="settings-sidebar" class="settings-sidebar">
+        <div class="settings-header">
+            <h3>Theme Settings</h3>
+            <p>Customize your dashboard.</p>
+        </div>
+        <div class="settings-body">
+            <div class="color-picker-group">
+                <label for="color-bg">Background</label>
+                <input type="color" id="color-bg" value="#050505">
+            </div>
+            <div class="color-picker-group">
+                <label for="color-card">Card Body</label>
+                <input type="color" id="color-card" value="#0a0a0f">
+            </div>
+            <div class="color-picker-group">
+                <label for="color-border">Borders</label>
+                <input type="color" id="color-border" value="#222222">
+            </div>
+            <div class="color-picker-group">
+                <label for="color-text">Primary Text</label>
+                <input type="color" id="color-text" value="#ffffff">
+            </div>
+            <button id="reset-theme-btn" class="interactable">Reset to Default</button>
+        </div>
+    </aside>
+
     <!-- Secret Admin Log (Hidden) -->
     <div id="admin-log-modal" class="admin-log-modal hidden">
         <div class="admin-log-content interactable">
