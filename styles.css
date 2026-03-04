@@ -314,12 +314,12 @@ body:hover .cursor-ring {
     position: absolute;
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 40%, transparent 70%);
+    background: radial-gradient(circle, var(--glow-color, rgba(255, 255, 255, 0.04)) 0%, rgba(255, 255, 255, 0.01) 40%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
     transform: translate(-50%, -50%);
     z-index: 1;
-    transition: left 0.1s ease-out, top 0.1s ease-out;
+    transition: left 0.1s ease-out, top 0.1s ease-out, background 0.5s ease;
 }
 
 .container {

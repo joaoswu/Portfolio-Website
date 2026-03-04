@@ -149,13 +149,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Log hover actions
             let targetName = "element";
-            if (el.classList.contains('github-commits-card')) targetName = "GitHub activity";
-            else if (el.classList.contains('music-card')) targetName = "audio interface";
-            else if (el.classList.contains('discord-status-card')) targetName = "Discord status";
-            else if (el.classList.contains('spotify-card')) targetName = "Spotify activity";
-            else if (el.classList.contains('wakatime-card')) targetName = "WakaTime stats";
-            else if (el.classList.contains('action-log-card')) targetName = "system log";
-            else if (el.id === 'theme-toggler') targetName = "theme override";
+            let glowColor = "rgba(255, 255, 255, 0.04)"; // Default
+
+            if (el.classList.contains('github-commits-card') || el.classList.contains('github')) {
+                targetName = "GitHub";
+                glowColor = "rgba(192, 132, 252, 0.15)"; // Purple
+            }
+            else if (el.classList.contains('music-card')) {
+                targetName = "audio interface";
+                glowColor = "rgba(255, 255, 255, 0.1)"; // Brighter white
+            }
+            else if (el.classList.contains('discord-status-card') || el.classList.contains('discord-invite') || el.id === 'discord-card') {
+                targetName = "Discord";
+                glowColor = "rgba(88, 101, 242, 0.15)"; // Discord Blue
+            }
+            else if (el.classList.contains('spotify-card')) {
+                targetName = "Spotify";
+                glowColor = "rgba(29, 185, 84, 0.15)"; // Spotify Green
+            }
+            else if (el.classList.contains('wakatime-card')) {
+                targetName = "WakaTime stats";
+                glowColor = "rgba(0, 0, 0, 0.2)"; // Darker for stats
+            }
+            else if (el.classList.contains('tiktok')) {
+                targetName = "TikTok";
+                glowColor = "rgba(255, 0, 80, 0.15)"; // TikTok Red/Pink
+            }
+            else if (el.classList.contains('action-log-card')) {
+                targetName = "system log";
+                glowColor = "rgba(255, 255, 255, 0.08)";
+            }
+            else if (el.id === 'theme-toggler') {
+                targetName = "theme override";
+                glowColor = "rgba(255, 255, 0, 0.1)"; // Yellowish
+            }
+
+            // Update mouse glow color
+            if (mouseGlow) {
+                mouseGlow.style.setProperty('--glow-color', glowColor);
+            }
 
             if (targetName !== "element") {
                 document.dispatchEvent(new CustomEvent('siteAction', {
@@ -163,7 +195,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }));
             }
         });
-        el.addEventListener('mouseleave', () => cursorRing.classList.remove('hovering'));
+        el.addEventListener('mouseleave', () => {
+            cursorRing.classList.remove('hovering');
+            if (mouseGlow) {
+                mouseGlow.style.setProperty('--glow-color', 'rgba(255, 255, 255, 0.04)');
+            }
+        });
     });
 
     // --- 3. AMBIENT MOUSE GLOW ---
