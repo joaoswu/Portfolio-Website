@@ -1759,9 +1759,118 @@ body.light-mode .tiktok-card:hover {
     transform: scale(1.05);
 }
 
+/* Cursor Graveyard */
+.graveyard-subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 30px;
+    letter-spacing: 0.5px;
+}
+
+.graveyard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--grid-gap);
+    margin-bottom: 30px;
+}
+
+.graveyard-card {
+    background: linear-gradient(135deg, rgba(88, 28, 135, 0.05) 0%, rgba(88, 28, 135, 0.01) 100%);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 12px;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.graveyard-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 10px 25px rgba(88, 28, 135, 0.15);
+}
+
+body.light-mode .graveyard-card:hover {
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.1);
+}
+
+.graveyard-icon {
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.4));
+}
+
+.graveyard-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.graveyard-value {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.graveyard-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* PC Specs Marquee */
+.specs-marquee {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 15px 0;
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.light-mode .specs-marquee {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+.specs-marquee .marquee-content {
+    display: inline-flex;
+    white-space: nowrap;
+    animation: marquee 30s linear infinite;
+}
+
+.specs-marquee .marquee-content span {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    padding: 0 30px;
+    letter-spacing: 1px;
+}
+
+.specs-marquee .marquee-content span::before {
+    content: "•";
+    color: var(--primary-color);
+    margin-right: 30px;
+    font-size: 1.2rem;
+}
+
 /* Responsive Grid & Mobile Optimization */
 @media (max-width: 900px) {
-    .bento-grid {
+
+    .bento-grid,
+    .tiktok-grid,
+    .graveyard-grid {
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: auto;
         max-width: 100%;
@@ -1806,7 +1915,9 @@ body.light-mode .tiktok-card:hover {
         padding: 40px 10px;
     }
 
-    .bento-grid {
+    .bento-grid,
+    .tiktok-grid,
+    .graveyard-grid {
         grid-template-columns: 1fr !important;
         grid-template-rows: auto !important;
         padding: 10px;
