@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. ENTRY SCREEN LOGIC ---
-    const entryScreen = document.getElementById('entry-screen');
+    const enterScreen = document.getElementById('enter-screen');
     const enterBtn = document.getElementById('enter-btn');
     const bgMusic = document.getElementById('bg-music');
+    const progressBar = document.getElementById('progress-bar');
+    const progressContainer = document.getElementById('progress-container');
+    const loadingText = document.getElementById('loading-text');
 
     // Typewriter Utility
     async function typeText(element, text, speed = 40) {
@@ -16,8 +19,22 @@ document.addEventListener('DOMContentLoaded', () => {
         element.classList.remove('typing-active');
     }
 
-    if (enterBtn && entryScreen) {
+    if (enterBtn && enterScreen) {
         enterBtn.addEventListener('click', () => {
+            // Hide the button
+            enterBtn.style.display = 'none';
+
+            // Show loading text and progress bar
+            if (loadingText) {
+                loadingText.textContent = 'LOADING';
+                loadingText.setAttribute('data-text', 'LOADING');
+            }
+            if (progressContainer) {
+                progressContainer.style.display = 'block';
+                void progressContainer.offsetWidth; // trigger reflow
+                progressContainer.style.opacity = '1';
+            }
+
             // Play Audio early so it loads during the fake loading bar
             if (bgMusic) {
                 bgMusic.volume = 0.5; // Start at reasonable volume
@@ -50,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     setTimeout(() => {
                         // Enter the site
-                        entryScreen.classList.add('hidden');
+                        enterScreen.classList.add('hidden');
                         document.body.classList.remove('loading');
 
                         // --- START ADVANCED BOOT SEQUENCE ---
