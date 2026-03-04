@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // CUSTOMIZATION SECTION
     // ==========================================
     const MY_MOOD = "Alive, I Guess.";
+    const TIKTOK_FOLLOWERS_COUNT = 1500; // Type your numbers here
+    const TIKTOK_LIKES_COUNT = 32500;
+    const TIKTOK_VIDEOS_COUNT = 24;
     // ==========================================
 
     // --- LOAD CUSTOM THEME ---
@@ -1016,46 +1019,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tiktokFollowersEl = document.getElementById('tiktok-followers');
     const tiktokLikesEl = document.getElementById('tiktok-likes');
     const tiktokVideosEl = document.getElementById('tiktok-videos');
-    let hasFetchedTikTok = false;
-
-    async function fetchTikTokStats() {
-        if (hasFetchedTikTok) return;
-        hasFetchedTikTok = true;
-
-        try {
-            // Use allorigins as a free CORS proxy
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.tiktok.com/@joao.sw')}`;
-            const response = await fetch(proxyUrl);
-            const data = await response.json();
-
-            // The HTML string is in data.contents
-            const html = data.contents;
-            if (!html) throw new Error("No HTML returned");
-
-            // Extract the Universal Data JSON from the script tag
-            const match = html.match(/<script id="__UNIVERSAL_DATA_FOR_REHYDRATION__"[^>]*>([^<]+)<\/script>/);
-            if (match && match[1]) {
-                const universalData = JSON.parse(match[1]);
-
-                // Navigate TikTok's deeply nested JSON structure
-                const userObjKey = Object.keys(universalData.__DEFAULT_SCOPE__).find(k => k.includes('user-detail'));
-                if (userObjKey) {
-                    const stats = universalData.__DEFAULT_SCOPE__[userObjKey].userInfo.stats;
-
-                    if (stats.followerCount !== undefined) animateTikTokCounter(tiktokFollowersEl, stats.followerCount);
-                    if (stats.heartCount !== undefined) animateTikTokCounter(tiktokLikesEl, stats.heartCount);
-                    if (stats.videoCount !== undefined) animateTikTokCounter(tiktokVideosEl, stats.videoCount);
-                    return;
-                }
-            }
-            throw new Error("Could not parse TikTok data");
-        } catch (error) {
-            console.error("TikTok Fetch Error:", error);
-            if (tiktokFollowersEl) tiktokFollowersEl.textContent = 'N/A';
-            if (tiktokLikesEl) tiktokLikesEl.textContent = 'N/A';
-            if (tiktokVideosEl) tiktokVideosEl.textContent = 'N/A';
-        }
-    }
+    let hasAnimatedTikTok = false;
 
     function animateTikTokCounter(el, target) {
         if (!el || isNaN(target)) return;
@@ -1073,7 +1037,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (current >= 1000000) {
                 el.textContent = (current / 1000000).toFixed(1) + 'M';
-            } else if (current >= 10000) {
+            } else if (current >= 1000) {
                 el.textContent = (current / 1000).toFixed(1) + 'K';
             } else {
                 el.textContent = Math.floor(current).toLocaleString();
@@ -1086,7 +1050,12 @@ document.addEventListener('DOMContentLoaded', () => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('scrolled-in');
-                    fetchTikTokStats();
+                    if (!hasAnimatedTikTok) {
+                        hasAnimatedTikTok = true;
+                        animateTikTokCounter(tiktokFollowersEl, TIKTOK_FOLLOWERS_COUNT);
+                        animateTikTokCounter(tiktokLikesEl, TIKTOK_LIKES_COUNT);
+                        animateTikTokCounter(tiktokVideosEl, TIKTOK_VIDEOS_COUNT);
+                    }
                     observer.unobserve(entry.target);
                 }
             });
