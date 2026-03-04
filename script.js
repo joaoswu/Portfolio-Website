@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // CUSTOMIZATION SECTION
     // ==========================================
-    const MY_MOOD = "Consistency is the DNA of mastery.";
+    const MY_MOOD = "Alive, I Guess.";
     // ==========================================
 
     // --- 1. ENTRY SCREEN LOGIC ---
