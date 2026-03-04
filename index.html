@@ -181,20 +181,33 @@
                 <div class="weather-desc" id="weather-desc">Loading...</div>
             </div>
 
-            <!-- GitHub Commits -->
-            <a href="https://github.com/joaoswu" target="_blank" class="bento-item github-commits-card interactable"
-                data-tooltip="Latest Code Activity">
-                <div class="github-header">
-                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
-                        <path
-                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-                        </path>
+            <!-- System Telemetry Dashboard -->
+            <div class="bento-item telemetry-card interactable" data-tooltip="Live System Metrics">
+                <div class="telemetry-header">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                     </svg>
-                    <span>Latest Activity</span>
+                    <span>SYSTEM.TELEMETRY</span>
                 </div>
-                <div class="commit-message" id="commit-message">Fetching stats...</div>
-                <div class="commit-repo" id="commit-repo"></div>
-            </a>
+                <div class="telemetry-grid">
+                    <div class="tele-item">
+                        <div class="tele-label">INTERACTIONS</div>
+                        <div class="tele-value" id="tele-clicks">0000</div>
+                    </div>
+                    <div class="tele-item">
+                        <div class="tele-label">UPTIME</div>
+                        <div class="tele-value" id="tele-uptime">00:00</div>
+                    </div>
+                    <div class="tele-item">
+                        <div class="tele-label">THROUGHPUT</div>
+                        <div class="tele-value"><span id="tele-traffic">0.0</span> <small>KB/s</small></div>
+                    </div>
+                    <div class="tele-item">
+                        <div class="tele-label">OS_KERNEL</div>
+                        <div class="tele-value" id="tele-os">DETECTING...</div>
+                    </div>
+                </div>
+            </div>
 
             <!-- WakaTime Stats -->
             <div class="bento-item wakatime-card interactable" data-tooltip="Coding Statistics">
