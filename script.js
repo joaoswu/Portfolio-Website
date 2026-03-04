@@ -701,7 +701,8 @@ document.addEventListener('DOMContentLoaded', () => {
             analyser.connect(audioCtx.destination);
         }
 
-        analyser.fftSize = 256;
+        // Density refinement: 1024 on PC for many bars, 256 on mobile for stability
+        analyser.fftSize = !isTouchDevice ? 1024 : 256;
         const bufferLength = analyser.frequencyBinCount;
         const visualizerDataArray = new Uint8Array(bufferLength);
 
@@ -715,12 +716,13 @@ document.addEventListener('DOMContentLoaded', () => {
             analyser.getByteFrequencyData(visualizerDataArray);
             visualizerCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
 
-            const barWidth = (visualizerCanvas.width / bufferLength) * 2.5;
+            const barWidth = (visualizerCanvas.width / bufferLength) * (!isTouchDevice ? 1.5 : 2.5);
             let barHeight;
             let x = 0;
 
             for (let i = 0; i < bufferLength; i++) {
-                barHeight = visualizerDataArray[i] / 2;
+                // Height refinement: Reach higher on PC (/1.4 vs /2)
+                barHeight = !isTouchDevice ? (visualizerDataArray[i] / 1.4) : (visualizerDataArray[i] / 2);
                 const isLightMode = document.body.classList.contains('light-mode');
 
                 if (!isTouchDevice) {
