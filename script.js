@@ -4,9 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // CUSTOMIZATION SECTION
     // ==========================================
     const MY_MOOD = "Alive, I Guess.";
-    const TIKTOK_FOLLOWERS_COUNT = 1500; // Type your numbers here
-    const TIKTOK_LIKES_COUNT = 32500;
-    const TIKTOK_VIDEOS_COUNT = 24;
+    const TIKTOK_FOLLOWERS_COUNT = 47659; // Type your numbers here
+    const TIKTOK_LIKES_COUNT = 7700000;
+    const TIKTOK_VIDEOS_COUNT = 369;
     // ==========================================
 
     // --- LOAD CUSTOM THEME ---
