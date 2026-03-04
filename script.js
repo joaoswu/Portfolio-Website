@@ -433,6 +433,32 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    function updateSpotifyProgress(start, end) {
+        if (spotifyInterval) clearInterval(spotifyInterval);
+
+        const progressBar = document.getElementById('spotify-progress-bar');
+        const progressContainer = document.getElementById('spotify-progress-container');
+        if (!progressBar || !progressContainer) return;
+
+        progressContainer.style.display = 'block';
+
+        function update() {
+            const now = Date.now();
+            const total = end - start;
+            const current = now - start;
+            const progress = Math.min(Math.max((current / total) * 100, 0), 100);
+
+            progressBar.style.width = `${progress}%`;
+
+            if (now >= end) {
+                clearInterval(spotifyInterval);
+            }
+        }
+
+        update();
+        spotifyInterval = setInterval(update, 1000);
+    }
+
     function updateLanyardData(data) {
         const status = data.discord_status;
 
@@ -490,6 +516,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 spotifyAlbumArt.src = data.spotify.album_art_url;
                 albumArtContainer.style.display = 'block';
             }
+            if (data.spotify.timestamps) {
+                updateSpotifyProgress(data.spotify.timestamps.start, data.spotify.timestamps.end);
+            }
         } else {
             if (spotifySong && spotifyArtist) {
                 spotifySong.textContent = 'Not playing';
@@ -498,6 +527,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (albumArtContainer) {
                 albumArtContainer.style.display = 'none';
             }
+            if (spotifyInterval) clearInterval(spotifyInterval);
+            const progressContainer = document.getElementById('spotify-progress-container');
+            if (progressContainer) progressContainer.style.display = 'none';
         }
     }
 
