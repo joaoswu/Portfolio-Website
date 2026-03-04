@@ -425,8 +425,8 @@ body {
 .bento-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(6, 125px);
-    /* 6 rows for full-width action log and skills */
+    grid-template-rows: repeat(5, 125px);
+    /* 5 rows (Profile+Live, Dev+Social, Social+Clock+Audio, Skills) */
     gap: 12px;
     /* reduced space between cards */
     width: 100%;
@@ -992,60 +992,6 @@ body.light-mode .bento-item[data-tooltip]::before {
     transition: width 1s ease-out;
 }
 
-/* Interactive Action Log Card */
-.action-log-card {
-    grid-column: span 4;
-    grid-row: span 1;
-    background: var(--log-bg);
-    border: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    gap: 10px;
-    font-family: var(--font-mono);
-}
-
-.log-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 1px dashed var(--border-color);
-    padding-bottom: 10px;
-    margin-bottom: 5px;
-}
-
-.log-content {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    overflow-y: hidden;
-    height: 100%;
-    justify-content: flex-end;
-    /* Keep newest at bottom */
-}
-
-.log-entry {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    line-height: 1.3;
-    word-break: break-word;
-    animation: typeLog 0.3s ease-out forwards;
-    opacity: 0;
-    transform: translateY(10px);
-}
-
-.log-entry.highlight {
-    color: var(--text-primary);
-}
-
-.log-entry.code-green {
-    color: #4ade80;
-    /* Hacker green */
-}
 
 @keyframes typeLog {
     to {

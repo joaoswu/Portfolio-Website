@@ -115,15 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             }, index * 80); // 80ms stagger
                         });
 
-                        // Dispatch event for the logger
-                        document.dispatchEvent(new CustomEvent('siteAction', {
-                            detail: { message: '> Authentication bypass successful.' }
-                        }));
-                        setTimeout(() => {
-                            document.dispatchEvent(new CustomEvent('siteAction', {
-                                detail: { message: '> Welcome, guest.' }
-                            }));
-                        }, 800);
 
                     }, 400); // small pause at 100% before entering
                 }
@@ -177,40 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
         draw();
     }
 
-    // --- 1.5 SYSTEM LOG WIDGET ---
-    const actionLog = document.getElementById('action-log');
-    if (actionLog) {
-        let lastLogMessage = ''; // Keep track of the last logged message
-
-        // Listen for custom events across the site
-        document.addEventListener('siteAction', (e) => {
-            const msg = e.detail.message;
-            const isHighlight = e.detail.highlight;
-            const isCodeGreen = e.detail.codeGreen;
-
-            // Only log if it's a new unique action to prevent hover spam
-            if (msg === lastLogMessage) return;
-            lastLogMessage = msg;
-
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
-            if (isHighlight) entry.classList.add('highlight');
-            if (isCodeGreen) entry.classList.add('code-green');
-
-            // Add timestamp
-            const now = new Date();
-            const timeStr = `[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}]`;
-
-            entry.innerText = `${timeStr} ${msg}`;
-
-            actionLog.appendChild(entry);
-
-            // Keep only the last 5 logs to prevent overflow
-            while (actionLog.childElementCount > 6) { // 6 because of the hardcoded 2 in HTML
-                actionLog.removeChild(actionLog.firstChild);
-            }
-        });
-    }
 
     // --- 2. CUSTOM CYBER CURSOR & TARGETING RETICLE ---
     const cursor = document.getElementById('cursor');
@@ -310,49 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('mouseenter', () => {
             cursor.classList.add('hovering');
 
-            // Log hover actions
-            let targetName = "element";
-            let glowColor = "rgba(255, 255, 255, 0.04)"; // Default
-
-            if (el.classList.contains('github-commits-card') || el.classList.contains('github')) {
-                targetName = "GitHub";
-                glowColor = "rgba(192, 132, 252, 0.15)"; // Purple
-            }
-            else if (el.classList.contains('music-card')) {
-                targetName = "audio interface";
-                glowColor = "rgba(255, 255, 255, 0.1)"; // Brighter white
-            }
-            else if (el.classList.contains('discord-status-card') || el.classList.contains('discord-invite') || el.id === 'discord-card') {
-                targetName = "Discord";
-                glowColor = "rgba(88, 101, 242, 0.15)"; // Discord Blue
-            }
-            else if (el.classList.contains('spotify-card')) {
-                targetName = "Spotify";
-                glowColor = "rgba(29, 185, 84, 0.15)"; // Spotify Green
-            }
-            else if (el.classList.contains('wakatime-card')) {
-                targetName = "WakaTime stats";
-                glowColor = "rgba(0, 0, 0, 0.2)"; // Darker for stats
-            }
-            else if (el.classList.contains('tiktok')) {
-                targetName = "TikTok";
-                glowColor = "rgba(255, 0, 80, 0.15)"; // TikTok Red/Pink
-            }
-            else if (el.classList.contains('action-log-card')) {
-                targetName = "system log";
-                glowColor = "rgba(255, 255, 255, 0.08)";
-            }
-            else if (el.id === 'theme-toggler') {
-                targetName = "theme override";
-                glowColor = "rgba(255, 255, 0, 0.1)"; // Yellowish
-            }
-
-
-            if (targetName !== "element") {
-                document.dispatchEvent(new CustomEvent('siteAction', {
-                    detail: { message: `> Scanning ${targetName}...` }
-                }));
-            }
         });
         el.addEventListener('mouseleave', () => {
             cursor.classList.remove('hovering');
@@ -454,16 +368,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 bgMusic.play().catch(e => console.log("Audio play failed:", e));
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
-                document.dispatchEvent(new CustomEvent('siteAction', {
-                    detail: { message: '> Audio playback initialized.' }
-                }));
             } else {
                 bgMusic.pause();
                 playIcon.style.display = 'block';
                 pauseIcon.style.display = 'none';
-                document.dispatchEvent(new CustomEvent('siteAction', {
-                    detail: { message: '> Audio playback paused.' }
-                }));
             }
         });
 
@@ -472,9 +380,6 @@ document.addEventListener('DOMContentLoaded', () => {
             bgMusic.volume = volumeSlider.value / 100;
             volumeSlider.addEventListener('change', (e) => {
                 const vol = Math.round(e.target.value);
-                document.dispatchEvent(new CustomEvent('siteAction', {
-                    detail: { message: `> Audio volume set to ${vol}%.` }
-                }));
             });
             volumeSlider.addEventListener('input', (e) => {
                 bgMusic.volume = e.target.value / 100;
