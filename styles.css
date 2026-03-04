@@ -425,8 +425,8 @@ body {
 .bento-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 125px);
-    /* reduced heights to compress overall size */
+    grid-template-rows: repeat(5, 125px);
+    /* changed to 5 rows to allow wide skills marquee */
     gap: 12px;
     /* reduced space between cards */
     width: 100%;
@@ -1145,7 +1145,7 @@ body.light-mode .bento-item[data-tooltip]::before {
 
 /* Skills Card */
 .skills-card {
-    grid-column: span 2;
+    grid-column: span 4;
     grid-row: span 1;
 }
 
