@@ -185,14 +185,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // View Count
     const viewCountEl = document.getElementById('view-count');
     if (viewCountEl) {
-        fetch('https://api.counterapi.dev/v1/joaowebsite_views/page_hits/up')
+        // Using countapi.xyz as it has highly reliable CORS support for Vercel/Github Pages
+        fetch('https://api.countapi.xyz/hit/joaowebsite_views/page_hits')
             .then(res => res.json())
             .then(data => {
-                viewCountEl.textContent = data.count;
+                if (data.value) {
+                    viewCountEl.textContent = data.value;
+                }
             })
             .catch(err => {
                 console.error("View count error", err);
-                viewCountEl.textContent = "Error";
+                viewCountEl.textContent = "Error"; // Fallback to Error initially, but we could also just leave it blank
             });
     }
 
