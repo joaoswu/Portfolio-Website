@@ -14,48 +14,61 @@
 
 /* Light Mode Overrides */
 body.light-mode {
-    --bg-color: #f0f0f5;
+    --bg-color: #f8f9fa;
     --card-bg: rgba(255, 255, 255, 0.7);
-    --border-color: rgba(0, 0, 0, 0.1);
-    --hover-bg: rgba(255, 255, 255, 0.9);
-    --text-primary: #111111;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --hover-bg: rgba(255, 255, 255, 0.95);
+    --text-primary: #1a1a1a;
     --text-secondary: #555555;
-    --text-muted: #888888;
-    --log-bg: rgba(255, 255, 255, 0.8);
-    background-image: none;
+    --text-muted: #999999;
+    --log-bg: rgba(255, 255, 255, 0.6);
+    background-image:
+        radial-gradient(at 0% 0%, rgba(255, 255, 255, 1) 0, transparent 50%),
+        radial-gradient(at 50% 0%, rgba(230, 230, 250, 0.2) 0, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(255, 255, 255, 1) 0, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(240, 248, 255, 0.3) 0, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(255, 255, 255, 1) 0, transparent 50%);
+    background-color: var(--bg-color);
 }
 
 body.light-mode .scanlines::before {
-    background: linear-gradient(rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.3) 50%);
-    background-size: 100% 2px, 3px 100%;
+    background: transparent !important;
 }
 
 body.light-mode .background-grid {
     background-image:
-        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-    box-shadow: inset 0 0 150px #fff;
+        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    box-shadow: none;
+    opacity: 0.5;
 }
 
 body.light-mode .cursor {
     background: #000;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 body.light-mode .cursor-ring {
-    border-color: rgba(0, 0, 0, 0.3);
+    border-color: rgba(0, 0, 0, 0.15);
 }
 
 body.light-mode .mouse-glow {
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.01) 40%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.005) 40%, transparent 70%);
 }
 
 body.light-mode .bento-item {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 body.light-mode .profile-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 100%);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+body.light-mode .cursor,
+body.light-mode .cursor-ring {
+    mix-blend-mode: normal;
 }
 
 /* Dark Mode specific background */
@@ -63,43 +76,6 @@ body:not(.light-mode) {
     background-image: radial-gradient(circle at center, #0a0a14 0%, #000 100%);
 }
 
-body.light-mode .scanlines::before {
-    background: linear-gradient(rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.3) 50%);
-    background-size: 100% 2px, 3px 100%;
-}
-
-body.light-mode .background-grid {
-    background-image:
-        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-    box-shadow: inset 0 0 150px #fff;
-}
-
-body.light-mode .cursor {
-    background: #000;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-body.light-mode .cursor-ring {
-    border-color: rgba(0, 0, 0, 0.3);
-}
-
-body.light-mode .mouse-glow {
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.01) 40%, transparent 70%);
-}
-
-body.light-mode .bento-item {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-}
-
-body.light-mode .profile-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 100%);
-}
-
-body.light-mode .cursor,
-body.light-mode .cursor-ring {
-    mix-blend-mode: normal;
-}
 
 * {
     margin: 0;
