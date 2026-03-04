@@ -84,33 +84,13 @@ body:not(.light-mode) {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    cursor: none !important;
-    /* Hide default cursor */
 }
 
-html {
-    overflow-x: hidden;
-    width: 100%;
-}
-
-body {
-    background-color: var(--bg-color);
-    color: var(--text-primary);
-    font-family: 'Inter', sans-serif;
-    margin: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    transition: background-color 0.4s ease, color 0.4s ease;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    position: relative;
+/* Only hide default cursor on devices that support hover (precise pointers) */
+@media (hover: hover) and (pointer: fine) {
+    * {
+        cursor: none !important;
+    }
 }
 
 /* Custom Cyber Cursor */
