@@ -149,6 +149,72 @@ body {
     }
 }
 
+/* Tactical Targeting Reticle */
+.target-reticle {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    z-index: 9999;
+    transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+        height 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+        transform 0.1s linear;
+    will-change: transform, width, height;
+}
+
+.bracket {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid var(--text-primary);
+    opacity: 0.4;
+    transition: all 0.3s ease;
+}
+
+.bracket-tl {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
+
+.bracket-tr {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
+}
+
+.bracket-bl {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+}
+
+.bracket-br {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+}
+
+.target-reticle.locked {
+    width: 100px;
+    /* Placeholder, will be set by JS */
+    height: 100px;
+}
+
+.target-reticle.locked .bracket {
+    opacity: 1;
+    width: 20px;
+    height: 20px;
+    border-color: var(--text-primary);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
 /* Click to Enter Screen */
 .enter-screen {
     position: fixed;

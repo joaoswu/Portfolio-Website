@@ -142,9 +142,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 2. CUSTOM CYBER CURSOR ---
+    // --- 2. CUSTOM CYBER CURSOR & TARGETING RETICLE ---
     const cursor = document.getElementById('cursor');
     const cursorShape = document.getElementById('cursor-shape');
+    const reticle = document.getElementById('target-reticle');
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
@@ -153,9 +154,29 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastY = mouseY;
     let currentAngle = 0;
 
+    // Reticle State
+    let reticleX = mouseX;
+    let reticleY = mouseY;
+    let reticleW = 40;
+    let reticleH = 40;
+
+    let targetX = mouseX;
+    let targetY = mouseY;
+    let targetW = 40;
+    let targetH = 40;
+    let isLocked = false;
+
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+
+        // If not locked, target follows mouse
+        if (!isLocked) {
+            targetX = mouseX;
+            targetY = mouseY;
+            targetW = 40;
+            targetH = 40;
+        }
 
         // Follow perfectly
         cursor.style.left = mouseX + 'px';
@@ -163,37 +184,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function animateCursor() {
-        // Calculate velocity components
+        // --- CURSOR ROTATION ---
         const dx = mouseX - lastX;
         const dy = mouseY - lastY;
         const velocity = Math.sqrt(dx * dx + dy * dy);
 
-        // Only rotate if moving fast enough (deadzone to prevent jitter)
         if (velocity > 1) {
-            // Target angle (90 degrees offset to align the triangle top)
             const targetAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
-
-            // Smoothly interpolate angle
             let diff = targetAngle - currentAngle;
             while (diff < -180) diff += 360;
             while (diff > 180) diff -= 360;
             currentAngle += diff * 0.2;
         }
-
-        // Always apply transform to ensure it stays centered
         cursor.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg)`;
+
+        // --- RETICLE LERP ---
+        const lerpSpeed = isLocked ? 0.3 : 0.15;
+        reticleX += (targetX - reticleX) * lerpSpeed;
+        reticleY += (targetY - reticleY) * lerpSpeed;
+        reticleW += (targetW - reticleW) * lerpSpeed;
+        reticleH += (targetH - reticleH) * lerpSpeed;
+
+        reticle.style.width = `${reticleW}px`;
+        reticle.style.height = `${reticleH}px`;
+        reticle.style.transform = `translate(-50%, -50%) translate(${reticleX}px, ${reticleY}px)`;
 
         lastX = mouseX;
         lastY = mouseY;
-
         requestAnimationFrame(animateCursor);
     }
-    // Initialize position
-    cursor.style.transform = `translate(-50%, -50%) rotate(0deg)`;
     animateCursor();
 
-    // Hover states for cursor
-    const interactables = document.querySelectorAll('.interactable, .card');
+    // Lock-on Logic for Bento Items
+    const bentoCards = document.querySelectorAll('.bento-item');
+    bentoCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            const rect = card.getBoundingClientRect();
+            targetX = rect.left + rect.width / 2;
+            targetY = rect.top + rect.height / 2;
+            targetW = rect.width + 10;
+            targetH = rect.height + 10;
+            isLocked = true;
+            reticle.classList.add('locked');
+        });
+
+        card.addEventListener('mouseleave', () => {
+            isLocked = false;
+            reticle.classList.remove('locked');
+        });
+    });
+
+    // Hover states for cursor morphing
+    const interactables = document.querySelectorAll('.interactable, .bento-item');
     interactables.forEach(el => {
         el.addEventListener('mouseenter', () => {
             cursor.classList.add('hovering');
