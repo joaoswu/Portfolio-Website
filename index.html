@@ -104,6 +104,14 @@
             <!-- Discord Status (Lanyard) -->
             <div class="bento-item discord-status-card interactable" id="discord-card"
                 data-tooltip="Live Discord Status">
+                <!-- Views Overlay -->
+                <div class="card-overlay-stats" data-tooltip="Total Profile Views">
+                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <span id="view-count">...</span>
+                </div>
                 <div class="discord-profile">
                     <div class="avatar-container">
                         <img src="" alt="Discord Avatar" id="discord-avatar" class="discord-avatar"
@@ -155,11 +163,6 @@
                 <i class="icon">Discord</i>
             </a>
 
-            <!-- View Count -->
-            <div class="bento-item views-card interactable" data-tooltip="Total Profile Views">
-                <div class="view-label">Views</div>
-                <div class="view-count" id="view-count">...</div>
-            </div>
 
             <!-- Audio Control -->
             <div class="bento-item music-card interactable" data-tooltip="Local Audio Player">
