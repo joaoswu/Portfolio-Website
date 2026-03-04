@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let gainNode;
     let source;
     let dataArray;
-    let animationId;
 
     // Typewriter Utility
     async function typeText(element, text, speed = 40) {
@@ -73,8 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const bufferLength = analyser.frequencyBinCount;
                     dataArray = new Uint8Array(bufferLength);
 
-                    // Start drawing loop but only visually active when playing
-                    drawVisualizer();
                 }
 
                 bgMusic.volume = 0.8; // Set default volume louder
