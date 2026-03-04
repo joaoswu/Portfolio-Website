@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 1. ENTRY SCREEN LOGIC ---
     const enterScreen = document.getElementById('enter-screen');
     const enterBtn = document.getElementById('enter-btn');
+    const optimizeBtn = document.getElementById('optimize-btn'); // Optimize Trigger
     const bgMusic = document.getElementById('bg-music');
     const progressBar = document.getElementById('progress-bar');
     const progressContainer = document.getElementById('progress-container');
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- GLOBAL SELECTORS & STATE ---
     const bentoItems = document.querySelectorAll('.bento-item');
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches;
+    let isOptimized = false; // Add state tracker
 
     // Audio Visualizer Variables
     let audioCtx;
@@ -31,10 +33,24 @@ document.addEventListener('DOMContentLoaded', () => {
         element.classList.remove('typing-active');
     }
 
+    if (optimizeBtn) {
+        optimizeBtn.addEventListener('click', () => {
+            isOptimized = !isOptimized;
+            if (isOptimized) {
+                optimizeBtn.textContent = '[ OPTIMIZE : ON ]';
+                optimizeBtn.classList.add('active');
+            } else {
+                optimizeBtn.textContent = '[ OPTIMIZE : OFF ]';
+                optimizeBtn.classList.remove('active');
+            }
+        });
+    }
+
     if (enterBtn && enterScreen) {
         enterBtn.addEventListener('click', () => {
-            // Hide the button
+            // Hide the buttons
             enterBtn.style.display = 'none';
+            if (optimizeBtn) optimizeBtn.style.display = 'none';
 
             // Show loading text and progress bar
             if (loadingText) {
@@ -106,6 +122,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Enter the site
                         enterScreen.classList.add('hidden');
                         document.body.classList.remove('loading');
+
+                        // Apply Performance Optimizations
+                        if (isOptimized) {
+                            document.body.classList.add('optimized-mode');
+                        }
 
                         // --- START ADVANCED BOOT SEQUENCE ---
                         bentoItems.forEach((item, index) => {
@@ -615,6 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function animateNetwork() {
+        if (isOptimized) return; // KILLSWITCH for particles
         ctx_net.clearRect(0, 0, canvas.width, canvas.height);
         particles.forEach(p => p.update());
         for (let i = 0; i < particles.length; i++) {
@@ -679,6 +701,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 7. BOTTOM AUDIO VISUALIZER ---
     function setupVisualizer() {
+        if (isOptimized) return; // KILLSWITCH for Audio Visualizer Loop
+
         const visualizerCanvas = document.getElementById('music-visualizer');
         if (!visualizerCanvas || !bgMusic || window.audioVisualizerInitialized) return;
 

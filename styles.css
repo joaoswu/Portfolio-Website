@@ -311,6 +311,32 @@ body {
     left: 200%;
 }
 
+.optimize-btn {
+    background: transparent;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 8px 16px;
+    letter-spacing: 2px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    margin-top: -20px;
+}
+
+.optimize-btn.active {
+    color: #43b581;
+    /* Discord Green for ON */
+    border-style: solid;
+    border-color: rgba(67, 181, 129, 0.5);
+    background: rgba(67, 181, 129, 0.1);
+}
+
+.optimize-btn:hover {
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
 /* Loading Progress Bar */
 .progress-container {
     width: 250px;
@@ -401,6 +427,13 @@ body {
     }
 }
 
+/* Disable Heavy Graphics in Optimized Mode */
+body.optimized-mode .scanlines,
+body.optimized-mode .background-grid,
+body.optimized-mode #network-canvas,
+body.optimized-mode #music-visualizer {
+    display: none !important;
+}
 
 .container {
     position: relative;
