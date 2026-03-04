@@ -52,7 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     source = audioCtx.createMediaElementSource(bgMusic);
                     source.connect(analyser);
                     analyser.connect(audioCtx.destination);
-                    analyser.fftSize = 64; // Small for sharp bars
+                    analyser.fftSize = 256; // High frequency resolution
+                    analyser.smoothingTimeConstant = 0.85; // Smoother transitions
                     const bufferLength = analyser.frequencyBinCount;
                     dataArray = new Uint8Array(bufferLength);
 
@@ -156,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const barWidth = (width / bufferLength) * 2.5;
+            const barWidth = (width / bufferLength);
             let barHeight;
             let x = 0;
 
@@ -169,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fillStyle = isLight ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.5)';
 
                 // Draw mirrored bars or just standard frequency bars
-                ctx.fillRect(x, height - barHeight, barWidth - 2, barHeight);
+                ctx.fillRect(x, height - barHeight, barWidth - 1, barHeight);
                 x += barWidth;
             }
         }
