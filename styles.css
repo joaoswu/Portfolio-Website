@@ -7,15 +7,10 @@
     --text-secondary: #888888;
     --text-muted: #666666;
     --log-bg: #0a0a0a;
+    --container-padding: 15px;
     --font-heading: 'Orbitron', sans-serif;
     --font-body: 'Inter', sans-serif;
     --font-mono: 'Share Tech Mono', monospace;
-
-    /* Responsive Tokens */
-    --grid-gap: 12px;
-    --card-padding: 18px;
-    --row-height: 125px;
-    --container-padding: 15px;
 }
 
 /* Light Mode Overrides */

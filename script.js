@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingText = document.getElementById('loading-text');
     const visualizerCanvas = document.getElementById('music-visualizer');
 
+    // --- GLOBAL SELECTORS & STATE ---
+    const bentoItems = document.querySelectorAll('.bento-item');
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer: coarse)").matches;
+
     // Audio Visualizer Variables
     let audioCtx;
     let analyser;
@@ -107,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         document.body.classList.remove('loading');
 
                         // --- START ADVANCED BOOT SEQUENCE ---
-                        const bentoItems = document.querySelectorAll('.bento-item');
                         bentoItems.forEach((item, index) => {
                             // Staggered Entrance
                             setTimeout(() => {
@@ -182,13 +185,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- 2. CUSTOM CYBER CURSOR & TARGETING RETICLE ---
     const cursor = document.getElementById('cursor');
     const cursorShape = document.getElementById('cursor-shape');
     const reticle = document.getElementById('target-reticle');
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     // Movement tracking for velocity rotation
     let lastX = mouseX;
