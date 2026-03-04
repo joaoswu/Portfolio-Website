@@ -73,32 +73,34 @@
     <main class="container">
         <div class="bento-grid">
             <!-- Profile -->
-            <div class="bento-item profile-card interactable">
+            <div class="bento-item profile-card interactable" data-tooltip="Personal Info & Bio">
                 <h1 class="name">joao</h1>
                 <p class="subtitle">My Information</p>
             </div>
 
             <!-- Socials -->
-            <a href="https://www.tiktok.com/@joao.sw" target="_blank"
-                class="bento-item social-card tiktok interactable">
+            <a href="https://www.tiktok.com/@joao.sw" target="_blank" class="bento-item social-card tiktok interactable"
+                data-tooltip="Follow on TikTok">
                 <i class="icon">TikTok</i>
             </a>
-            <a href="https://github.com/joaoswu" target="_blank" class="bento-item social-card github interactable">
+            <a href="https://github.com/joaoswu" target="_blank" class="bento-item social-card github interactable"
+                data-tooltip="View GitHub Profile">
                 <i class="icon">GitHub</i>
             </a>
             <a href="https://discord.gg/bd5GhG43" target="_blank"
-                class="bento-item social-card discord-invite interactable">
+                class="bento-item social-card discord-invite interactable" data-tooltip="Add me on Discord">
                 <i class="icon">Discord: add me</i>
             </a>
 
             <!-- View Count -->
-            <div class="bento-item views-card interactable">
+            <div class="bento-item views-card interactable" data-tooltip="Total Profile Views">
                 <div class="view-label">Views</div>
                 <div class="view-count" id="view-count">...</div>
             </div>
 
             <!-- Discord Status (Lanyard) -->
-            <div class="bento-item discord-status-card interactable" id="discord-card">
+            <div class="bento-item discord-status-card interactable" id="discord-card"
+                data-tooltip="Live Discord Status">
                 <div class="discord-profile">
                     <div class="avatar-container">
                         <img src="" alt="Discord Avatar" id="discord-avatar" class="discord-avatar"
@@ -113,7 +115,7 @@
             </div>
 
             <!-- Spotify (Lanyard) -->
-            <div class="bento-item spotify-card interactable" id="spotify-status">
+            <div class="bento-item spotify-card interactable" id="spotify-status" data-tooltip="Listening on Spotify">
                 <div class="spotify-info">
                     <div class="spotify-label">Spotify</div>
                     <div class="spotify-song" id="spotify-song">Not playing</div>
@@ -122,7 +124,7 @@
             </div>
 
             <!-- Audio Control -->
-            <div class="bento-item music-card interactable">
+            <div class="bento-item music-card interactable" data-tooltip="Local Audio Player">
                 <div class="music-header">
                     <div class="music-label">House Of Balloons</div>
                     <button class="play-pause-btn interactable" id="music-toggle">
@@ -157,21 +159,22 @@
             </div>
 
             <!-- Live Clock -->
-            <div class="bento-item clock-card interactable">
+            <div class="bento-item clock-card interactable" data-tooltip="Local Time (GMT-3)">
                 <div class="clock-label" id="clock-date">Loading...</div>
                 <div class="clock-time" id="clock-time">00:00:00</div>
                 <div class="clock-timezone">Local Time</div>
             </div>
 
             <!-- Weather -->
-            <div class="bento-item weather-card interactable">
+            <div class="bento-item weather-card interactable" data-tooltip="Current Weather">
                 <div class="weather-label">Currently</div>
                 <div class="weather-temp" id="weather-temp">--°C</div>
                 <div class="weather-desc" id="weather-desc">Loading...</div>
             </div>
 
             <!-- GitHub Commits -->
-            <a href="https://github.com/joaoswu" target="_blank" class="bento-item github-commits-card interactable">
+            <a href="https://github.com/joaoswu" target="_blank" class="bento-item github-commits-card interactable"
+                data-tooltip="Latest Code Activity">
                 <div class="github-header">
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
                         <path
@@ -185,7 +188,7 @@
             </a>
 
             <!-- WakaTime Stats -->
-            <div class="bento-item wakatime-card interactable">
+            <div class="bento-item wakatime-card interactable" data-tooltip="Coding Statistics">
                 <div class="wakatime-header">
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
                         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
@@ -198,7 +201,8 @@
             </div>
 
             <!-- Interactive Action Log -->
-            <div class="bento-item action-log-card interactable" id="action-log-container">
+            <div class="bento-item action-log-card interactable" id="action-log-container"
+                data-tooltip="System Activity Logs">
                 <div class="log-header">
                     <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
                         <polyline points="4 17 10 11 4 5"></polyline>
@@ -214,7 +218,7 @@
             </div>
 
             <!-- Skills Marquee -->
-            <div class="bento-item skills-card interactable">
+            <div class="bento-item skills-card interactable" data-tooltip="Technical Skillset">
                 <div class="skills-marquee">
                     <div class="marquee-content">
                         <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Python</span><span>Node.js</span><span>React</span><span>SQL</span><span>Git</span><span>Tailwind</span><span>APIs</span>
