@@ -90,10 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 2. UI SOUND SYSTEM (WEB AUDIO API) ---
-    let sfxEnabled = localStorage.getItem('sfx-enabled') !== 'false';
-
     function playSound(type) {
-        if (!sfxEnabled || !audioCtx) return;
+        if (!audioCtx) return;
         if (audioCtx.state === 'suspended') audioCtx.resume();
 
         const osc = audioCtx.createOscillator();
@@ -104,25 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const now = audioCtx.currentTime;
 
-        if (type === 'hover') {
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, now);
-            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.05);
-            envelope.gain.setValueAtTime(0, now);
-            envelope.gain.linearRampToValueAtTime(0.05, now + 0.01);
-            envelope.gain.linearRampToValueAtTime(0, now + 0.05);
-            osc.start(now);
-            osc.stop(now + 0.05);
-        } else if (type === 'click') {
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(400, now);
-            osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
-            envelope.gain.setValueAtTime(0, now);
-            envelope.gain.linearRampToValueAtTime(0.1, now + 0.01);
-            envelope.gain.linearRampToValueAtTime(0, now + 0.1);
-            osc.start(now);
-            osc.stop(now + 0.1);
-        } else if (type === 'type') {
+        if (type === 'type') {
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(150, now);
             envelope.gain.setValueAtTime(0, now);
@@ -130,39 +110,11 @@ document.addEventListener('DOMContentLoaded', () => {
             envelope.gain.linearRampToValueAtTime(0, now + 0.02);
             osc.start(now);
             osc.stop(now + 0.02);
-        } else if (type === 'transition') {
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(100, now);
-            osc.frequency.exponentialRampToValueAtTime(800, now + 0.5);
-            envelope.gain.setValueAtTime(0, now);
-            envelope.gain.linearRampToValueAtTime(0.1, now + 0.1);
-            envelope.gain.linearRampToValueAtTime(0, now + 0.5);
-            osc.start(now);
-            osc.stop(now + 0.5);
         }
     }
 
-    // Attach sound to interactables
-    function attachSounds() {
-        document.querySelectorAll('.interactable').forEach(el => {
-            if (el.dataset.soundBound) return;
-            el.addEventListener('mouseenter', () => playSound('hover'));
-            el.addEventListener('click', () => playSound('click'));
-            el.dataset.soundBound = "true";
-        });
-    }
-    attachSounds(); // Initial bind
 
-    const sfxToggleBtn = document.getElementById('sfx-toggle-btn');
-    if (sfxToggleBtn) {
-        if (!sfxEnabled) sfxToggleBtn.classList.add('muted');
-        sfxToggleBtn.addEventListener('click', () => {
-            sfxEnabled = !sfxEnabled;
-            localStorage.setItem('sfx-enabled', sfxEnabled);
-            sfxToggleBtn.classList.toggle('muted', !sfxEnabled);
-            if (sfxEnabled) playSound('click');
-        });
-    }
+
 
 
     if (optimizeBtn) {
@@ -194,6 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 el.textContent = originalText;
             });
         });
+
+        // Add typing effect to nav links on restore
+        document.querySelectorAll('.nav-link').forEach(el => {
+            const originalText = el.getAttribute('data-text') || el.textContent;
+            el.textContent = originalText;
+        });
+
         if (quoteContainer) {
             quoteContainer.classList.add('animate-in');
             if (dailyQuoteEl) dailyQuoteEl.textContent = MY_MOOD;
@@ -351,6 +310,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                 });
                             }, index * 80); // 80ms stagger
                         });
+
+                        // Staggered Entrance for nav links
+                        document.querySelectorAll('.nav-link').forEach((link, index) => {
+                            const originalText = link.getAttribute('data-text') || link.textContent;
+                            if (!link.getAttribute('data-text')) link.setAttribute('data-text', originalText);
+                            link.textContent = '';
+                            setTimeout(() => {
+                                typeText(link, originalText);
+                            }, 500 + (index * 100));
+                        });
+
 
                         // Start Bottom Visualizer
                         if (window.setupVisualizer) window.setupVisualizer();
@@ -3233,8 +3203,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (href && href.endsWith('.html') && !href.startsWith('http')) {
                 e.preventDefault();
                 sessionStorage.setItem('joao_transitioning', 'true');
-                playSound('transition');
-
                 if (transitionOverlay) {
                     transitionOverlay.classList.remove('hidden');
                     transitionOverlay.classList.add('active');
@@ -3259,7 +3227,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (guestbookTrigger && guestbookSidebar) {
         guestbookTrigger.addEventListener('click', () => {
             guestbookSidebar.classList.toggle('active');
-            playSound('click');
             // Reset other sidebars if open
             const qaSidebar = document.getElementById('qa-sidebar');
             const settingsSidebar = document.getElementById('settings-sidebar');
@@ -3306,7 +3273,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 guestbookInput.value = '';
-                playSound('click');
             });
         }
     }

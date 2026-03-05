@@ -2672,17 +2672,6 @@ body.light-mode .settings-sidebar {
     color: #000;
 }
 
-/* SFX Toggle Styling */
-#sfx-toggle-btn.muted {
-    color: var(--text-secondary);
-    opacity: 0.5;
-}
-
-#sfx-toggle-btn.muted svg {
-    stroke-dasharray: 4;
-    /* Visual cue for muted */
-}
-
 /* Lint Fixes */
 .project-desc {
     display: -webkit-box;
