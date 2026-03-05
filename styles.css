@@ -723,61 +723,7 @@ body.light-mode .commission-status:hover {
 
 /* Theme Toggler (Relocated to bottom) */
 
-/* Q&A Sidebar */
-.qa-trigger {
-    position: fixed;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    width: 30px;
-    height: 80px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-left: none;
-    border-radius: 0 12px 12px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    z-index: 1000;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
 
-.qa-trigger:hover {
-    background: var(--hover-bg);
-    color: var(--text-primary);
-    width: 40px;
-    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.5);
-}
-
-.qa-sidebar {
-    position: fixed;
-    top: 0;
-    left: -350px;
-    width: 320px;
-    height: 100vh;
-    background: rgba(10, 10, 15, 0.95);
-    border-right: 1px solid var(--border-color);
-    z-index: 1001;
-    padding: 40px 30px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-body.light-mode .qa-sidebar {
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
-}
-
-.qa-sidebar.active {
-    left: 0;
-}
 
 .qa-header {
     margin-bottom: 30px;
@@ -831,98 +777,9 @@ body.light-mode .input-group textarea {
     resize: vertical;
 }
 
-#qa-submit {
-    background: var(--text-primary);
-    color: var(--bg-color);
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
 
-#qa-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-}
 
-body.light-mode #qa-submit:hover {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
 
-.qa-status {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    text-align: center;
-    min-height: 20px;
-}
-
-.qa-status.success {
-    color: #43b581;
-}
-
-.qa-status.error {
-    color: #f04747;
-}
-
-/* Customization Settings Sidebar */
-.settings-trigger {
-    position: fixed;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    width: 30px;
-    height: 80px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-right: none;
-    border-radius: 12px 0 0 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    z-index: 1000;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
-
-.settings-trigger:hover {
-    background: var(--hover-bg);
-    color: var(--text-primary);
-    width: 40px;
-    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
-}
-
-.settings-sidebar {
-    position: fixed;
-    top: 0;
-    right: -350px;
-    width: 320px;
-    height: 100vh;
-    background: rgba(10, 10, 15, 0.95);
-    border-left: 1px solid var(--border-color);
-    z-index: 1001;
-    padding: 40px 30px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-body.light-mode .settings-sidebar {
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
-}
-
-.settings-sidebar.active {
-    right: 0;
-}
 
 .settings-header {
     margin-bottom: 30px;
@@ -2362,62 +2219,7 @@ body.fade-out {
 /*  SETTINGS SIDEBAR & THEME TRIGGER         */
 /* ========================================= */
 
-/* Settings Sidebar Trigger (Right Edge Hover) */
-.settings-trigger {
-    position: fixed;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    width: 30px;
-    height: 80px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-right: none;
-    border-radius: 12px 0 0 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    z-index: 1000;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
 
-.settings-trigger:hover {
-    background: var(--hover-bg);
-    color: var(--text-primary);
-    width: 40px;
-    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
-}
-
-/* Settings Sidebar Panel */
-.settings-sidebar {
-    position: fixed;
-    top: 0;
-    right: -350px;
-    width: 320px;
-    height: 100vh;
-    background: rgba(10, 10, 15, 0.95);
-    border-left: 1px solid var(--border-color);
-    z-index: 1001;
-    padding: 40px 30px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-body.light-mode .settings-sidebar {
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
-}
-
-.settings-sidebar.active {
-    right: 0;
-}
 
 .settings-header {
     margin-bottom: 30px;
@@ -2893,69 +2695,7 @@ input[type="range"] {
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-/* Latest Transmission TikTok Sidebar Override */
-#settings-sidebar .settings-body {
-    padding: 0 !important;
-    background: #000;
-}
 
-#settings-sidebar.active {
-    right: 0;
-    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.8);
-}
-
-/* Loadout Arsenal Sidebar Styles */
-.loadout-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 12px 15px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    transition: all 0.3s ease;
-}
-
-.loadout-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateX(-5px);
-}
-
-.loadout-icon {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-heading);
-    font-size: 1.2rem;
-    font-weight: bold;
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid currentColor;
-    text-shadow: 0 0 10px currentColor;
-    flex-shrink: 0;
-}
-
-.loadout-info h4 {
-    margin: 0 0 4px 0;
-    font-family: var(--font-mono);
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    letter-spacing: 1px;
-}
-
-.loadout-info p {
-    margin: 0;
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-}
-
-#settings-sidebar.active {
-    width: 320px;
-    /* Slight increase for better text fit */
-}
 
 /* Snake Game Modal */
 .snake-modal {

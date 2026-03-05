@@ -455,53 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // --- Q&A SIDEBAR LOGIC ---
-        const qaTrigger = document.getElementById('qa-trigger');
-        const qaSidebar = document.getElementById('qa-sidebar');
-        let qaHoverTimeout;
 
-        if (qaTrigger && qaSidebar) {
-            const openSidebar = () => {
-                clearTimeout(qaHoverTimeout);
-                qaSidebar.classList.add('active');
-            };
-
-            const closeSidebar = () => {
-                qaHoverTimeout = setTimeout(() => {
-                    qaSidebar.classList.remove('active');
-                }, 300); // Small delay to allow moving mouse to sidebar
-            };
-
-            qaTrigger.addEventListener('mouseenter', openSidebar);
-            qaTrigger.addEventListener('mouseleave', closeSidebar);
-
-            qaSidebar.addEventListener('mouseenter', openSidebar);
-            qaSidebar.addEventListener('mouseleave', closeSidebar);
-        }
-
-        // --- SETTINGS SIDEBAR LOGIC ---
-        const settingsTrigger = document.getElementById('settings-trigger');
-        const settingsSidebar = document.getElementById('settings-sidebar');
-        let settingsHoverTimeout;
-
-        if (settingsTrigger && settingsSidebar) {
-            const openSettings = () => {
-                clearTimeout(settingsHoverTimeout);
-                settingsSidebar.classList.add('active');
-            };
-
-            const closeSettings = () => {
-                settingsHoverTimeout = setTimeout(() => {
-                    settingsSidebar.classList.remove('active');
-                }, 300);
-            };
-
-            settingsTrigger.addEventListener('mouseenter', openSettings);
-            settingsTrigger.addEventListener('mouseleave', closeSettings);
-
-            settingsSidebar.addEventListener('mouseenter', openSettings);
-            settingsSidebar.addEventListener('mouseleave', closeSettings);
-        }
 
     }
 
