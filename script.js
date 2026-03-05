@@ -1304,6 +1304,51 @@ document.addEventListener('DOMContentLoaded', () => {
             if (adminModal) adminModal.classList.add('hidden');
         });
     }
+
+    // --- 10. SECRET TOPSU CODE ---
+    const topsuCode = ['j', 'o', 'a', 'o'];
+    let topsuIndex = 0;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === topsuCode[topsuIndex]) {
+            topsuIndex++;
+            if (topsuIndex === topsuCode.length) {
+                showTopsuNotification();
+                topsuIndex = 0;
+            }
+        } else {
+            if (e.key.toLowerCase() === topsuCode[0]) {
+                topsuIndex = 1;
+            } else {
+                topsuIndex = 0;
+            }
+        }
+    });
+
+    function showTopsuNotification() {
+        let notif = document.getElementById('topsu-notif');
+        if (!notif) {
+            notif = document.createElement('div');
+            notif.id = 'topsu-notif';
+            notif.className = 'topsu-toast';
+            notif.innerHTML = `
+                <div class="topsu-toast-content">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" style="color: var(--text-primary);"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <span>Topsu was here</span>
+                </div>
+            `;
+            document.body.appendChild(notif);
+        }
+
+        // Trigger animation
+        requestAnimationFrame(() => {
+            notif.classList.add('show');
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 3500); // hide after 3.5 seconds
+        });
+    }
+
     // --- SEAMLESS PAGE TRANSITIONS ---
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
