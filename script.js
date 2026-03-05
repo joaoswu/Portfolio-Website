@@ -3131,6 +3131,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- HOLOGRAPHIC TILT EFFECTS ---
+    if (typeof VanillaTilt !== 'undefined' && !isTouchDevice) {
+        VanillaTilt.init(document.querySelectorAll(".bento-item, .tilt-card, .project-card"), {
+            max: 10,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.2,
+            gyroscope: false // Disable gyro to prevent issues on some laptops
+        });
+    }
+
     // --- SEAMLESS PAGE TRANSITIONS ---
     const transitionOverlay = document.getElementById('overlay-transition');
 
