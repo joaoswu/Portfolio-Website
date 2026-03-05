@@ -2439,9 +2439,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     let y = r * TILE_SIZE;
 
                     if (map[r][c] === 0) {
-                        ctx.strokeStyle = `hsla(220, 100%, 50%, ${0.3 + Math.sin(frame * 0.05) * 0.2})`;
+                        if (state === 3 && frame % 10 < 5) {
+                            ctx.strokeStyle = '#fff';
+                            ctx.shadowBlur = 15;
+                            ctx.shadowColor = '#fff';
+                        } else {
+                            ctx.strokeStyle = `hsla(220, 100%, 50%, ${0.3 + Math.sin(frame * 0.05) * 0.2})`;
+                        }
                         ctx.lineWidth = 2;
                         ctx.strokeRect(x + 3, y + 3, TILE_SIZE - 6, TILE_SIZE - 6);
+                        ctx.shadowBlur = 0;
                     } else if (map[r][c] === 1) {
                         ctx.fillStyle = '#fff';
                         ctx.beginPath();
