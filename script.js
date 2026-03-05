@@ -2327,6 +2327,252 @@ document.addEventListener('DOMContentLoaded', () => {
         if (breakoutGameLoop) cancelAnimationFrame(breakoutGameLoop);
         loop();
     }
+
+    // --- 15. SECRET PACMAN CODE ---
+    const pacmanCode = ['p', 'a', 'c', 'm', 'a', 'n'];
+    let pacmanIdx = 0;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === pacmanCode[pacmanIdx]) {
+            pacmanIdx++;
+            if (pacmanIdx === pacmanCode.length) {
+                openPacmanGame();
+                pacmanIdx = 0;
+            }
+        } else {
+            if (e.key.toLowerCase() === pacmanCode[0]) { pacmanIdx = 1; }
+            else { pacmanIdx = 0; }
+        }
+    });
+
+    let pacmanGameLoop;
+    function openPacmanGame() {
+        let modal = document.getElementById('pacman-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'pacman-modal';
+            modal.className = 'pacman-modal';
+            modal.innerHTML = '<div class=\"pacman-content\"><h2>PAC-MAN</h2><div class=\"pacman-scoreboard\"><div>SCORE: <span id=\"pacman-score\">0</span></div><div>HIGH: <span id=\"pacman-highscore\">0</span></div></div><canvas id=\"pacman-canvas\" width=\"380\" height=\"420\"></canvas><div class=\"pacman-controls\"><b>ARROWS</b>: MOVE | <b>ESC</b>: EXIT</div></div>';
+            document.body.appendChild(modal);
+        }
+        modal.classList.add('active');
+        startPacmanGame();
+
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                modal.classList.remove('active');
+                cancelAnimationFrame(pacmanGameLoop);
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+    }
+
+    function startPacmanGame() {
+        const canvas = document.getElementById('pacman-canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('pacman-score');
+        const highscoreEl = document.getElementById('pacman-highscore');
+
+        let score = 0;
+        let highscore = localStorage.getItem('pacmanHighscore') || 0;
+        highscoreEl.textContent = highscore;
+
+        const TILE_SIZE = 20;
+        const map = [
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0],
+            [0,2,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,2,0],
+            [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+            [0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0],
+            [0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0],
+            [0,0,0,0,1,0,0,0,3,0,3,0,0,0,1,0,0,0,0],
+            [3,3,3,0,1,0,3,3,3,3,3,3,3,0,1,0,3,3,3],
+            [0,0,0,0,1,0,3,0,0,4,0,0,3,0,1,0,0,0,0],
+            [3,3,3,3,1,3,3,0,3,3,3,0,3,3,1,3,3,3,3],
+            [0,0,0,0,1,0,3,0,0,0,0,0,3,0,1,0,0,0,0],
+            [3,3,3,0,1,0,3,3,3,3,3,3,3,0,1,0,3,3,3],
+            [0,0,0,0,1,0,3,0,0,0,0,0,3,0,1,0,0,0,0],
+            [0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0],
+            [0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0],
+            [0,2,1,0,1,1,1,1,1,3,1,1,1,1,1,0,1,2,0],
+            [0,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,0,0],
+            [0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0],
+            [0,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0],
+            [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ];
+
+        let gameMap = JSON.parse(JSON.stringify(map));
+
+        let pacman = { x: 9 * TILE_SIZE, y: 15 * TILE_SIZE, dir: 0, nextDir: 0, speed: 2 };
+        let ghosts = [
+            { x: 9 * TILE_SIZE, y: 8 * TILE_SIZE, color: '#ff0000', dir: 1, speed: 1.5 },
+            { x: 9 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#ffb8ff', dir: 2, speed: 1.5 },
+            { x: 8 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#00ffff', dir: 3, speed: 1.5 },
+            { x: 10 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#ffb852', dir: 0, speed: 1.5 }
+        ];
+
+        let state = 0; // 0: Ready, 1: Playing, 2: GameOver, 3: Win
+        let frame = 0;
+
+        function drawMap() {
+            for (let r = 0; r < gameMap.length; r++) {
+                for (let c = 0; c < gameMap[r].length; c++) {
+                    let x = c * TILE_SIZE;
+                    let y = r * TILE_SIZE;
+                    if (gameMap[r][c] === 0) {
+                        ctx.strokeStyle = '#2222ff';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(x + 2, y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+                    } else if (gameMap[r][c] === 1) {
+                        ctx.fillStyle = '#ffb8ae';
+                        ctx.beginPath();
+                        ctx.arc(x + TILE_SIZE/2, y + TILE_SIZE/2, 2, 0, Math.PI*2);
+                        ctx.fill();
+                    } else if (gameMap[r][c] === 2) {
+                        ctx.fillStyle = '#ffb8ae';
+                        ctx.beginPath();
+                        ctx.arc(x + TILE_SIZE/2, y + TILE_SIZE/2, 5, 0, Math.PI*2);
+                        ctx.fill();
+                    }
+                }
+            }
+        }
+
+        function drawPacman() {
+            ctx.fillStyle = '#ffff00';
+            ctx.beginPath();
+            let x = pacman.x + TILE_SIZE/2;
+            let y = pacman.y + TILE_SIZE/2;
+            let mouth = Math.abs(Math.sin(frame * 0.2)) * 0.2;
+            let angles = [
+                [mouth, 2 - mouth], // East
+                [0.5 + mouth, 1.5 - mouth], // South
+                [1 + mouth, 3 - mouth], // West (wrong but looks okay)
+                [1.5 + mouth, 2.5 - mouth] // North
+            ];
+            // Simple circle for now to avoid rotation math mess
+            ctx.arc(x, y, TILE_SIZE/2 - 2, 0, Math.PI*2);
+            ctx.fill();
+        }
+
+        function drawGhosts() {
+            ghosts.forEach(g => {
+                ctx.fillStyle = g.color;
+                ctx.beginPath();
+                ctx.arc(g.x + TILE_SIZE/2, g.y + TILE_SIZE/2 - 2, TILE_SIZE/2 - 2, Math.PI, 0);
+                ctx.lineTo(g.x + TILE_SIZE - 2, g.y + TILE_SIZE - 2);
+                ctx.lineTo(g.x + 2, g.y + TILE_SIZE - 2);
+                ctx.fill();
+            });
+        }
+
+        function movePacman() {
+            // Check nextDir
+            if (pacman.x % TILE_SIZE === 0 && pacman.y % TILE_SIZE === 0) {
+                let r = pacman.y / TILE_SIZE;
+                let c = pacman.x / TILE_SIZE;
+                
+                // Eat pellet
+                if (gameMap[r][c] === 1) { gameMap[r][c] = 3; score += 10; scoreEl.textContent = score; }
+                if (gameMap[r][c] === 2) { gameMap[r][c] = 3; score += 50; scoreEl.textContent = score; }
+
+                // Determine possible next moves
+                const canMove = (d) => {
+                    let nr = r, nc = c;
+                    if (d === 0) nc++; else if (d === 1) nr++; else if (d === 2) nc--; else if (d === 3) nr--;
+                    if (nr < 0 || nr >= gameMap.length || nc < 0 || nc >= gameMap[0].length) return false;
+                    return gameMap[nr][nc] !== 0;
+                };
+
+                if (canMove(pacman.nextDir)) pacman.dir = pacman.nextDir;
+                if (!canMove(pacman.dir)) return; // Stop
+            }
+
+            if (pacman.dir === 0) pacman.x += pacman.speed;
+            else if (pacman.dir === 1) pacman.y += pacman.speed;
+            else if (pacman.dir === 2) pacman.x -= pacman.speed;
+            else if (pacman.dir === 3) pacman.y -= pacman.speed;
+
+            // Screen wrap
+            if (pacman.x < 0) pacman.x = canvas.width - TILE_SIZE;
+            if (pacman.x >= canvas.width) pacman.x = 0;
+        }
+
+        function loop() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (state === 1) {
+                movePacman();
+                // Collision with ghosts
+                ghosts.forEach(g => {
+                    if (Math.abs(pacman.x - g.x) < TILE_SIZE/2 && Math.abs(pacman.y - g.y) < TILE_SIZE/2) {
+                        state = 2; // Caught
+                    }
+                    // Simple Ghost AI
+                    if (g.x % TILE_SIZE === 0 && g.y % TILE_SIZE === 0) {
+                        g.dir = Math.floor(Math.random() * 4);
+                    }
+                    if (g.dir === 0) g.x += g.speed; else if (g.dir === 1) g.y += g.speed; else if (g.dir === 2) g.x -= g.speed; else if (g.dir === 3) g.y -= g.speed;
+                    if (g.x < 0) g.x = canvas.width - TILE_SIZE; if (g.x >= canvas.width) g.x = 0;
+                });
+            }
+
+            drawMap();
+            drawPacman();
+            drawGhosts();
+
+            if (state === 0) {
+                ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillStyle = '#ffff00';
+                ctx.font = '20px Orbitron';
+                ctx.textAlign = 'center';
+                ctx.fillText('READY SYSTEM', canvas.width/2, canvas.height/2);
+                ctx.font = '12px Rajdhani';
+                ctx.fillText('PRESS [SPACE] TO INITIALIZE', canvas.width/2, canvas.height/2 + 30);
+            } else if (state === 2) {
+                ctx.fillStyle = 'rgba(0,0,0,0.8)';
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillStyle = '#ff3131';
+                ctx.font = '24px Orbitron';
+                ctx.textAlign = 'center';
+                ctx.fillText('SYSTEM BREACH', canvas.width/2, canvas.height/2);
+                ctx.fillStyle = '#fff';
+                ctx.font = '14px Rajdhani';
+                ctx.fillText('FINAL DATA: ' + score, canvas.width/2, canvas.height/2 + 40);
+            }
+
+            frame++;
+            pacmanGameLoop = requestAnimationFrame(loop);
+        }
+
+        const onKeyDown = (e) => {
+            if ([37, 38, 39, 40, 32].indexOf(e.keyCode) > -1) e.preventDefault();
+            if (e.keyCode === 39) pacman.nextDir = 0;
+            else if (e.keyCode === 40) pacman.nextDir = 1;
+            else if (e.keyCode === 37) pacman.nextDir = 2;
+            else if (e.keyCode === 38) pacman.nextDir = 3;
+            else if (e.keyCode === 32) if (state === 0) state = 1; else if (state === 2) {
+                state = 0; score = 0; scoreEl.textContent = 0;
+                gameMap = JSON.parse(JSON.stringify(map));
+                pacman = { x: 9 * TILE_SIZE, y: 15 * TILE_SIZE, dir: 0, nextDir: 0, speed: 2 };
+            }
+        };
+        document.addEventListener('keydown', onKeyDown);
+
+        const escapeCheck = (e) => {
+            if (e.key === 'Escape') {
+                document.removeEventListener('keydown', onKeyDown);
+                document.removeEventListener('keydown', escapeCheck);
+            }
+        };
+        document.addEventListener('keydown', escapeCheck);
+
+        loop();
+    }
     function stopSnakeGame() {
         clearInterval(snakeGameInterval);
     }

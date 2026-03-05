@@ -3060,3 +3060,79 @@ body.light-mode .settings-sidebar {
 .breakout-controls b {
     color: #00ffff;
 }
+
+/* Pac-man Game Modal */
+.pacman-modal {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 100003;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.pacman-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.pacman-content {
+    background: #000;
+    border: 1px solid rgba(0, 0, 255, 0.2);
+    padding: 30px;
+    border-radius: 24px;
+    box-shadow: 0 0 80px rgba(0, 0, 255, 0.1);
+    text-align: center;
+}
+
+.pacman-content h2 {
+    color: #ffff00;
+    font-family: var(--font-mono);
+    margin-top: 0;
+    margin-bottom: 20px;
+    letter-spacing: 6px;
+    text-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+}
+
+.pacman-scoreboard {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    font-family: var(--font-mono);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pacman-scoreboard span {
+    color: #ffff00;
+    font-weight: bold;
+}
+
+#pacman-canvas {
+    background: #000;
+    border: 2px solid #1a1a1a;
+    border-radius: 8px;
+    display: block;
+    box-shadow: inset 0 0 50px rgba(0, 0, 255, 0.1);
+}
+
+.pacman-controls {
+    margin-top: 15px;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+.pacman-controls b {
+    color: #ffff00;
+}
