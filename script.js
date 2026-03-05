@@ -1323,6 +1323,10 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.innerHTML = `
                 <div class="snake-content">
                     <h2>S N A K E</h2>
+                    <div class="snake-scoreboard">
+                        <div>SCORE: <span id="snake-current-score">0</span></div>
+                        <div>HIGH SCORE: <span id="snake-high-score">0</span></div>
+                    </div>
                     <canvas id="snake-canvas" width="400" height="400"></canvas>
                     <p>Use Arrow Keys to move. Press [ESC] to exit.</p>
                 </div>
@@ -1349,6 +1353,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         const box = 20;
+        let score = 0;
+        let highscore = localStorage.getItem('snakeHighscore') || 0;
+
+        const scoreEl = document.getElementById('snake-current-score');
+        const highscoreEl = document.getElementById('snake-high-score');
+        if (highscoreEl) highscoreEl.textContent = highscore;
+
         let snake = [{ x: 9 * box, y: 10 * box }];
         let food = {
             x: Math.floor(Math.random() * 19 + 1) * box,
@@ -1394,6 +1405,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (d == "DOWN") snakeY += box;
 
             if (snakeX == food.x && snakeY == food.y) {
+                score++;
+                if (scoreEl) scoreEl.textContent = score;
                 food = {
                     x: Math.floor(Math.random() * 19 + 1) * box,
                     y: Math.floor(Math.random() * 19 + 1) * box
@@ -1407,7 +1420,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
                 clearInterval(snakeGameInterval);
                 document.removeEventListener("keydown", direction);
-                alert("GAME OVER! Type SNAKE to try again.");
+
+                if (score > highscore) {
+                    localStorage.setItem('snakeHighscore', score);
+                    alert("NEW HIGH SCORE: " + score + "! Type SNAKE to try again.");
+                } else {
+                    alert("GAME OVER! Score: " + score + ". Type SNAKE to try again.");
+                }
+
                 document.getElementById('snake-modal').classList.remove('active');
             }
 

@@ -2781,3 +2781,24 @@ body.light-mode .settings-sidebar {
     display: block;
     margin: 0 auto;
 }
+
+/* Snake Scoreboard */
+.snake-scoreboard {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+    font-size: 1rem;
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.snake-scoreboard span {
+    color: #4CAF50;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
