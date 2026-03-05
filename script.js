@@ -101,7 +101,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (enterBtn && enterScreen) {
+    const hasEnteredSession = sessionStorage.getItem('joao_site_entered');
+
+    if (hasEnteredSession && enterScreen) {
+        // Skip enter screen completely
+        enterScreen.style.display = 'none';
+        document.body.classList.remove('loading');
+
+        // Fast animate-in
+        bentoItems.forEach((item) => {
+            item.classList.add('animate-in');
+            const textEls = item.querySelectorAll('h1, h2, h3, p, .icon, span:not(.no-type)');
+            textEls.forEach(el => {
+                const originalText = el.getAttribute('data-text') || el.textContent;
+                el.textContent = originalText;
+            });
+        });
+        if (quoteContainer) {
+            quoteContainer.classList.add('animate-in');
+            if (dailyQuoteEl) dailyQuoteEl.textContent = MY_MOOD;
+        }
+        if (window.setupVisualizer) window.setupVisualizer();
+
+        if (bgMusic) {
+            bgMusic.volume = 0.8;
+            bgMusic.muted = sessionStorage.getItem('joao_audio_muted') === 'true';
+            // Attempt to play, caught lightly if autoplay policy blocks since there was no interaction on THIS page yet
+            bgMusic.play().catch(() => { console.log('Autoplay prevented by browser.'); });
+        }
+    } else if (enterBtn && enterScreen) {
         enterBtn.addEventListener('click', () => {
             // Hide the buttons
             enterBtn.style.display = 'none';
@@ -216,6 +244,70 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 400); // small pause at 100% before entering
                 }
             }, 100); // update every 100ms
+
+            // Mark session as entered
+            sessionStorage.setItem('joao_site_entered', 'true');
+        });
+    }
+
+    // --- AUDIO MUTE BUTTON LOGIC ---
+    const audioBtn = document.getElementById('nav-audio-btn');
+    if (audioBtn && bgMusic) {
+        // Restore state
+        const isMuted = sessionStorage.getItem('joao_audio_muted') === 'true';
+        bgMusic.muted = isMuted;
+
+        const updateAudioIcon = () => {
+            if (bgMusic.muted) {
+                audioBtn.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>`;
+            } else {
+                audioBtn.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>`;
+            }
+        };
+        updateAudioIcon();
+
+        audioBtn.addEventListener('click', () => {
+            bgMusic.muted = !bgMusic.muted;
+            sessionStorage.setItem('joao_audio_muted', bgMusic.muted);
+            updateAudioIcon();
+
+            if (!bgMusic.muted && bgMusic.paused) {
+                bgMusic.play().catch(() => { });
+            }
+        });
+    }
+
+    // --- SUPPORT MODAL LOGIC ---
+    const supportBtn = document.getElementById('nav-support-btn');
+    const supportModal = document.getElementById('support-modal');
+    const closeSupportBtn = document.getElementById('close-support');
+    const sendSupportBtn = document.getElementById('send-support');
+
+    if (supportBtn && supportModal) {
+        supportBtn.addEventListener('click', () => {
+            supportModal.classList.remove('hidden');
+        });
+    }
+
+    if (closeSupportBtn && supportModal) {
+        closeSupportBtn.addEventListener('click', () => {
+            supportModal.classList.add('hidden');
+        });
+    }
+
+    if (sendSupportBtn) {
+        sendSupportBtn.addEventListener('click', () => {
+            const email = document.getElementById('support-email').value;
+            const message = document.getElementById('support-message').value;
+            if (!message) return; // Simple validation
+
+            const subject = encodeURIComponent("Support Request");
+            const body = encodeURIComponent(`From: ${email}\n\nMessage:\n${message}`);
+            window.location.href = `mailto:joaofilmss33@gmail.com?subject=${subject}&body=${body}`;
+
+            supportModal.classList.add('hidden');
+            document.getElementById('support-message').value = '';
+            document.getElementById('support-email').value = '';
         });
     }
 
@@ -1263,5 +1355,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (adminModal) adminModal.classList.add('hidden');
         });
     }
+    // --- SEAMLESS PAGE TRANSITIONS ---
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const tgt = e.currentTarget.getAttribute('href');
+            if (tgt && tgt.endsWith('.html') && !tgt.startsWith('http')) {
+                e.preventDefault();
+                document.body.classList.add('fade-out');
+                setTimeout(() => {
+                    window.location.href = tgt;
+                }, 400); // Wait for fade-out animation
+            }
+        });
+    });
 
 });

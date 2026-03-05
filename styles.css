@@ -2268,3 +2268,119 @@ body.light-mode .specs-marquee {
         font-size: 1.6rem;
     }
 }
+
+/* ========================================= */
+/*               SUPPORT MODAL               */
+/* ========================================= */
+.support-content {
+    max-width: 450px;
+    width: 100%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-subtitle {
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+#support-message {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 12px 15px;
+    border-radius: 8px;
+    resize: vertical;
+    min-height: 120px;
+    transition: border-color 0.3s ease;
+}
+
+#support-message:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+body.light-mode #support-message {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode #support-message:focus {
+    border-color: rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================= */
+/*             PAGE TRANSITIONS              */
+/* ========================================= */
+html.skip-enter #enter-screen {
+    display: none !important;
+}
+
+html.skip-enter body {
+    animation: fadeInPage 0.8s ease forwards;
+}
+
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+body.fade-out {
+    animation: fadeOutPage 0.5s ease forwards;
+}
+
+@keyframes fadeOutPage {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+}
+
+/* ========================================= */
+/*              THEME TRIGGER                */
+/* ========================================= */
+.settings-trigger,
+.theme-toggle {
+    position: fixed;
+    bottom: 20px !important;
+    right: 20px !important;
+    top: auto !important;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.settings-trigger:hover,
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: rotate(90deg);
+}
