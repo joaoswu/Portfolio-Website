@@ -260,6 +260,52 @@ body {
     margin-top: -20px;
 }
 
+/* --- Advanced Boot Sequence Console --- */
+#boot-console {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* Spawns lines from bottom up ideally, but we manage via JS overflow */
+    align-items: flex-start;
+    overflow: hidden;
+    z-index: 10000;
+}
+
+.boot-line {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    color: #4af626;
+    /* Classic terminal green */
+    text-shadow: 0 0 5px rgba(74, 246, 38, 0.5);
+    margin-bottom: 4px;
+    opacity: 0;
+    animation: bootFadeIn 0.1s ease forwards;
+    white-space: pre-wrap;
+    text-align: left;
+}
+
+.boot-line.error {
+    color: #ff3333;
+    text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
+}
+
+.boot-line.warning {
+    color: #ffcc00;
+    text-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+}
+
+@keyframes bootFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
 .optimize-btn.active {
     color: #43b581;
     /* Discord Green for ON */

@@ -185,26 +185,62 @@ document.addEventListener('DOMContentLoaded', () => {
                 }).catch(e => console.log("Audio play failed, user may need to interact more:", e));
             }
 
-            // Fake loading sequence (fast but smooth, ~1.2 seconds total)
-            let progress = 0;
-            const loadInterval = setInterval(() => {
-                progress += Math.random() * 20 + 5; // Fast chunks
-                if (progress > 100) progress = 100;
+            // FAKE LOADING => ADVANCED BOOT SEQUENCE
+            const bootSequence = [
+                "INITIALIZING NEON PROTOCOLS...",
+                "LOADING CORE MODULES...",
+                "MEMORY CHECK............ [OK]",
+                "MOUNTING VIRTUAL DRIVES... [OK]",
+                "DECRYPTING USER DATA...... [OK]",
+                "ESTABLISHING SECURE CONNECTION...",
+                "CONNECTION ESTABLISHED.",
+                "BYPASSING MAINFRAME SECURITY...",
+                "WARNING: UNAUTHORIZED ACCESS DETECTED",
+                "OVERRIDING SECURITY PROTOCOLS...",
+                "ACCESS GRANTED.",
+                "BOOTING GRAPHICS ENGINE...",
+                "CALIBRATING SENSORS...",
+                "SYSTEM READY."
+            ];
 
-                if (progressBar) progressBar.style.width = `${progress}%`;
+            const bootConsole = document.createElement('div');
+            bootConsole.id = 'boot-console';
+            enterScreen.appendChild(bootConsole);
 
-                if (progress === 100) {
-                    clearInterval(loadInterval);
+            // Hide normal content
+            const enterContent = document.querySelector('.enter-content');
+            if (enterContent) enterContent.style.display = 'none';
 
-                    if (loadingText) {
-                        loadingText.textContent = 'Website ready';
-                        loadingText.setAttribute('data-text', 'Website ready');
-                    }
+            let lineIndex = 0;
+            const typeDelay = () => Math.random() * 80 + 20; // Fast typing simulation
 
+            function renderNextBootLine() {
+                if (lineIndex < bootSequence.length) {
+                    const text = bootSequence[lineIndex];
+                    const lineEl = document.createElement('div');
+                    lineEl.className = 'boot-line';
+
+                    // Add optional colors for flavor
+                    if (text.includes("WARNING")) lineEl.classList.add('warning');
+                    if (text.includes("FAILED")) lineEl.classList.add('error');
+
+                    lineEl.textContent = text;
+                    bootConsole.appendChild(lineEl);
+
+                    // Auto-scroll to bottom
+                    bootConsole.scrollTop = bootConsole.scrollHeight;
+
+                    lineIndex++;
+                    setTimeout(renderNextBootLine, typeDelay());
+                } else {
+                    // Sequence Finished
                     setTimeout(() => {
                         // Enter the site
                         enterScreen.classList.add('hidden');
                         document.body.classList.remove('loading');
+
+                        // Clean up boot console so it doesn't stay in DOM and block clicks
+                        setTimeout(() => { if (bootConsole) bootConsole.remove(); }, 1000);
 
                         // Apply Performance Optimizations
                         if (isOptimized) {
@@ -219,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }, 300);
                         }
 
-                        // --- START ADVANCED BOOT SEQUENCE ---
+                        // --- START MAIN CONTENT ENTRANCE ---
                         bentoItems.forEach((item, index) => {
                             // Staggered Entrance
                             setTimeout(() => {
@@ -241,9 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         // Start Bottom Visualizer
                         if (window.setupVisualizer) window.setupVisualizer();
-                    }, 400); // small pause at 100% before entering
+                    }, 400); // small pause at "SYSTEM READY" before entering
                 }
-            }, 100); // update every 100ms
+            }
+
+            // Start Boot Sequence
+            setTimeout(renderNextBootLine, 100);
 
             // Mark session as entered
             sessionStorage.setItem('joao_site_entered', 'true');
