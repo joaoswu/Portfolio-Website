@@ -370,17 +370,28 @@ body {
     width: 60px;
     height: 60px;
     margin: -30px 0 0 -30px;
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.05);
     border-top: 2px solid var(--text-primary);
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 0.8s linear infinite;
     opacity: 0;
     transition: opacity 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
 .overlay-transition.active::before {
     opacity: 1;
     transition-delay: 0.2s;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Network Canvas Interactive Background */
