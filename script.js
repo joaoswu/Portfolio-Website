@@ -414,62 +414,6 @@ document.addEventListener('DOMContentLoaded', () => {
             settingsSidebar.addEventListener('mouseleave', closeSettings);
         }
 
-        // --- THEME CUSTOMIZATION LOGIC ---
-        const colorBg = document.getElementById('color-bg');
-        const colorCard = document.getElementById('color-card');
-        const colorBorder = document.getElementById('color-border');
-        const colorText = document.getElementById('color-text');
-        const resetThemeBtn = document.getElementById('reset-theme-btn');
-
-        const updateTheme = (varName, value) => {
-            document.documentElement.style.setProperty(varName, value);
-
-            // Save to localStorage
-            let currentTheme = JSON.parse(localStorage.getItem('custom-theme')) || {};
-            currentTheme[varName] = value;
-            localStorage.setItem('custom-theme', JSON.stringify(currentTheme));
-
-            // If they change theme, force removal of light mode to prevent conflicts
-            if (document.body.classList.contains('light-mode')) {
-                document.body.classList.remove('light-mode');
-                localStorage.setItem('theme', 'dark-mode');
-                const themeIconSun = document.getElementById('theme-icon-sun');
-                const themeIconMoon = document.getElementById('theme-icon-moon');
-                if (themeIconSun && themeIconMoon) {
-                    themeIconSun.style.display = 'block';
-                    themeIconMoon.style.display = 'none';
-                }
-            }
-        };
-
-        if (colorBg) colorBg.addEventListener('input', (e) => updateTheme('--bg-color', e.target.value));
-        if (colorCard) colorCard.addEventListener('input', (e) => updateTheme('--card-bg', e.target.value));
-        if (colorBorder) colorBorder.addEventListener('input', (e) => {
-            updateTheme('--border-color', e.target.value);
-            // Also update hover bg to match the new border theme loosely
-            updateTheme('--hover-bg', e.target.value + '80'); // Add 50% opacity hex
-        });
-        if (colorText) colorText.addEventListener('input', (e) => updateTheme('--text-primary', e.target.value));
-
-        if (resetThemeBtn) {
-            resetThemeBtn.addEventListener('click', () => {
-                localStorage.removeItem('custom-theme');
-                // Remove inline styles to revert to CSS file defaults
-                document.documentElement.style.removeProperty('--bg-color');
-                document.documentElement.style.removeProperty('--card-bg');
-                document.documentElement.style.removeProperty('--border-color');
-                document.documentElement.style.removeProperty('--hover-bg');
-                document.documentElement.style.removeProperty('--text-primary');
-
-                // Reset picker values to defaults
-                if (colorBg) colorBg.value = '#050505';
-                if (colorCard) colorCard.value = '#0a0a0f';
-                if (colorBorder) colorBorder.value = '#222222';
-                if (colorText) colorText.value = '#ffffff';
-            });
-        }
-    }
-
 
     // --- 4. 3D TILT INTERACTION ---
     if (!isTouchDevice) {

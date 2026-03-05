@@ -2661,3 +2661,12 @@ body.light-mode .settings-sidebar {
     text-transform: uppercase;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
+/* Latest Transmission TikTok Sidebar Override */
+#settings-sidebar .settings-body {
+    padding: 0 !important;
+    background: #000;
+}
+#settings-sidebar.active {
+    right: 0;
+    box-shadow: -10px 0 50px rgba(0,0,0,0.8);
+}
