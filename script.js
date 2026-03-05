@@ -1347,7 +1347,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', handleEscape);
     }
 
-        let snakeGameInterval;
+    let snakeGameInterval;
     function startSnakeGame() {
         const canvas = document.getElementById('snake-canvas');
         if (!canvas) return;
@@ -1358,7 +1358,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let gameSpeed = 100;
         let particles = [];
         let isGameOver = false;
-        
+
         const scoreEl = document.getElementById('snake-current-score');
         const highscoreEl = document.getElementById('snake-high-score');
         if (highscoreEl) highscoreEl.textContent = highscore;
@@ -1373,7 +1373,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const direction = (e) => {
             // Prevent scrolling with arrow keys
-            if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+            if ([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
                 e.preventDefault();
             }
 
@@ -1448,7 +1448,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function gameLoop() {
             if (isGameOver) return;
-            
+
             d = nextD;
 
             // Background
@@ -1475,14 +1475,14 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.shadowBlur = 0;
 
             // Draw Food
-            const foodGrad = ctx.createRadialGradient(food.x + box/2, food.y + box/2, 2, food.x + box/2, food.y + box/2, box/2);
+            const foodGrad = ctx.createRadialGradient(food.x + box / 2, food.y + box / 2, 2, food.x + box / 2, food.y + box / 2, box / 2);
             foodGrad.addColorStop(0, "#ff5252");
             foodGrad.addColorStop(1, "#b71c1c");
             ctx.shadowBlur = 20;
             ctx.shadowColor = "#f44336";
             ctx.fillStyle = foodGrad;
             ctx.beginPath();
-            ctx.arc(food.x + box/2, food.y + box/2, box/2 - 2, 0, Math.PI * 2);
+            ctx.arc(food.x + box / 2, food.y + box / 2, box / 2 - 2, 0, Math.PI * 2);
             ctx.fill();
             ctx.shadowBlur = 0;
 
@@ -1526,7 +1526,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.font = "bold 30px Orbitron";
                 ctx.textAlign = "center";
                 ctx.fillText("CRITICAL FAILURE", canvas.width / 2, canvas.height / 2 - 20);
-                
+
                 ctx.font = "16px Rajdhani";
                 ctx.fillStyle = "#4CAF50";
                 if (score > highscore) {
@@ -1535,7 +1535,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     ctx.fillText("FINAL SCORE: " + score, canvas.width / 2, canvas.height / 2 + 20);
                 }
-                
+
                 ctx.fillStyle = "#888";
                 ctx.fillText("PRESS [SPACE] TO REBOOT", canvas.width / 2, canvas.height / 2 + 60);
                 return;
@@ -1576,7 +1576,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modal = document.createElement('div');
             modal.id = 'tetris-modal';
             modal.className = 'tetris-modal';
-            modal.innerHTML = '<div class="tetris-content"><div class="tetris-main"><h2>VOID EXTRUDER</h2><canvas id="tetris-canvas" width="240" height="480"></canvas></div><div class="tetris-side"><div class="tetris-stat-box"><div class="tetris-stat-label">SCORE</div><div id="tetris-score" class="tetris-stat-value">0</div></div><div class="tetris-stat-box"><div class="tetris-stat-label">HIGH SCORE</div><div id="tetris-highscore" class="tetris-stat-value">0</div></div><div class="tetris-stat-box"><div class="tetris-stat-label">NEXT</div><canvas id="tetris-next" width="80" height="80"></canvas></div><div class="tetris-controls"><b>ARROWS</b>: MOVE<br><b>UP</b>: ROTATE<br><b>SPACE</b>: HARD DROP<br><b>ESC</b>: EXIT</div></div></div>';
+            modal.innerHTML = '<div class="tetris-content"><div class="tetris-main"><h2>TETRIS</h2><canvas id="tetris-canvas" width="240" height="480"></canvas></div><div class="tetris-side"><div class="tetris-stat-box"><div class="tetris-stat-label">SCORE</div><div id="tetris-score" class="tetris-stat-value">0</div></div><div class="tetris-stat-box"><div class="tetris-stat-label">HIGH SCORE</div><div id="tetris-highscore" class="tetris-stat-value">0</div></div><div class="tetris-stat-box"><div class="tetris-stat-label">NEXT</div><canvas id="tetris-next" width="80" height="80"></canvas></div><div class="tetris-controls"><b>ARROWS</b>: MOVE<br><b>UP</b>: ROTATE<br><b>SPACE</b>: HARD DROP<br><b>ESC</b>: EXIT</div></div></div>';
             document.body.appendChild(modal);
         }
 
@@ -1598,7 +1598,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nextCanvas = document.getElementById('tetris-next');
         const ctx = canvas.getContext('2d');
         const nextCtx = nextCanvas.getContext('2d');
-        
+
         const COLS = 12;
         const ROWS = 20;
         const SQ = 20;
@@ -1624,26 +1624,26 @@ document.addEventListener('DOMContentLoaded', () => {
         function drawBoard() { for (let r = 0; r < ROWS; r++) { for (let c = 0; c < COLS; c++) { drawSquare(c, r, board[r][c]); } } }
 
         const PIECES = [
-            [[[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]], "#00f0f0"], 
-            [[[1,0,0],[1,1,1],[0,0,0]], "#0000f0"], 
-            [[[0,0,1],[1,1,1],[0,0,0]], "#f0a000"], 
-            [[[1,1],[1,1]], "#f0f000"], 
-            [[[0,1,1],[1,1,0],[0,0,0]], "#00f000"], 
-            [[[0,1,0],[1,1,1],[0,0,0]], "#a000f0"], 
-            [[[1,1,0],[0,1,1],[0,0,0]], "#f00000"]
+            [[[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]], "#00f0f0"],
+            [[[1, 0, 0], [1, 1, 1], [0, 0, 0]], "#0000f0"],
+            [[[0, 0, 1], [1, 1, 1], [0, 0, 0]], "#f0a000"],
+            [[[1, 1], [1, 1]], "#f0f000"],
+            [[[0, 1, 1], [1, 1, 0], [0, 0, 0]], "#00f000"],
+            [[[0, 1, 0], [1, 1, 1], [0, 0, 0]], "#a000f0"],
+            [[[1, 1, 0], [0, 1, 1], [0, 0, 0]], "#f00000"]
         ];
 
         function Piece(tetromino, color) {
             this.tetromino = tetromino;
             this.color = color;
             this.activeTetromino = this.tetromino;
-            this.x = Math.floor(COLS/2) - 2;
+            this.x = Math.floor(COLS / 2) - 2;
             this.y = -2;
         }
 
         function rotateMatrix(matrix) { return matrix[0].map((_, i) => matrix.map(row => row[i]).reverse()); }
 
-        Piece.prototype.draw = function(context = ctx) {
+        Piece.prototype.draw = function (context = ctx) {
             for (let r = 0; r < this.activeTetromino.length; r++) {
                 for (let c = 0; c < this.activeTetromino.length; c++) {
                     if (this.activeTetromino[r][c]) {
@@ -1653,7 +1653,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        Piece.prototype.unDraw = function() {
+        Piece.prototype.unDraw = function () {
             for (let r = 0; r < this.activeTetromino.length; r++) {
                 for (let c = 0; c < this.activeTetromino.length; c++) {
                     if (this.activeTetromino[r][c]) {
@@ -1663,7 +1663,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        Piece.prototype.moveDown = function() {
+        Piece.prototype.moveDown = function () {
             if (!this.collision(0, 1, this.activeTetromino)) {
                 this.unDraw();
                 this.y++;
@@ -1676,14 +1676,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        Piece.prototype.moveRight = function() { if (!this.collision(1, 0, this.activeTetromino)) { this.unDraw(); this.x++; this.draw(); } };
-        Piece.prototype.moveLeft = function() { if (!this.collision(-1, 0, this.activeTetromino)) { this.unDraw(); this.x--; this.draw(); } };
-        Piece.prototype.rotate = function() {
+        Piece.prototype.moveRight = function () { if (!this.collision(1, 0, this.activeTetromino)) { this.unDraw(); this.x++; this.draw(); } };
+        Piece.prototype.moveLeft = function () { if (!this.collision(-1, 0, this.activeTetromino)) { this.unDraw(); this.x--; this.draw(); } };
+        Piece.prototype.rotate = function () {
             let nextPattern = rotateMatrix(this.activeTetromino);
             if (!this.collision(0, 0, nextPattern)) { this.unDraw(); this.activeTetromino = nextPattern; this.draw(); }
         };
 
-        Piece.prototype.collision = function(x, y, piece) {
+        Piece.prototype.collision = function (x, y, piece) {
             for (let r = 0; r < piece.length; r++) {
                 for (let c = 0; c < piece.length; c++) {
                     if (!piece[r][c]) continue;
@@ -1701,7 +1701,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let highscore = localStorage.getItem('tetrisHighscore') || 0;
         document.getElementById('tetris-highscore').textContent = highscore;
 
-        Piece.prototype.lock = function() {
+        Piece.prototype.lock = function () {
             for (let r = 0; r < this.activeTetromino.length; r++) {
                 for (let c = 0; c < this.activeTetromino.length; c++) {
                     if (!this.activeTetromino[r][c]) continue;
@@ -1747,7 +1747,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function control(e) {
             if (isGameOver) return;
-            if([37, 38, 39, 40, 32].indexOf(e.keyCode) > -1) e.preventDefault();
+            if ([37, 38, 39, 40, 32].indexOf(e.keyCode) > -1) e.preventDefault();
             if (e.keyCode == 37) p.moveLeft();
             else if (e.keyCode == 38) p.rotate();
             else if (e.keyCode == 39) p.moveRight();
@@ -1760,13 +1760,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isGameOver) {
                 if (score > highscore) { localStorage.setItem('tetrisHighscore', score); }
                 ctx.fillStyle = "rgba(0,0,0,0.85)";
-                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#fff";
                 ctx.font = "18px Orbitron";
                 ctx.textAlign = "center";
-                ctx.fillText("VOID CONSUMED", canvas.width/2, canvas.height/2);
+                ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2);
                 ctx.font = "12px Rajdhani";
-                ctx.fillText("FINAL SCORE: " + score, canvas.width/2, canvas.height/2 + 30);
+                ctx.fillText("FINAL SCORE: " + score, canvas.width / 2, canvas.height / 2 + 30);
                 document.removeEventListener("keydown", control);
                 return;
             }
