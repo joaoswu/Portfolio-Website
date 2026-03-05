@@ -2670,3 +2670,55 @@ body.light-mode .settings-sidebar {
     right: 0;
     box-shadow: -10px 0 50px rgba(0,0,0,0.8);
 }
+
+/* Loadout Arsenal Sidebar Styles */
+.loadout-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.loadout-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(-5px);
+}
+
+.loadout-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid currentColor;
+    text-shadow: 0 0 10px currentColor;
+    flex-shrink: 0;
+}
+
+.loadout-info h4 {
+    margin: 0 0 4px 0;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+}
+
+.loadout-info p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+#settings-sidebar.active {
+    width: 320px; /* Slight increase for better text fit */
+}
