@@ -83,10 +83,87 @@ document.addEventListener('DOMContentLoaded', () => {
         element.classList.add('typing-active');
         for (let i = 0; i < text.length; i++) {
             element.textContent += text[i];
+            if (i % 2 === 0) playSound('type'); // Play clicking sound during typing
             await new Promise(resolve => setTimeout(resolve, speed));
         }
         element.classList.remove('typing-active');
     }
+
+    // --- 2. UI SOUND SYSTEM (WEB AUDIO API) ---
+    let sfxEnabled = localStorage.getItem('sfx-enabled') !== 'false';
+
+    function playSound(type) {
+        if (!sfxEnabled || !audioCtx) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const osc = audioCtx.createOscillator();
+        const envelope = audioCtx.createGain();
+
+        osc.connect(envelope);
+        envelope.connect(gainNode || audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+
+        if (type === 'hover') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, now);
+            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.05);
+            envelope.gain.setValueAtTime(0, now);
+            envelope.gain.linearRampToValueAtTime(0.05, now + 0.01);
+            envelope.gain.linearRampToValueAtTime(0, now + 0.05);
+            osc.start(now);
+            osc.stop(now + 0.05);
+        } else if (type === 'click') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+            envelope.gain.setValueAtTime(0, now);
+            envelope.gain.linearRampToValueAtTime(0.1, now + 0.01);
+            envelope.gain.linearRampToValueAtTime(0, now + 0.1);
+            osc.start(now);
+            osc.stop(now + 0.1);
+        } else if (type === 'type') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(150, now);
+            envelope.gain.setValueAtTime(0, now);
+            envelope.gain.linearRampToValueAtTime(0.02, now + 0.005);
+            envelope.gain.linearRampToValueAtTime(0, now + 0.02);
+            osc.start(now);
+            osc.stop(now + 0.02);
+        } else if (type === 'transition') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(100, now);
+            osc.frequency.exponentialRampToValueAtTime(800, now + 0.5);
+            envelope.gain.setValueAtTime(0, now);
+            envelope.gain.linearRampToValueAtTime(0.1, now + 0.1);
+            envelope.gain.linearRampToValueAtTime(0, now + 0.5);
+            osc.start(now);
+            osc.stop(now + 0.5);
+        }
+    }
+
+    // Attach sound to interactables
+    function attachSounds() {
+        document.querySelectorAll('.interactable').forEach(el => {
+            if (el.dataset.soundBound) return;
+            el.addEventListener('mouseenter', () => playSound('hover'));
+            el.addEventListener('click', () => playSound('click'));
+            el.dataset.soundBound = "true";
+        });
+    }
+    attachSounds(); // Initial bind
+
+    const sfxToggleBtn = document.getElementById('sfx-toggle-btn');
+    if (sfxToggleBtn) {
+        if (!sfxEnabled) sfxToggleBtn.classList.add('muted');
+        sfxToggleBtn.addEventListener('click', () => {
+            sfxEnabled = !sfxEnabled;
+            localStorage.setItem('sfx-enabled', sfxEnabled);
+            sfxToggleBtn.classList.toggle('muted', !sfxEnabled);
+            if (sfxEnabled) playSound('click');
+        });
+    }
+
 
     if (optimizeBtn) {
         optimizeBtn.addEventListener('click', () => {
@@ -3129,5 +3206,109 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
         });
     });
+
+    // --- SEAMLESS PAGE TRANSITIONS ---
+    const transitionOverlay = document.getElementById('overlay-transition');
+
+    // Handle Page In (if transitioning)
+    if (sessionStorage.getItem('joao_transitioning') === 'true') {
+        if (transitionOverlay) {
+            transitionOverlay.classList.remove('hidden');
+            transitionOverlay.classList.add('active');
+
+            setTimeout(() => {
+                transitionOverlay.classList.remove('active');
+                setTimeout(() => {
+                    transitionOverlay.classList.add('hidden');
+                    sessionStorage.setItem('joao_transitioning', 'false');
+                }, 500);
+            }, 300);
+        }
+    }
+
+    // Intercept Nav Clicks
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            if (href && href.endsWith('.html') && !href.startsWith('http')) {
+                e.preventDefault();
+                sessionStorage.setItem('joao_transitioning', 'true');
+                playSound('transition');
+
+                if (transitionOverlay) {
+                    transitionOverlay.classList.remove('hidden');
+                    transitionOverlay.classList.add('active');
+
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 500);
+                } else {
+                    window.location.href = href;
+                }
+            }
+        });
+    });
+
+    // --- SECURE COMMS (GUESTBOOK) ---
+    const guestbookTrigger = document.getElementById('guestbook-trigger');
+    const guestbookSidebar = document.getElementById('guestbook-sidebar');
+    const guestbookLog = document.getElementById('guestbook-log');
+    const guestbookForm = document.getElementById('guestbook-form');
+    const guestbookInput = document.getElementById('guestbook-input');
+
+    if (guestbookTrigger && guestbookSidebar) {
+        guestbookTrigger.addEventListener('click', () => {
+            guestbookSidebar.classList.toggle('active');
+            playSound('click');
+            // Reset other sidebars if open
+            const qaSidebar = document.getElementById('qa-sidebar');
+            const settingsSidebar = document.getElementById('settings-sidebar');
+            if (qaSidebar) qaSidebar.classList.remove('active');
+            if (settingsSidebar) settingsSidebar.classList.remove('active');
+        });
+    }
+
+    // Firebase Guestbook Logic
+    if (db && guestbookLog) {
+        const gbRef = db.ref('guestbook');
+
+        // Listen for new messages
+        gbRef.limitToLast(20).on('child_added', (snapshot) => {
+            const data = snapshot.val();
+            const msgEl = document.createElement('div');
+            msgEl.className = 'guestbook-msg';
+
+            const timestamp = new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            msgEl.innerHTML = `
+                <span class="user">[${timestamp}] ${data.user || 'ANON'}:</span>
+                <span class="content">${data.text}</span>
+            `;
+
+            guestbookLog.appendChild(msgEl);
+            guestbookLog.scrollTop = guestbookLog.scrollHeight;
+
+            // Play a subtle notification sound if open
+            if (guestbookSidebar && guestbookSidebar.classList.contains('active')) playSound('type');
+        });
+
+        // Handle submission
+        if (guestbookForm) {
+            guestbookForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const text = guestbookInput.value.trim();
+                if (!text) return;
+
+                gbRef.push({
+                    text: text,
+                    user: 'GUEST_' + Math.floor(Math.random() * 9000 + 1000),
+                    timestamp: Date.now()
+                });
+
+                guestbookInput.value = '';
+                playSound('click');
+            });
+        }
+    }
 
 });
