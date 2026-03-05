@@ -355,15 +355,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!isTouchDevice) {
-        // Hover states for cursor morphing
-        const interactables = document.querySelectorAll('.interactable, .bento-item');
-        interactables.forEach(el => {
-            el.addEventListener('mouseenter', () => {
+        // Use event delegation for dynamic elements
+        document.addEventListener('mouseover', (e) => {
+            const target = e.target.closest('.interactable, .bento-item, canvas');
+            if (target) {
                 cursor.classList.add('hovering');
-            });
-            el.addEventListener('mouseleave', () => {
+            }
+        });
+        document.addEventListener('mouseout', (e) => {
+            const target = e.target.closest('.interactable, .bento-item, canvas');
+            if (target) {
                 cursor.classList.remove('hovering');
-            });
+            }
         });
 
         // --- Q&A SIDEBAR LOGIC ---
@@ -1327,7 +1330,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div>SCORE: <span id="snake-current-score">0</span></div>
                         <div>HIGH SCORE: <span id="snake-high-score">0</span></div>
                     </div>
-                    <canvas id="snake-canvas" width="400" height="400"></canvas>
+                    <canvas id="snake-canvas" width="400" height="400" class="interactable"></canvas>
                     <p>Use Arrow Keys to move. Press [SPACE] to restart. Press [ESC] to exit.</p>
                 </div>
             `;
@@ -1576,7 +1579,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modal = document.createElement('div');
             modal.id = 'tetris-modal';
             modal.className = 'tetris-modal';
-            modal.innerHTML = '<div class="tetris-content"><div class="tetris-main"><h2>TETRIS</h2><canvas id="tetris-canvas" width="240" height="480"></canvas></div><div class="tetris-side"><div class="tetris-stat-box"><div class="tetris-stat-label">SCORE</div><div id="tetris-score" class="tetris-stat-value">0</div></div><div class="tetris-stat-box"><div class="tetris-stat-label">HIGH SCORE</div><div id="tetris-highscore" class="tetris-stat-value">0</div></div><div class="tetris-stat-box"><div class="tetris-stat-label">NEXT</div><canvas id="tetris-next" width="80" height="80"></canvas></div><div class="tetris-controls"><b>ARROWS</b>: MOVE<br><b>UP</b>: ROTATE<br><b>SPACE</b>: HARD DROP<br><b>ESC</b>: EXIT</div></div></div>';
+            modal.innerHTML = '<div class="tetris-content"><div class="tetris-main"><h2>TETRIS</h2><canvas id="tetris-canvas" width="240" height="480" class="interactable"></canvas></div><div class="tetris-side"><div class="tetris-stat-box"><div class="tetris-stat-label">SCORE</div><div id="tetris-score" class="tetris-stat-value">0</div></div><div class="tetris-stat-box"><div class="tetris-stat-label">HIGH SCORE</div><div id="tetris-highscore" class="tetris-stat-value">0</div></div><div class="tetris-stat-box"><div class="tetris-stat-label">NEXT</div><canvas id="tetris-next" width="80" height="80" class="interactable"></canvas></div><div class="tetris-controls"><b>ARROWS</b>: MOVE<br><b>UP</b>: ROTATE<br><b>SPACE</b>: HARD DROP<br><b>ESC</b>: EXIT</div></div></div>';
             document.body.appendChild(modal);
         }
 
@@ -1802,7 +1805,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modal = document.createElement('div');
             modal.id = 'flappy-modal';
             modal.className = 'flappy-modal';
-            modal.innerHTML = '<div class=\"flappy-content\"><h2>FLAPPY BIRD</h2><div class=\"flappy-scoreboard\"><div>SCORE: <span id=\"flappy-score\">0</span></div><div>HIGH SCORE: <span id=\"flappy-highscore\">0</span></div></div><canvas id=\"flappy-canvas\" width=\"800\" height=\"480\"></canvas><div class=\"flappy-controls\"><b>SPACE / CLICK</b>: JUMP | <b>ESC</b>: EXIT</div></div>';
+            modal.innerHTML = '<div class=\"flappy-content\"><h2>FLAPPY BIRD</h2><div class=\"flappy-scoreboard\"><div>SCORE: <span id=\"flappy-score\">0</span></div><div>HIGH SCORE: <span id=\"flappy-highscore\">0</span></div></div><canvas id=\"flappy-canvas\" width=\"800\" height=\"480\" class=\"interactable\"></canvas><div class=\"flappy-controls\"><b>SPACE / CLICK</b>: JUMP | <b>ESC</b>: EXIT</div></div>';
             document.body.appendChild(modal);
         }
         modal.classList.add('active');
@@ -2061,7 +2064,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modal = document.createElement('div');
             modal.id = 'breakout-modal';
             modal.className = 'breakout-modal';
-            modal.innerHTML = '<div class=\"breakout-content\"><h2>QUANTUM BREAKOUT</h2><div class=\"breakout-scoreboard\"><div>SCORE: <span id=\"breakout-score\">0</span></div><div>HIGH SCORE: <span id=\"breakout-highscore\">0</span></div></div><canvas id=\"breakout-canvas\" width=\"600\" height=\"400\"></canvas><div class=\"breakout-controls\"><b>ARROW KEYS</b>: MOVE PADDLE | <b>ESC</b>: EXIT</div></div>';
+            modal.innerHTML = '<div class=\"breakout-content\"><h2>QUANTUM BREAKOUT</h2><div class=\"breakout-scoreboard\"><div>SCORE: <span id=\"breakout-score\">0</span></div><div>HIGH SCORE: <span id=\"breakout-highscore\">0</span></div></div><canvas id=\"breakout-canvas\" width=\"600\" height=\"400\" class=\"interactable\"></canvas><div class=\"breakout-controls\"><b>ARROW KEYS</b>: MOVE PADDLE | <b>ESC</b>: EXIT</div></div>';
             document.body.appendChild(modal);
         }
         modal.classList.add('active');
@@ -2352,7 +2355,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modal = document.createElement('div');
             modal.id = 'pacman-modal';
             modal.className = 'pacman-modal';
-            modal.innerHTML = '<div class=\"pacman-content\"><h2>PAC-MAN</h2><div class=\"pacman-scoreboard\"><div>SCORE: <span id=\"pacman-score\">0</span></div><div>HIGH: <span id=\"pacman-highscore\">0</span></div></div><canvas id=\"pacman-canvas\" width=\"380\" height=\"440\"></canvas><div class=\"pacman-controls\"><b>ARROWS</b>: MOVE | <b>ESC</b>: EXIT</div></div>';
+            modal.innerHTML = '<div class=\"pacman-content\"><h2>PAC-MAN</h2><div class=\"pacman-scoreboard\"><div>SCORE: <span id=\"pacman-score\">0</span></div><div>HIGH: <span id=\"pacman-highscore\">0</span></div></div><canvas id=\"pacman-canvas\" width=\"380\" height=\"440\" class=\"interactable\"></canvas><div class=\"pacman-controls\"><b>ARROWS</b>: MOVE | <b>ESC</b>: EXIT</div></div>';
             document.body.appendChild(modal);
         }
         modal.classList.add('active');
@@ -2849,7 +2852,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span>TIME: <span id="mine-time">0</span>s</span>
                         </div>
                     </div>
-                    <canvas id="minesweeper-canvas" width="300" height="300"></canvas>
+                    <canvas id="minesweeper-canvas" width="300" height="300" class="interactable"></canvas>
                     <div class="minesweeper-controls">
                         Left Click: <b>Reveal</b> | Right Click: <b>Flag</b> | <b>ESC</b>: Exit
                     </div>

@@ -124,7 +124,8 @@ body {
     width: 30px;
     height: 30px;
     pointer-events: none;
-    z-index: 10000;
+    z-index: 2000000;
+    /* Set to extremely high value to stay above all modals/toasts */
     mix-blend-mode: exclusion;
     transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
     display: flex;
@@ -132,7 +133,6 @@ body {
     justify-content: center;
     transform: translate(-50%, -50%);
     opacity: 1 !important;
-    /* Ensure it's never hidden */
 }
 
 .cursor-shape {
