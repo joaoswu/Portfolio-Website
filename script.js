@@ -1359,49 +1359,104 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 10. SECRET TOPSU CODE ---
-    const topsuCode = ['j', 'o', 'a', 'o'];
-    let topsuIndex = 0;
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key.toLowerCase() === topsuCode[topsuIndex]) {
-            topsuIndex++;
-            if (topsuIndex === topsuCode.length) {
-                showTopsuNotification();
-                topsuIndex = 0;
-            }
-        } else {
-            if (e.key.toLowerCase() === topsuCode[0]) {
-                topsuIndex = 1;
-            } else {
-                topsuIndex = 0;
-            }
-        }
-    });
-
-    function showTopsuNotification() {
-        let notif = document.getElementById('topsu-notif');
+    // --- 10. SYSTEM TOAST SYSTEM (Easter Eggs) ---
+    function showSystemToast(message, icon = null) {
+        let notif = document.getElementById('system-toast');
         if (!notif) {
             notif = document.createElement('div');
-            notif.id = 'topsu-notif';
-            notif.className = 'topsu-toast';
-            notif.innerHTML = `
-                <div class="topsu-toast-content">
-                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" style="color: var(--text-primary);"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                    <span>Topsu was here</span>
-                </div>
-            `;
+            notif.id = 'system-toast';
+            notif.className = 'topsu-toast'; // Reusing existing style class
             document.body.appendChild(notif);
         }
+
+        const iconSVG = icon || `<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" style="color: var(--text-primary);"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
+
+        notif.innerHTML = `
+            <div class="topsu-toast-content">
+                ${iconSVG}
+                <span>${message}</span>
+            </div>
+        `;
 
         // Trigger animation
         requestAnimationFrame(() => {
             notif.classList.add('show');
-            setTimeout(() => {
+            if (typeof playSound === 'function') playSound('type');
+
+            // Clear existing timeout if any
+            if (notif._hideTimeout) clearTimeout(notif._hideTimeout);
+
+            notif._hideTimeout = setTimeout(() => {
                 notif.classList.remove('show');
-            }, 3500); // hide after 3.5 seconds
+            }, 3500);
         });
     }
+
+    // Existing Topsu Secret
+    const topsuCode = ['j', 'o', 'a', 'o'];
+    let topsuIndex = 0;
+    document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === topsuCode[topsuIndex]) {
+            topsuIndex++;
+            if (topsuIndex === topsuCode.length) {
+                showSystemToast("Topsu was here");
+                topsuIndex = 0;
+            }
+        } else {
+            topsuIndex = e.key.toLowerCase() === topsuCode[0] ? 1 : 0;
+        }
+    });
+
+    // New Trigger: Logo Rapid Click
+    const navLogo = document.querySelector('.nav-logo');
+    let logoClicks = 0;
+    let logoClickTimer;
+    if (navLogo) {
+        navLogo.addEventListener('click', () => {
+            logoClicks++;
+            clearTimeout(logoClickTimer);
+            logoClickTimer = setTimeout(() => { logoClicks = 0; }, 2000);
+
+            if (logoClicks === 5) showSystemToast("SYSTEM INTEGRITY: 100%");
+            if (logoClicks === 10) showSystemToast("SECURITY OVERRIDE DETECTED", "⚠️");
+            if (logoClicks === 15) showSystemToast("ROOT ACCESS INITIALIZED", "🛡️");
+        });
+    }
+
+    // New Trigger: Hidden Keybinds
+    document.addEventListener('keydown', (e) => {
+        if (e.altKey && e.key.toLowerCase() === 's') {
+            e.preventDefault();
+            showSystemToast("SCREENSHOT CAPTURED (EMULATED)", "📸");
+        }
+        if (e.altKey && e.key.toLowerCase() === 'r') {
+            e.preventDefault();
+            showSystemToast("ROTATING ENCRYPTION KEYS...", "🔑");
+        }
+    });
+
+    // New Trigger: Profile Hover
+    if (profileCard) {
+        profileCard.addEventListener('mouseenter', () => {
+            if (!sessionStorage.getItem('notified_profile')) {
+                showSystemToast("USER DATA ACCESSED", "👤");
+                sessionStorage.setItem('notified_profile', 'true');
+            }
+        });
+    }
+
+    // New Trigger: Social Cards
+    document.querySelectorAll('.social-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            const platform = card.classList.contains('tiktok') ? 'TIKTOK' :
+                card.classList.contains('github') ? 'GITHUB' :
+                    card.classList.contains('discord-invite') ? 'DISCORD' : 'UPLINK';
+            if (!sessionStorage.getItem(`notified_${platform}`)) {
+                showSystemToast(`ESTABLISHING ${platform} UPLINK...`, "📡");
+                sessionStorage.setItem(`notified_${platform}`, 'true');
+            }
+        });
+    });
 
     // --- 11. SECRET SNAKE CODE ---
     const snakeCode = ['s', 'n', 'a', 'k', 'e'];
