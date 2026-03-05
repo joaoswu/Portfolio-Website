@@ -2061,7 +2061,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modal = document.createElement('div');
             modal.id = 'breakout-modal';
             modal.className = 'breakout-modal';
-            modal.innerHTML = '<div class=\"breakout-content\"><h2>QUANTUM BREAKOUT</h2><div class=\"breakout-scoreboard\"><div>SCORE: <span id=\"breakout-score\">0</span></div><div>HIGH SCORE: <span id=\"breakout-highscore\">0</span></div></div><canvas id=\"breakout-canvas\" width=\"600\" height=\"400\"></canvas><div class=\"breakout-controls\"><b>ARROWS / MOUSE</b>: MOVE PADDLE | <b>ESC</b>: EXIT</div></div>';
+            modal.innerHTML = '<div class=\"breakout-content\"><h2>QUANTUM BREAKOUT</h2><div class=\"breakout-scoreboard\"><div>SCORE: <span id=\"breakout-score\">0</span></div><div>HIGH SCORE: <span id=\"breakout-highscore\">0</span></div></div><canvas id=\"breakout-canvas\" width=\"600\" height=\"400\"></canvas><div class=\"breakout-controls\"><b>ARROW KEYS</b>: MOVE PADDLE | <b>ESC</b>: EXIT</div></div>';
             document.body.appendChild(modal);
         }
         modal.classList.add('active');
@@ -2087,7 +2087,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let highscore = localStorage.getItem('breakoutHighscore') || 0;
         highscoreEl.textContent = highscore;
 
-        let ball = { x: canvas.width / 2, y: canvas.height - 30, dx: 4, dy: -4, radius: 6 };
+        let ball = { x: canvas.width / 2, y: canvas.height - 30, dx: 2.5, dy: -2.5, radius: 6 };
         let paddle = { h: 10, w: 75, x: (canvas.width - 75) / 2 };
         let rightPressed = false;
         let leftPressed = false;
@@ -2153,7 +2153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         let brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
                         bricks[c][r].x = brickX;
                         bricks[c][r].y = brickY;
-                        
+
                         ctx.beginPath();
                         ctx.rect(brickX, brickY, brickWidth, brickHeight);
                         const grad = ctx.createLinearGradient(brickX, brickY, brickX + brickWidth, brickY + brickHeight);
@@ -2180,7 +2180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             b.status = 0;
                             score++;
                             scoreEl.textContent = score;
-                            createParticles(b.x + brickWidth/2, b.y + brickHeight/2, "#00ffff");
+                            createParticles(b.x + brickWidth / 2, b.y + brickHeight / 2, "#00ffff");
                             if (score == brickRowCount * brickColumnCount) {
                                 state = 3;
                             }
@@ -2193,7 +2193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function restart() {
             score = 0;
             scoreEl.textContent = 0;
-            ball = { x: canvas.width / 2, y: canvas.height - 30, dx: 4, dy: -4, radius: 6 };
+            ball = { x: canvas.width / 2, y: canvas.height - 30, dx: 2.5, dy: -2.5, radius: 6 };
             paddle = { h: 10, w: 75, x: (canvas.width - 75) / 2 };
             for (let c = 0; c < brickColumnCount; c++) {
                 for (let r = 0; r < brickRowCount; r++) {
@@ -2210,8 +2210,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Grid
             ctx.strokeStyle = "rgba(0, 255, 255, 0.03)";
-            for(let i=0; i<canvas.width; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
-            for(let i=0; i<canvas.height; i+=40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
+            for (let i = 0; i < canvas.width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke(); }
+            for (let i = 0; i < canvas.height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke(); }
 
             if (state === 1) {
                 if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
@@ -2262,37 +2262,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (state === 0) {
                 ctx.fillStyle = "rgba(0,0,0,0.5)";
-                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#FFF";
                 ctx.font = "bold 20px Orbitron";
                 ctx.textAlign = "center";
-                ctx.fillText("BREAK THE SYSTEM", canvas.width/2, canvas.height/2 - 20);
+                ctx.fillText("BREAK THE SYSTEM", canvas.width / 2, canvas.height / 2 - 20);
                 ctx.font = "14px Rajdhani";
-                ctx.fillText("PRESS [SPACE] OR CLICK TO START", canvas.width/2, canvas.height/2 + 20);
+                ctx.fillText("PRESS [SPACE] OR CLICK TO START", canvas.width / 2, canvas.height / 2 + 20);
             } else if (state === 2) {
                 ctx.fillStyle = "rgba(0,0,0,0.8)";
-                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#FF3131";
                 ctx.font = "bold 24px Orbitron";
                 ctx.textAlign = "center";
-                ctx.fillText("SYSTEM FAILED", canvas.width/2, canvas.height/2 - 20);
+                ctx.fillText("SYSTEM FAILED", canvas.width / 2, canvas.height / 2 - 20);
                 ctx.fillStyle = "#FFF";
                 ctx.font = "16px Rajdhani";
-                ctx.fillText("FINAL SCORE: " + score, canvas.width/2, canvas.height/2 + 20);
+                ctx.fillText("FINAL SCORE: " + score, canvas.width / 2, canvas.height / 2 + 20);
                 ctx.fillStyle = "#888";
-                ctx.fillText("PRESS [SPACE] TO REBOOT", canvas.width/2, canvas.height/2 + 60);
+                ctx.fillText("PRESS [SPACE] TO REBOOT", canvas.width / 2, canvas.height / 2 + 60);
             } else if (state === 3) {
                 ctx.fillStyle = "rgba(0,0,0,0.8)";
-                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#00FF00";
                 ctx.font = "bold 24px Orbitron";
                 ctx.textAlign = "center";
-                ctx.fillText("SYSTEM SECURED", canvas.width/2, canvas.height/2 - 20);
+                ctx.fillText("SYSTEM SECURED", canvas.width / 2, canvas.height / 2 - 20);
                 ctx.fillStyle = "#FFF";
                 ctx.font = "16px Rajdhani";
-                ctx.fillText("YOU CLEANED THE CORE", canvas.width/2, canvas.height/2 + 20);
+                ctx.fillText("YOU CLEANED THE CORE", canvas.width / 2, canvas.height / 2 + 20);
                 ctx.fillStyle = "#888";
-                ctx.fillText("PRESS [SPACE] TO RE-RUN", canvas.width/2, canvas.height/2 + 60);
+                ctx.fillText("PRESS [SPACE] TO RE-RUN", canvas.width / 2, canvas.height / 2 + 60);
             }
 
             breakoutGameLoop = requestAnimationFrame(loop);
@@ -2311,23 +2311,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key == "Right" || e.key == "ArrowRight") rightPressed = false;
             else if (e.key == "Left" || e.key == "ArrowLeft") leftPressed = false;
         };
-        const onMouseMove = (e) => {
-            let relativeX = e.clientX - canvas.offsetLeft;
-            if (relativeX > 0 && relativeX < canvas.width) {
-                paddle.x = relativeX - paddle.w / 2;
-            }
-        };
-
         document.addEventListener("keydown", onKeyDown);
         document.addEventListener("keyup", onKeyUp);
-        canvas.addEventListener("mousemove", onMouseMove);
         canvas.addEventListener("mousedown", () => { if (state === 0) state = 1; else if (state === 2 || state === 3) restart(); });
 
         const escapeCheck = (e) => {
             if (e.key === 'Escape') {
                 document.removeEventListener('keydown', onKeyDown);
                 document.removeEventListener('keyup', onKeyUp);
-                canvas.removeEventListener('mousemove', onMouseMove);
                 document.removeEventListener('keydown', escapeCheck);
             }
         };
