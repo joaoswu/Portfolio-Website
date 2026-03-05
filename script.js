@@ -3171,6 +3171,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- SYSTEM STATUS DASHBOARD ---
+    const activeNodesEl = document.getElementById('active-nodes');
+    const sectorTimeEl = document.getElementById('sector-time');
+    const sectorConditionsEl = document.getElementById('sector-conditions');
+
+    // 1. Sector Time (Clock)
+    function updateSectorTime() {
+        if (!sectorTimeEl) return;
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+        sectorTimeEl.textContent = `[${timeStr}]`;
+    }
+    setInterval(updateSectorTime, 1000);
+    updateSectorTime();
+
+    // 2. Active Nodes tracking (Firebase)
+    if (db && activeNodesEl) {
+        const onlineRef = db.ref('online_users');
+        const connectedRef = db.ref('.info/connected');
+
+        connectedRef.on('value', (snap) => {
+            if (snap.val() === true) {
+                // Add this session to the online list
+                const con = onlineRef.push();
+
+                // Remove on disconnect
+                con.onDisconnect().remove();
+
+                // Set initial value
+                con.set({
+                    last_active: Date.now(),
+                    username: currentUsername || 'ANON'
+                });
+            }
+        });
+
+        // Listen for total count
+        onlineRef.on('value', (snapshot) => {
+            const count = snapshot.numChildren() || 0;
+            activeNodesEl.textContent = count.toString().padStart(2, '0');
+        });
+    }
+
+    // 3. Sector Conditions (Weather)
+    function updateSectorConditions() {
+        if (!sectorConditionsEl) return;
+        fetch('https://api.open-meteo.com/v1/forecast?latitude=51.5085&longitude=-0.1257&current_weather=true')
+            .then(res => res.json())
+            .then(data => {
+                const weather = data.current_weather;
+                const temp = Math.round(weather.temperature);
+                const desc = weather.weathercode <= 3 ? "CLEAR" : "CLOUDY";
+                sectorConditionsEl.textContent = `${temp}°C // ${desc}`;
+            })
+            .catch(() => {
+                sectorConditionsEl.textContent = "STATION_OFFLINE";
+            });
+    }
+    updateSectorConditions();
+    setInterval(updateSectorConditions, 600000); // Update every 10 mins
+
     // --- SECURE COMMS (GUESTBOOK) ---
     const guestbookTrigger = document.getElementById('guestbook-trigger');
     const guestbookSidebar = document.getElementById('guestbook-sidebar');

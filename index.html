@@ -107,6 +107,26 @@
             <h3>Secure Comms</h3>
             <p>Live encrypted feed.</p>
         </div>
+
+        <!-- System Diagnostics Panel -->
+        <div class="system-status">
+            <div class="status-item">
+                <span class="label">NODE_STATUS:</span>
+                <span class="value online"><span class="pulse"></span> ONLINE</span>
+            </div>
+            <div class="status-item">
+                <span class="label">ACTIVE_NODES:</span>
+                <span id="active-nodes" class="value">--</span>
+            </div>
+            <div class="status-item">
+                <span class="label">SECTOR_TIME:</span>
+                <span id="sector-time" class="value">--:--:--</span>
+            </div>
+            <div class="status-item">
+                <span class="label">CONDITIONS:</span>
+                <span id="sector-conditions" class="value">FETCHING...</span>
+            </div>
+        </div>
         <div id="guestbook-log" class="guestbook-log">
             <!-- Messages will be injected here -->
         </div>
