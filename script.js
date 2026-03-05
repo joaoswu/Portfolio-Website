@@ -1821,26 +1821,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function startFlappyBird() {
         const canvas = document.getElementById('flappy-canvas');
         const ctx = canvas.getContext('2d');
-        
+
         let score = 0;
         let highscore = localStorage.getItem('flappyHighscore') || 0;
         document.getElementById('flappy-highscore').textContent = highscore;
         const scoreEl = document.getElementById('flappy-score');
 
-        let bird = { x: 50, y: 150, width: 20, height: 20, gravity: 0.6, lift: -10, velocity: 0 };
+        let bird = { x: 50, y: 150, width: 20, height: 20, gravity: 0.4, lift: -7, velocity: 0 };
         let pipes = [];
         let frame = 0;
         let isGameOver = false;
 
         function Pipe() {
-            this.top = Math.random() * (canvas.height / 2);
-            this.bottom = Math.random() * (canvas.height / 2);
+            const gap = 150;
+            this.top = Math.random() * (canvas.height - gap - 100) + 50;
+            this.bottom = canvas.height - this.top - gap;
             this.x = canvas.width;
             this.w = 50;
-            this.speed = 3;
+            this.speed = 2;
             this.passed = false;
 
-            this.show = function() {
+            this.show = function () {
                 const grad = ctx.createLinearGradient(this.x, 0, this.x + this.w, 0);
                 grad.addColorStop(0, '#FFD700');
                 grad.addColorStop(1, '#B8860B');
@@ -1852,13 +1853,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.shadowBlur = 0;
             };
 
-            this.update = function() {
+            this.update = function () {
                 this.x -= this.speed;
             };
 
-            this.offscreen = function() { return this.x < -this.w; };
+            this.offscreen = function () { return this.x < -this.w; };
 
-            this.hits = function(bird) {
+            this.hits = function (bird) {
                 if (bird.y < this.top || bird.y + bird.height > canvas.height - this.bottom) {
                     if (bird.x + bird.width > this.x && bird.x < this.x + this.w) {
                         return true;
@@ -1875,7 +1876,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Draw a cursor-like triangle
             ctx.beginPath();
             ctx.moveTo(bird.x, bird.y);
-            ctx.lineTo(bird.x + bird.width, bird.y + bird.height/2);
+            ctx.lineTo(bird.x + bird.width, bird.y + bird.height / 2);
             ctx.lineTo(bird.x, bird.y + bird.height);
             ctx.closePath();
             ctx.fill();
@@ -1886,15 +1887,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isGameOver) {
                 if (score > highscore) { localStorage.setItem('flappyHighscore', score); }
                 ctx.fillStyle = 'rgba(0,0,0,0.8)';
-                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = '#fff';
                 ctx.font = '24px Orbitron';
                 ctx.textAlign = 'center';
-                ctx.fillText('CRITICAL CRASH', canvas.width/2, canvas.height/2);
+                ctx.fillText('CRITICAL CRASH', canvas.width / 2, canvas.height / 2);
                 ctx.font = '16px Rajdhani';
-                ctx.fillText('SCORE: ' + score, canvas.width/2, canvas.height/2 + 40);
+                ctx.fillText('SCORE: ' + score, canvas.width / 2, canvas.height / 2 + 40);
                 ctx.fillStyle = '#888';
-                ctx.fillText('PRESS [SPACE] TO REBOOT', canvas.width/2, canvas.height/2 + 80);
+                ctx.fillText('PRESS [SPACE] TO REBOOT', canvas.width / 2, canvas.height / 2 + 80);
                 return;
             }
 
@@ -1904,7 +1905,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (bird.y > canvas.height) { bird.y = canvas.height; bird.velocity = 0; isGameOver = true; }
             if (bird.y < 0) { bird.y = 0; bird.velocity = 0; isGameOver = true; }
 
-            if (frame % 90 === 0) { pipes.push(new Pipe()); }
+            if (frame % 120 === 0) { pipes.push(new Pipe()); }
 
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1912,8 +1913,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Grid background lines
             ctx.strokeStyle = 'rgba(255, 215, 0, 0.05)';
             ctx.lineWidth = 1;
-            for(let i=0; i<canvas.width; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
-            for(let i=0; i<canvas.height; i+=40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
+            for (let i = 0; i < canvas.width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke(); }
+            for (let i = 0; i < canvas.height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke(); }
 
             for (let i = pipes.length - 1; i >= 0; i--) {
                 pipes[i].show();
