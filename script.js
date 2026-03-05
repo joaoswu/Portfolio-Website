@@ -1548,6 +1548,235 @@ document.addEventListener('DOMContentLoaded', () => {
         snakeGameInterval = setInterval(gameLoop, gameSpeed);
     }
 
+
+    // --- 12. SECRET TETRIS CODE ---
+    const tetrisCode = ['t', 'e', 't', 'r', 'i', 's'];
+    let tetrisIdx = 0;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === tetrisCode[tetrisIdx]) {
+            tetrisIdx++;
+            if (tetrisIdx === tetrisCode.length) {
+                openTetrisGame();
+                tetrisIdx = 0;
+            }
+        } else {
+            if (e.key.toLowerCase() === tetrisCode[0]) {
+                tetrisIdx = 1;
+            } else {
+                tetrisIdx = 0;
+            }
+        }
+    });
+
+    let tetrisGameLoop;
+    function openTetrisGame() {
+        let modal = document.getElementById('tetris-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'tetris-modal';
+            modal.className = 'tetris-modal';
+            modal.innerHTML = '<div class="tetris-content"><div class="tetris-main"><h2>VOID EXTRUDER</h2><canvas id="tetris-canvas" width="240" height="480"></canvas></div><div class="tetris-side"><div class="tetris-stat-box"><div class="tetris-stat-label">SCORE</div><div id="tetris-score" class="tetris-stat-value">0</div></div><div class="tetris-stat-box"><div class="tetris-stat-label">HIGH SCORE</div><div id="tetris-highscore" class="tetris-stat-value">0</div></div><div class="tetris-stat-box"><div class="tetris-stat-label">NEXT</div><canvas id="tetris-next" width="80" height="80"></canvas></div><div class="tetris-controls"><b>ARROWS</b>: MOVE<br><b>UP</b>: ROTATE<br><b>SPACE</b>: HARD DROP<br><b>ESC</b>: EXIT</div></div></div>';
+            document.body.appendChild(modal);
+        }
+
+        modal.classList.add('active');
+        startTetrisGame();
+
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                modal.classList.remove('active');
+                cancelAnimationFrame(tetrisGameLoop);
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+    }
+
+    function startTetrisGame() {
+        const canvas = document.getElementById('tetris-canvas');
+        const nextCanvas = document.getElementById('tetris-next');
+        const ctx = canvas.getContext('2d');
+        const nextCtx = nextCanvas.getContext('2d');
+        
+        const COLS = 12;
+        const ROWS = 20;
+        const SQ = 20;
+        const VACANT = "#000000";
+
+        function drawSquare(x, y, color, context = ctx) {
+            context.fillStyle = color;
+            context.fillRect(x * SQ, y * SQ, SQ, SQ);
+            context.strokeStyle = "rgba(255,255,255,0.05)";
+            context.strokeRect(x * SQ, y * SQ, SQ, SQ);
+            if (color !== VACANT) {
+                // Glow effect inside square
+                context.strokeStyle = color;
+                context.lineWidth = 1;
+                context.strokeRect(x * SQ + 2, y * SQ + 2, SQ - 4, SQ - 4);
+                context.lineWidth = 1;
+            }
+        }
+
+        let board = [];
+        for (let r = 0; r < ROWS; r++) { board[r] = []; for (let c = 0; c < COLS; c++) { board[r][c] = VACANT; } }
+
+        function drawBoard() { for (let r = 0; r < ROWS; r++) { for (let c = 0; c < COLS; c++) { drawSquare(c, r, board[r][c]); } } }
+
+        const PIECES = [
+            [[[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]], "#00f0f0"], 
+            [[[1,0,0],[1,1,1],[0,0,0]], "#0000f0"], 
+            [[[0,0,1],[1,1,1],[0,0,0]], "#f0a000"], 
+            [[[1,1],[1,1]], "#f0f000"], 
+            [[[0,1,1],[1,1,0],[0,0,0]], "#00f000"], 
+            [[[0,1,0],[1,1,1],[0,0,0]], "#a000f0"], 
+            [[[1,1,0],[0,1,1],[0,0,0]], "#f00000"]
+        ];
+
+        function Piece(tetromino, color) {
+            this.tetromino = tetromino;
+            this.color = color;
+            this.activeTetromino = this.tetromino;
+            this.x = Math.floor(COLS/2) - 2;
+            this.y = -2;
+        }
+
+        function rotateMatrix(matrix) { return matrix[0].map((_, i) => matrix.map(row => row[i]).reverse()); }
+
+        Piece.prototype.draw = function(context = ctx) {
+            for (let r = 0; r < this.activeTetromino.length; r++) {
+                for (let c = 0; c < this.activeTetromino.length; c++) {
+                    if (this.activeTetromino[r][c]) {
+                        drawSquare(this.x + c, this.y + r, this.color, context);
+                    }
+                }
+            }
+        };
+
+        Piece.prototype.unDraw = function() {
+            for (let r = 0; r < this.activeTetromino.length; r++) {
+                for (let c = 0; c < this.activeTetromino.length; c++) {
+                    if (this.activeTetromino[r][c]) {
+                        drawSquare(this.x + c, this.y + r, VACANT);
+                    }
+                }
+            }
+        };
+
+        Piece.prototype.moveDown = function() {
+            if (!this.collision(0, 1, this.activeTetromino)) {
+                this.unDraw();
+                this.y++;
+                this.draw();
+            } else {
+                this.lock();
+                p = nextP;
+                nextP = randomPiece();
+                drawNext();
+            }
+        };
+
+        Piece.prototype.moveRight = function() { if (!this.collision(1, 0, this.activeTetromino)) { this.unDraw(); this.x++; this.draw(); } };
+        Piece.prototype.moveLeft = function() { if (!this.collision(-1, 0, this.activeTetromino)) { this.unDraw(); this.x--; this.draw(); } };
+        Piece.prototype.rotate = function() {
+            let nextPattern = rotateMatrix(this.activeTetromino);
+            if (!this.collision(0, 0, nextPattern)) { this.unDraw(); this.activeTetromino = nextPattern; this.draw(); }
+        };
+
+        Piece.prototype.collision = function(x, y, piece) {
+            for (let r = 0; r < piece.length; r++) {
+                for (let c = 0; c < piece.length; c++) {
+                    if (!piece[r][c]) continue;
+                    let newX = this.x + c + x;
+                    let newY = this.y + r + y;
+                    if (newX < 0 || newX >= COLS || newY >= ROWS) return true;
+                    if (newY < 0) continue;
+                    if (board[newY][newX] != VACANT) return true;
+                }
+            }
+            return false;
+        };
+
+        let score = 0;
+        let highscore = localStorage.getItem('tetrisHighscore') || 0;
+        document.getElementById('tetris-highscore').textContent = highscore;
+
+        Piece.prototype.lock = function() {
+            for (let r = 0; r < this.activeTetromino.length; r++) {
+                for (let c = 0; c < this.activeTetromino.length; c++) {
+                    if (!this.activeTetromino[r][c]) continue;
+                    if (this.y + r < 0) { isGameOver = true; break; }
+                    board[this.y + r][this.x + c] = this.color;
+                }
+            }
+            for (let r = 0; r < ROWS; r++) {
+                let isRowFull = true;
+                for (let c = 0; c < COLS; c++) { isRowFull = isRowFull && (board[r][c] != VACANT); }
+                if (isRowFull) {
+                    for (let y = r; y > 1; y--) { for (let c = 0; c < COLS; c++) { board[y][c] = board[y - 1][c]; } }
+                    for (let c = 0; c < COLS; c++) { board[0][c] = VACANT; }
+                    score += 100;
+                }
+            }
+            drawBoard();
+            document.getElementById('tetris-score').textContent = score;
+        };
+
+        function randomPiece() { let r = Math.floor(Math.random() * PIECES.length); return new Piece(PIECES[r][0], PIECES[r][1]); }
+
+        function drawNext() {
+            nextCtx.fillStyle = "#000";
+            nextCtx.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
+            for (let r = 0; r < nextP.activeTetromino.length; r++) {
+                for (let c = 0; c < nextP.activeTetromino.length; c++) {
+                    if (nextP.activeTetromino[r][c]) {
+                        nextCtx.fillStyle = nextP.color;
+                        nextCtx.fillRect(c * 20 + 10, r * 20 + 10, 18, 18);
+                    }
+                }
+            }
+        }
+
+        let p = randomPiece();
+        let nextP = randomPiece();
+        drawNext();
+        drawBoard();
+
+        let dropStart = Date.now();
+        let isGameOver = false;
+
+        function control(e) {
+            if (isGameOver) return;
+            if([37, 38, 39, 40, 32].indexOf(e.keyCode) > -1) e.preventDefault();
+            if (e.keyCode == 37) p.moveLeft();
+            else if (e.keyCode == 38) p.rotate();
+            else if (e.keyCode == 39) p.moveRight();
+            else if (e.keyCode == 40) p.moveDown();
+            else if (e.keyCode == 32) { while (!p.collision(0, 1, p.activeTetromino)) { p.moveDown(); } p.moveDown(); }
+        }
+        document.addEventListener("keydown", control);
+
+        function gameLoopFunc() {
+            if (isGameOver) {
+                if (score > highscore) { localStorage.setItem('tetrisHighscore', score); }
+                ctx.fillStyle = "rgba(0,0,0,0.85)";
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillStyle = "#fff";
+                ctx.font = "18px Orbitron";
+                ctx.textAlign = "center";
+                ctx.fillText("VOID CONSUMED", canvas.width/2, canvas.height/2);
+                ctx.font = "12px Rajdhani";
+                ctx.fillText("FINAL SCORE: " + score, canvas.width/2, canvas.height/2 + 30);
+                document.removeEventListener("keydown", control);
+                return;
+            }
+            let now = Date.now();
+            let delta = now - dropStart;
+            if (delta > 800) { p.moveDown(); dropStart = Date.now(); }
+            tetrisGameLoop = requestAnimationFrame(gameLoopFunc);
+        }
+        gameLoopFunc();
+    }
     function stopSnakeGame() {
         clearInterval(snakeGameInterval);
     }

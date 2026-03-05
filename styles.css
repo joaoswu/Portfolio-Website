@@ -2802,3 +2802,109 @@ body.light-mode .settings-sidebar {
     font-weight: bold;
     text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
 }
+
+/* Tetris Game Modal */
+.tetris-modal {
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 100001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.tetris-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.tetris-content {
+    background: #05050a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 0 60px rgba(0, 191, 255, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.tetris-main h2 {
+    color: #00BFFF;
+    font-family: var(--font-mono);
+    margin-top: 0;
+    margin-bottom: 25px;
+    letter-spacing: 4px;
+    text-shadow: 0 0 15px rgba(0, 191, 255, 0.6);
+}
+
+.tetris-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 150px;
+}
+
+.tetris-stat-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.tetris-stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+}
+
+.tetris-stat-value {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.tetris-next-preview {
+    width: 80px;
+    height: 80px;
+    background: #000;
+    border: 1px solid #222;
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#tetris-canvas {
+    background: #000;
+    border: 2px solid #1a1a1a;
+    border-radius: 4px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.9) inset;
+    display: block;
+}
+
+.tetris-controls {
+    margin-top: 20px;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.tetris-controls b {
+    color: var(--text-primary);
+}
