@@ -2430,6 +2430,57 @@ body.fade-out {
     word-break: break-word;
 }
 
+.username-prompt {
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.username-prompt h3 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    margin: 0;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.username-prompt p {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.username-error {
+    color: #f04747;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    min-height: 18px;
+}
+
+#username-submit-btn {
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--text-primary);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#username-submit-btn:hover {
+    background: var(--text-primary);
+    color: #000;
+}
+
 .guestbook-form {
     padding: 20px;
     border-top: 1px solid var(--border-color);

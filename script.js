@@ -3177,17 +3177,80 @@ document.addEventListener('DOMContentLoaded', () => {
     const guestbookLog = document.getElementById('guestbook-log');
     const guestbookForm = document.getElementById('guestbook-form');
     const guestbookInput = document.getElementById('guestbook-input');
+    const usernamePrompt = document.getElementById('username-prompt');
+    const usernameInput = document.getElementById('username-input');
+    const usernameSubmitBtn = document.getElementById('username-submit-btn');
+    const usernameError = document.getElementById('username-error');
+
+    let currentUsername = localStorage.getItem('chat_username');
+
+    function updateChatUI() {
+        if (currentUsername) {
+            if (usernamePrompt) usernamePrompt.style.display = 'none';
+            if (guestbookForm) guestbookForm.style.display = 'flex';
+        } else {
+            if (usernamePrompt) usernamePrompt.style.display = 'flex';
+            if (guestbookForm) guestbookForm.style.display = 'none';
+        }
+    }
+
+    updateChatUI();
 
     if (guestbookTrigger && guestbookSidebar) {
         guestbookTrigger.addEventListener('click', () => {
             guestbookSidebar.classList.toggle('active');
-
         });
     }
 
     // Firebase Guestbook Logic
     if (db && guestbookLog) {
         const gbRef = db.ref('guestbook');
+        const usersRef = db.ref('usernames');
+
+        // Handle Username Establishment
+        if (usernameSubmitBtn && usernameInput) {
+            usernameSubmitBtn.addEventListener('click', async () => {
+                const username = usernameInput.value.trim();
+                const cleanUsername = username.replace(/[^a-zA-Z0-9_]/g, '');
+
+                if (username.length < 3) {
+                    usernameError.textContent = "ID too short (min 3 characters).";
+                    return;
+                }
+                if (username !== cleanUsername) {
+                    usernameError.textContent = "Alphanumeric characters only.";
+                    return;
+                }
+
+                usernameSubmitBtn.disabled = true;
+                usernameSubmitBtn.textContent = "VERIFYING...";
+
+                try {
+                    const snapshot = await usersRef.child(cleanUsername.toLowerCase()).once('value');
+                    if (snapshot.exists()) {
+                        usernameError.textContent = "Callsign already established.";
+                        usernameSubmitBtn.disabled = false;
+                        usernameSubmitBtn.textContent = "ESTABLISH LINK";
+                    } else {
+                        // Reserving username
+                        await usersRef.child(cleanUsername.toLowerCase()).set({
+                            original: username,
+                            timestamp: Date.now()
+                        });
+
+                        currentUsername = username;
+                        localStorage.setItem('chat_username', username);
+                        updateChatUI();
+                        playSound('type');
+                    }
+                } catch (error) {
+                    console.error("Link Failure:", error);
+                    usernameError.textContent = "Network interference. Retry.";
+                    usernameSubmitBtn.disabled = false;
+                    usernameSubmitBtn.textContent = "ESTABLISH LINK";
+                }
+            });
+        }
 
         // Listen for new messages
         gbRef.limitToLast(20).on('child_added', (snapshot) => {
@@ -3205,7 +3268,6 @@ document.addEventListener('DOMContentLoaded', () => {
             guestbookLog.appendChild(msgEl);
             guestbookLog.scrollTop = guestbookLog.scrollHeight;
 
-            // Play a subtle notification sound if open
             if (guestbookSidebar && guestbookSidebar.classList.contains('active')) playSound('type');
         });
 
@@ -3213,12 +3275,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (guestbookForm) {
             guestbookForm.addEventListener('submit', (e) => {
                 e.preventDefault();
+                if (!currentUsername) return;
+
                 const text = guestbookInput.value.trim();
                 if (!text) return;
 
                 gbRef.push({
                     text: text,
-                    user: 'GUEST_' + Math.floor(Math.random() * 9000 + 1000),
+                    user: currentUsername,
                     timestamp: Date.now()
                 });
 

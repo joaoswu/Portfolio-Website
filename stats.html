@@ -231,7 +231,17 @@
         <div id="guestbook-log" class="guestbook-log">
             <!-- Messages will be injected here -->
         </div>
-        <form id="guestbook-form" class="guestbook-form">
+        <div id="username-prompt" class="username-prompt" style="display: none;">
+            <h3>Identify Yourself</h3>
+            <p>One-time unique callsign required.</p>
+            <div class="input-group">
+                <input type="text" id="username-input" placeholder="Enter Callsign..." maxlength="15"
+                    autocomplete="off">
+                <div id="username-error" class="username-error"></div>
+            </div>
+            <button id="username-submit-btn" class="interactable">ESTABLISH LINK</button>
+        </div>
+        <form id="guestbook-form" class="guestbook-form" style="display: none;">
             <input type="text" id="guestbook-input" placeholder="Broadcasting..." autocomplete="off" required
                 maxlength="100">
             <button type="submit" class="interactable">SEND</button>
