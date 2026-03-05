@@ -2420,16 +2420,16 @@ document.addEventListener('DOMContentLoaded', () => {
             y: 15 * TILE_SIZE,
             dir: 0,
             nextDir: 0,
-            speed: 2,
+            speed: 1, // Reduced from 2
             anim: 0
         };
 
         const ghostBase = { x: 9 * TILE_SIZE, y: 9 * TILE_SIZE };
         let ghosts = [
-            { x: 9 * TILE_SIZE, y: 7 * TILE_SIZE, color: '#ff0000', dir: 2, mode: 'chase', speed: 1.5, home: { x: 18, y: 0 } },
-            { x: 9 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#ffb8ff', dir: 3, mode: 'chase', speed: 1.5, home: { x: 0, y: 0 } },
-            { x: 8 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#00ffff', dir: 2, mode: 'chase', speed: 1.5, home: { x: 18, y: 20 } },
-            { x: 10 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#ffb852', dir: 0, mode: 'chase', speed: 1.5, home: { x: 0, y: 20 } }
+            { x: 9 * TILE_SIZE, y: 7 * TILE_SIZE, color: '#ff0000', dir: 2, mode: 'chase', speed: 1, home: { x: 18, y: 0 } },
+            { x: 9 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#ffb8ff', dir: 3, mode: 'chase', speed: 1, home: { x: 0, y: 0 } },
+            { x: 8 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#00ffff', dir: 2, mode: 'chase', speed: 1, home: { x: 18, y: 20 } },
+            { x: 10 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#ffb852', dir: 0, mode: 'chase', speed: 1, home: { x: 0, y: 20 } }
         ];
 
         function drawMaze() {
@@ -2675,12 +2675,12 @@ document.addEventListener('DOMContentLoaded', () => {
             map = JSON.parse(JSON.stringify(originalMap));
             score = 0; pelletsLeft = 0;
             map.forEach(row => row.forEach(cell => { if (cell === 1 || cell === 2) pelletsLeft++; }));
-            pacman = { x: 9 * TILE_SIZE, y: 15 * TILE_SIZE, dir: 0, nextDir: 0, speed: 2, anim: 0 };
+            pacman = { x: 9 * TILE_SIZE, y: 15 * TILE_SIZE, dir: 0, nextDir: 0, speed: 1, anim: 0 };
             ghosts = [
-                { x: 9 * TILE_SIZE, y: 7 * TILE_SIZE, color: '#ff0000', dir: 2, mode: 'chase', speed: 1.5, home: { x: 18, y: 0 } },
-                { x: 9 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#ffb8ff', dir: 3, mode: 'chase', speed: 1.5, home: { x: 0, y: 0 } },
-                { x: 8 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#00ffff', dir: 2, mode: 'chase', speed: 1.5, home: { x: 18, y: 20 } },
-                { x: 10 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#ffb852', dir: 0, mode: 'chase', speed: 1.5, home: { x: 0, y: 20 } }
+                { x: 9 * TILE_SIZE, y: 7 * TILE_SIZE, color: '#ff0000', dir: 2, mode: 'chase', speed: 1, home: { x: 18, y: 0 } },
+                { x: 9 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#ffb8ff', dir: 3, mode: 'chase', speed: 1, home: { x: 0, y: 0 } },
+                { x: 8 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#00ffff', dir: 2, mode: 'chase', speed: 1, home: { x: 18, y: 20 } },
+                { x: 10 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#ffb852', dir: 0, mode: 'chase', speed: 1, home: { x: 0, y: 20 } }
             ];
             state = 0;
         }
