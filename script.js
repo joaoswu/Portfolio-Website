@@ -414,6 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
             settingsSidebar.addEventListener('mouseleave', closeSettings);
         }
 
+    }
 
     // --- 4. 3D TILT INTERACTION ---
     if (!isTouchDevice) {
