@@ -695,30 +695,7 @@ body.light-mode .commission-status:hover {
     /* Increased top padding to clear nav */
 }
 
-/* Theme Toggler */
-.theme-toggler {
-    position: fixed;
-    top: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-}
-
-.theme-toggler:hover {
-    transform: scale(1.1);
-    background: var(--hover-bg);
-}
+/* Theme Toggler (Relocated to bottom) */
 
 /* Q&A Sidebar */
 .qa-trigger {
@@ -2357,10 +2334,139 @@ body.fade-out {
 }
 
 /* ========================================= */
-/*              THEME TRIGGER                */
+/*  SETTINGS SIDEBAR & THEME TRIGGER         */
 /* ========================================= */
-.settings-trigger,
-.theme-toggle {
+
+/* Settings Sidebar Trigger (Right Edge Hover) */
+.settings-trigger {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 80px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-right: none;
+    border-radius: 12px 0 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    z-index: 1000;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.settings-trigger:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+    width: 40px;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Settings Sidebar Panel */
+.settings-sidebar {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 320px;
+    height: 100vh;
+    background: rgba(10, 10, 15, 0.95);
+    border-left: 1px solid var(--border-color);
+    z-index: 1001;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.light-mode .settings-sidebar {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+}
+
+.settings-sidebar.active {
+    right: 0;
+}
+
+.settings-header {
+    margin-bottom: 30px;
+}
+
+.settings-header h3 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.settings-header p {
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+.settings-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.color-picker-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.color-picker-group label {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.color-picker-group input[type="color"] {
+    -webkit-appearance: none;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: transparent;
+}
+
+.color-picker-group input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.color-picker-group input[type="color"]::-webkit-color-swatch {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+#reset-theme-btn {
+    margin-top: 20px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 12px;
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+#reset-theme-btn:hover {
+    background: var(--hover-bg);
+}
+
+/* Theme Toggle Button (Bottom Right Circle) */
+.theme-toggler {
     position: fixed;
     bottom: 20px !important;
     right: 20px !important;
@@ -2379,8 +2485,7 @@ body.fade-out {
     backdrop-filter: blur(5px);
 }
 
-.settings-trigger:hover,
-.theme-toggle:hover {
+.theme-toggler:hover {
     background: rgba(255, 255, 255, 0.15);
-    transform: rotate(90deg);
+    transform: rotate(90deg) scale(1.1);
 }
