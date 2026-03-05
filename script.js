@@ -2854,13 +2854,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <canvas id="minesweeper-canvas" width="300" height="300" class="interactable"></canvas>
                     <div class="minesweeper-controls">
-                        Left Click: <b>Reveal</b> | Right Click: <b>Flag</b> | <b>ESC</b>: Exit
+                        Left Click: <b>Reveal</b> | Right Click: <b>Flag</b> | <b>R</b>: Reboot | <b>ESC</b>: Exit
                     </div>
                 </div>`;
             document.body.appendChild(modal);
         }
         modal.classList.add('active');
-        startMinesweeper();
+        startMinesweeper(modal);
 
         const handleEscape = (e) => {
             if (e.key === 'Escape') {
@@ -2871,10 +2871,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', handleEscape);
     }
 
-    function startMinesweeper() {
+    function startMinesweeper(modal) {
         const canvas = document.getElementById('minesweeper-canvas');
         const ctx = canvas.getContext('2d');
-        const mineCountEl = document.getElementById('mine-count');
         const timeEl = document.getElementById('mine-time');
 
         const GRID_SIZE = 10;
@@ -2886,33 +2885,26 @@ document.addEventListener('DOMContentLoaded', () => {
         let time = 0;
         let timerInterval;
         let effects = [];
+        let frame = 0;
+
+        const colors = {
+            1: '#00ffff', 2: '#00ff00', 3: '#ff3131', 4: '#bd00ff',
+            5: '#ff9a00', 6: '#0062ff', 7: '#f7ff00', 8: '#ffffff'
+        };
 
         function initGrid() {
             grid = [];
             for (let r = 0; r < GRID_SIZE; r++) {
                 grid[r] = [];
                 for (let c = 0; c < GRID_SIZE; c++) {
-                    grid[r][c] = {
-                        mine: false,
-                        revealed: false,
-                        flagged: false,
-                        neighborMines: 0
-                    };
+                    grid[r][c] = { mine: false, revealed: false, flagged: false, neighborMines: 0, revealAnim: 0 };
                 }
             }
-
-            // Place mines
             let placed = 0;
             while (placed < MINE_COUNT) {
-                let r = Math.floor(Math.random() * GRID_SIZE);
-                let c = Math.floor(Math.random() * GRID_SIZE);
-                if (!grid[r][c].mine) {
-                    grid[r][c].mine = true;
-                    placed++;
-                }
+                let r = Math.floor(Math.random() * GRID_SIZE), c = Math.floor(Math.random() * GRID_SIZE);
+                if (!grid[r][c].mine) { grid[r][c].mine = true; placed++; }
             }
-
-            // Calculate neighbors
             for (let r = 0; r < GRID_SIZE; r++) {
                 for (let c = 0; c < GRID_SIZE; c++) {
                     if (!grid[r][c].mine) {
@@ -2931,39 +2923,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function revealCell(r, c) {
             if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE || grid[r][c].revealed || grid[r][c].flagged || state !== 0) return;
-
             grid[r][c].revealed = true;
-
-            // Particles
-            for (let i = 0; i < 3; i++) {
-                effects.push({
-                    x: c * CELL_SIZE + CELL_SIZE / 2,
-                    y: r * CELL_SIZE + CELL_SIZE / 2,
-                    vx: (Math.random() - 0.5) * 3, vy: (Math.random() - 0.5) * 3,
-                    life: 1.0, color: '#00ffff'
-                });
-            }
-
-            if (grid[r][c].mine) {
-                state = 2; // Lost
-                clearInterval(timerInterval);
-                return;
-            }
-
+            grid[r][c].revealAnim = 1.0;
+            if (grid[r][c].mine) { state = 2; clearInterval(timerInterval); return; }
             if (grid[r][c].neighborMines === 0) {
                 for (let dr = -1; dr <= 1; dr++) {
-                    for (let dc = -1; dc <= 1; dc++) {
-                        revealCell(r + dr, c + dc);
-                    }
+                    for (let dc = -1; dc <= 1; dc++) revealCell(r + dr, c + dc);
                 }
             }
-
             checkWin();
         }
 
         function toggleFlag(r, c) {
             if (state !== 0 || grid[r][c].revealed) return;
             grid[r][c].flagged = !grid[r][c].flagged;
+            const mineCountEl = document.getElementById('mine-count');
+            if (mineCountEl) {
+                const flaggedCount = grid.flat().filter(cell => cell.flagged).length;
+                mineCountEl.textContent = MINE_COUNT - flaggedCount;
+            }
         }
 
         function checkWin() {
@@ -2973,88 +2951,112 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!grid[r][c].mine && !grid[r][c].revealed) win = false;
                 }
             }
-            if (win) {
-                state = 1;
-                clearInterval(timerInterval);
-            }
+            if (win) { state = 1; clearInterval(timerInterval); }
         }
 
         canvas.onmousedown = (e) => {
             const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const c = Math.floor(x / CELL_SIZE);
-            const r = Math.floor(y / CELL_SIZE);
-
+            const x = e.clientX - rect.left, y = e.clientY - rect.top;
+            const c = Math.floor(x / CELL_SIZE), r = Math.floor(y / CELL_SIZE);
             if (e.button === 0) revealCell(r, c);
-            else if (e.button === 2) {
-                e.preventDefault();
-                toggleFlag(r, c);
+            else if (e.button === 2) { e.preventDefault(); toggleFlag(r, c); }
+        };
+
+        const handleRestart = (e) => {
+            if (e.key.toLowerCase() === 'r') {
+                clearInterval(timerInterval);
+                document.removeEventListener('keydown', handleRestart);
+                startMinesweeper(modal);
             }
         };
-        canvas.oncontextmenu = (e) => e.preventDefault();
+        document.addEventListener('keydown', handleRestart);
 
         function draw() {
-            ctx.fillStyle = '#000';
+            ctx.fillStyle = '#010105';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw Grid
+            // Subtle Background Grid
+            ctx.strokeStyle = 'rgba(0, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= canvas.width; i += CELL_SIZE) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+            }
+
             for (let r = 0; r < GRID_SIZE; r++) {
                 for (let c = 0; c < GRID_SIZE; c++) {
                     let cell = grid[r][c];
-                    let x = c * CELL_SIZE;
-                    let y = r * CELL_SIZE;
-
-                    ctx.strokeStyle = '#111';
-                    ctx.strokeRect(x, y, CELL_SIZE, CELL_SIZE);
+                    let x = c * CELL_SIZE, y = r * CELL_SIZE;
 
                     if (cell.revealed) {
-                        ctx.fillStyle = cell.mine ? '#ff3131' : '#050510';
+                        ctx.fillStyle = cell.mine ? 'rgba(255, 49, 49, 0.2)' : 'rgba(0, 255, 255, 0.05)';
                         ctx.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
-                        if (!cell.mine && cell.neighborMines > 0) {
-                            ctx.fillStyle = '#00ffff';
-                            ctx.font = 'bold 14px Rajdhani';
+
+                        if (cell.mine) {
+                            // Draw animated mine core
+                            ctx.save();
+                            ctx.translate(x + CELL_SIZE / 2, y + CELL_SIZE / 2);
+                            ctx.rotate(frame * 0.1);
+                            ctx.fillStyle = '#ff3131';
+                            ctx.shadowBlur = 10; ctx.shadowColor = '#ff3131';
+                            ctx.fillRect(-4, -4, 8, 8);
+                            ctx.rotate(Math.PI / 4);
+                            ctx.fillRect(-3, -3, 6, 6);
+                            ctx.restore();
+                        } else if (cell.neighborMines > 0) {
+                            ctx.fillStyle = colors[cell.neighborMines] || '#fff';
+                            ctx.font = 'bold 16px Orbitron';
                             ctx.textAlign = 'center';
-                            ctx.fillText(cell.neighborMines, x + CELL_SIZE / 2, y + 21);
+                            ctx.shadowBlur = 5; ctx.shadowColor = colors[cell.neighborMines];
+                            ctx.fillText(cell.neighborMines, x + CELL_SIZE / 2, y + 22);
+                        }
+
+                        // Reveal flash
+                        if (cell.revealAnim > 0) {
+                            ctx.fillStyle = `rgba(255, 255, 255, ${cell.revealAnim * 0.5})`;
+                            ctx.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+                            cell.revealAnim -= 0.05;
                         }
                     } else {
-                        ctx.fillStyle = '#111';
-                        ctx.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+                        // Unrevealed cell
+                        const grad = ctx.createLinearGradient(x, y, x + CELL_SIZE, y + CELL_SIZE);
+                        grad.addColorStop(0, '#0a0a1a');
+                        grad.addColorStop(1, '#050510');
+                        ctx.fillStyle = grad;
+                        ctx.fillRect(x + 2, y + 2, CELL_SIZE - 4, CELL_SIZE - 4);
+
+                        ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
+                        ctx.strokeRect(x + 2, y + 2, CELL_SIZE - 4, CELL_SIZE - 4);
+
                         if (cell.flagged) {
                             ctx.fillStyle = '#ffff00';
+                            ctx.shadowBlur = 10; ctx.shadowColor = '#ffff00';
                             ctx.beginPath();
-                            ctx.arc(x + CELL_SIZE / 2, y + CELL_SIZE / 2, 4, 0, Math.PI * 2);
+                            ctx.moveTo(x + 10, y + 10); ctx.lineTo(x + 20, y + 15); ctx.lineTo(x + 10, y + 20);
                             ctx.fill();
                         }
-                    }
-
-                    // Neon edges
-                    if (cell.revealed && !cell.mine) {
-                        ctx.strokeStyle = `rgba(0, 255, 255, ${0.1 + Math.sin(frame * 0.05) * 0.05})`;
-                        ctx.strokeRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
                     }
                 }
             }
 
-            // Draw Effects
-            effects.forEach((eff, i) => {
-                eff.x += eff.vx; eff.y += eff.vy; eff.life -= 0.05;
-                if (eff.life <= 0) { effects.splice(i, 1); return; }
-                ctx.fillStyle = eff.color;
-                ctx.globalAlpha = eff.life;
-                ctx.fillRect(eff.x, eff.y, 2, 2);
-            });
-            ctx.globalAlpha = 1;
+            // Sweep Line
+            let sweepY = (frame * 2) % (canvas.height * 2);
+            if (sweepY < canvas.height) {
+                ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
+                ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(0, sweepY); ctx.lineTo(canvas.width, sweepY); ctx.stroke();
+            }
 
+            // Overlays
             if (state === 1) {
-                ctx.fillStyle = 'rgba(0,255,0,0.8)';
-                ctx.font = 'bold 20px Orbitron';
-                ctx.textAlign = 'center';
+                ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#00ff00'; ctx.font = 'bold 20px Orbitron'; ctx.textAlign = 'center';
+                ctx.shadowBlur = 15; ctx.shadowColor = '#00ff00';
                 ctx.fillText('SECTOR SECURED', canvas.width / 2, canvas.height / 2);
             } else if (state === 2) {
-                ctx.fillStyle = 'rgba(255,0,0,0.8)';
-                ctx.font = 'bold 20px Orbitron';
-                ctx.textAlign = 'center';
+                ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ff3131'; ctx.font = 'bold 20px Orbitron'; ctx.textAlign = 'center';
+                ctx.shadowBlur = 15; ctx.shadowColor = '#ff3131';
                 ctx.fillText('CRITICAL FAILURE', canvas.width / 2, canvas.height / 2);
             }
 
@@ -3062,7 +3064,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (modal.classList.contains('active')) requestAnimationFrame(draw);
         }
 
-        let frame = 0;
         initGrid();
         timerInterval = setInterval(() => { if (state === 0) { time++; timeEl.textContent = time; } }, 1000);
         draw();
