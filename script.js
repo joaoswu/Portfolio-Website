@@ -313,7 +313,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const cursor = document.getElementById('cursor');
     const cursorShape = document.getElementById('cursor-shape');
-    const reticle = document.getElementById('target-reticle');
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
@@ -322,30 +321,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastY = mouseY;
     let currentAngle = 0;
 
-    // Reticle State
-    let reticleX = mouseX;
-    let reticleY = mouseY;
-    let reticleW = 40;
-    let reticleH = 40;
-
-    let targetX = mouseX;
-    let targetY = mouseY;
-    let targetW = 40;
-    let targetH = 40;
-    let isLocked = false;
-
     document.addEventListener('mousemove', (e) => {
         if (isTouchDevice) return;
         mouseX = e.clientX;
         mouseY = e.clientY;
-
-        // If not locked, target follows mouse
-        if (!isLocked) {
-            targetX = mouseX;
-            targetY = mouseY;
-            targetW = 40;
-            targetH = 40;
-        }
 
         // Follow perfectly
         cursor.style.left = mouseX + 'px';
@@ -367,17 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         cursor.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg)`;
 
-        // --- RETICLE LERP ---
-        const lerpSpeed = isLocked ? 0.3 : 0.15;
-        reticleX += (targetX - reticleX) * lerpSpeed;
-        reticleY += (targetY - reticleY) * lerpSpeed;
-        reticleW += (targetW - reticleW) * lerpSpeed;
-        reticleH += (targetH - reticleH) * lerpSpeed;
-
-        reticle.style.width = `${reticleW}px`;
-        reticle.style.height = `${reticleH}px`;
-        reticle.style.transform = `translate(-50%, -50%) translate(${reticleX}px, ${reticleY}px)`;
-
         lastX = mouseX;
         lastY = mouseY;
         requestAnimationFrame(animateCursor);
@@ -386,26 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
         animateCursor();
     }
 
-    // Lock-on Logic for Bento Items
-    const bentoCards = document.querySelectorAll('.bento-item');
     if (!isTouchDevice) {
-        bentoCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                const rect = card.getBoundingClientRect();
-                targetX = rect.left + rect.width / 2;
-                targetY = rect.top + rect.height / 2;
-                targetW = rect.width + 10;
-                targetH = rect.height + 10;
-                isLocked = true;
-                reticle.classList.add('locked');
-            });
-
-            card.addEventListener('mouseleave', () => {
-                isLocked = false;
-                reticle.classList.remove('locked');
-            });
-        });
-
         // Hover states for cursor morphing
         const interactables = document.querySelectorAll('.interactable, .bento-item');
         interactables.forEach(el => {
