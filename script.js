@@ -1827,7 +1827,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('flappy-highscore').textContent = highscore;
         const scoreEl = document.getElementById('flappy-score');
 
-        let bird = { x: 50, y: 150, width: 20, height: 20, gravity: 0.4, lift: -7, velocity: 0 };
+        let bird = { x: 50, y: 150, width: 20, height: 20, gravity: 0.25, lift: -6, velocity: 0 };
         let pipes = [];
         let frame = 0;
         let isGameOver = false;
