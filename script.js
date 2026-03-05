@@ -900,6 +900,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- NEURAL ECHO TRAIL ---
+    class EchoParticle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.vx = (Math.random() - 0.5) * 2;
+            this.vy = (Math.random() - 0.5) * 2;
+            this.life = 1.0;
+            this.decay = 0.015 + Math.random() * 0.02;
+            this.size = Math.random() * 3 + 1;
+            this.color = Math.random() > 0.5 ? '#00ffff' : '#ffffff';
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.vy += 0.05; // Subtle gravity
+            this.life -= this.decay;
+
+            // Collision with UI elements
+            const colliders = document.querySelectorAll('.tilt-card, .top-nav, .system-status');
+            colliders.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (this.x > rect.left && this.x < rect.right && this.y > rect.top && this.y < rect.bottom) {
+                    // Simple bounce
+                    if (this.y < rect.top + 10 || this.y > rect.bottom - 10) this.vy *= -0.5;
+                    else this.vx *= -0.5;
+                    this.life -= 0.1; // Damage on hit
+                }
+            });
+        }
+
+        draw() {
+            ctx_net.globalAlpha = this.life;
+            ctx_net.fillStyle = this.color;
+            ctx_net.shadowBlur = 5;
+            ctx_net.shadowColor = this.color;
+            ctx_net.fillRect(this.x, this.y, this.size, this.size);
+            ctx_net.shadowBlur = 0;
+            ctx_net.globalAlpha = 1.0;
+        }
+    }
+
+    let echoParticles = [];
+    document.addEventListener('mousemove', (e) => {
+        if (isOptimized || isTouchDevice) return;
+        // Spawn particles
+        for (let i = 0; i < 2; i++) {
+            echoParticles.push(new EchoParticle(e.clientX, e.clientY));
+        }
+    });
+
     const particleCount = (canvas.width * canvas.height) / 15000;
     for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
@@ -908,6 +960,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function animateNetwork() {
         if (isOptimized) return; // KILLSWITCH for particles
         ctx_net.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Update & Draw Background Particles
         particles.forEach(p => p.update());
         for (let i = 0; i < particles.length; i++) {
             for (let j = i + 1; j < particles.length; j++) {
@@ -926,6 +980,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         particles.forEach(p => p.draw());
+
+        // Update & Draw Echo Trail
+        for (let i = echoParticles.length - 1; i >= 0; i--) {
+            const ep = echoParticles[i];
+            ep.update();
+            if (ep.life <= 0) {
+                echoParticles.splice(i, 1);
+            } else {
+                ep.draw();
+            }
+        }
+
         requestAnimationFrame(animateNetwork);
     }
     animateNetwork();
