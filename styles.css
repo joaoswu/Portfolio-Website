@@ -2722,3 +2722,62 @@ body.light-mode .settings-sidebar {
 #settings-sidebar.active {
     width: 320px; /* Slight increase for better text fit */
 }
+
+/* Snake Game Modal */
+.snake-modal {
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 100000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.snake-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.snake-content {
+    background: #05050a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 50px rgba(76, 175, 80, 0.15);
+    text-align: center;
+}
+
+.snake-content h2 {
+    color: #4CAF50;
+    font-family: var(--font-mono);
+    margin-top: 0;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.snake-content p {
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+#snake-canvas {
+    background: #000;
+    border: 2px solid #222;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8) inset;
+    display: block;
+    margin: 0 auto;
+}

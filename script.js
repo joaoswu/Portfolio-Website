@@ -1294,6 +1294,134 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- 11. SECRET SNAKE CODE ---
+    const snakeCode = ['s', 'n', 'a', 'k', 'e'];
+    let snakeIndex = 0;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === snakeCode[snakeIndex]) {
+            snakeIndex++;
+            if (snakeIndex === snakeCode.length) {
+                openSnakeGame();
+                snakeIndex = 0;
+            }
+        } else {
+            if (e.key.toLowerCase() === snakeCode[0]) {
+                snakeIndex = 1;
+            } else {
+                snakeIndex = 0;
+            }
+        }
+    });
+
+    function openSnakeGame() {
+        let modal = document.getElementById('snake-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'snake-modal';
+            modal.className = 'snake-modal';
+            modal.innerHTML = `
+                <div class="snake-content">
+                    <h2>S N A K E</h2>
+                    <canvas id="snake-canvas" width="400" height="400"></canvas>
+                    <p>Use Arrow Keys to move. Press [ESC] to exit.</p>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        modal.classList.add('active');
+        startSnakeGame();
+
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                modal.classList.remove('active');
+                stopSnakeGame();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+    }
+
+    let snakeGameInterval;
+    function startSnakeGame() {
+        const canvas = document.getElementById('snake-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const box = 20;
+        let snake = [{ x: 9 * box, y: 10 * box }];
+        let food = {
+            x: Math.floor(Math.random() * 19 + 1) * box,
+            y: Math.floor(Math.random() * 19 + 1) * box
+        };
+        let d;
+
+        const direction = (e) => {
+            if (e.keyCode == 37 && d != "RIGHT") d = "LEFT";
+            else if (e.keyCode == 38 && d != "DOWN") d = "UP";
+            else if (e.keyCode == 39 && d != "LEFT") d = "RIGHT";
+            else if (e.keyCode == 40 && d != "UP") d = "DOWN";
+        };
+        document.addEventListener("keydown", direction);
+
+        function collision(head, array) {
+            for (let i = 0; i < array.length; i++) {
+                if (head.x == array[i].x && head.y == array[i].y) return true;
+            }
+            return false;
+        }
+
+        function draw() {
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < snake.length; i++) {
+                ctx.fillStyle = (i == 0) ? "#4CAF50" : "#2E7D32";
+                ctx.fillRect(snake[i].x, snake[i].y, box, box);
+                ctx.strokeStyle = "#000";
+                ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+            }
+
+            ctx.fillStyle = "#f44336";
+            ctx.fillRect(food.x, food.y, box, box);
+
+            let snakeX = snake[0].x;
+            let snakeY = snake[0].y;
+
+            if (d == "LEFT") snakeX -= box;
+            if (d == "UP") snakeY -= box;
+            if (d == "RIGHT") snakeX += box;
+            if (d == "DOWN") snakeY += box;
+
+            if (snakeX == food.x && snakeY == food.y) {
+                food = {
+                    x: Math.floor(Math.random() * 19 + 1) * box,
+                    y: Math.floor(Math.random() * 19 + 1) * box
+                };
+            } else {
+                snake.pop();
+            }
+
+            let newHead = { x: snakeX, y: snakeY };
+
+            if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
+                clearInterval(snakeGameInterval);
+                document.removeEventListener("keydown", direction);
+                alert("GAME OVER! Type SNAKE to try again.");
+                document.getElementById('snake-modal').classList.remove('active');
+            }
+
+            snake.unshift(newHead);
+        }
+
+        if (snakeGameInterval) clearInterval(snakeGameInterval);
+        snakeGameInterval = setInterval(draw, 100);
+    }
+
+    function stopSnakeGame() {
+        clearInterval(snakeGameInterval);
+    }
+
     // --- SEAMLESS PAGE TRANSITIONS ---
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
