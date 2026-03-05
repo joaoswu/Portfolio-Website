@@ -2817,4 +2817,251 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- 16. SECRET MINESWEEPER CODE (NEON GRID) ---
+    const mineCode = ['m', 'i', 'n', 'e'];
+    let mineIdx = 0;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === mineCode[mineIdx]) {
+            mineIdx++;
+            if (mineIdx === mineCode.length) {
+                openMinesweeper();
+                mineIdx = 0;
+            }
+        } else {
+            if (e.key.toLowerCase() === mineCode[0]) { mineIdx = 1; }
+            else { mineIdx = 0; }
+        }
+    });
+
+    function openMinesweeper() {
+        let modal = document.getElementById('minesweeper-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'minesweeper-modal';
+            modal.className = 'minesweeper-modal';
+            modal.innerHTML = `
+                <div class="minesweeper-content">
+                    <div class="minesweeper-header">
+                        <h2>NEON GRID</h2>
+                        <div class="minesweeper-stats">
+                            <span>MINES: <span id="mine-count">4</span></span>
+                            <span>TIME: <span id="mine-time">0</span>s</span>
+                        </div>
+                    </div>
+                    <canvas id="minesweeper-canvas" width="300" height="300"></canvas>
+                    <div class="minesweeper-controls">
+                        Left Click: <b>Reveal</b> | Right Click: <b>Flag</b> | <b>ESC</b>: Exit
+                    </div>
+                </div>`;
+            document.body.appendChild(modal);
+        }
+        modal.classList.add('active');
+        startMinesweeper();
+
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                modal.classList.remove('active');
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+    }
+
+    function startMinesweeper() {
+        const canvas = document.getElementById('minesweeper-canvas');
+        const ctx = canvas.getContext('2d');
+        const mineCountEl = document.getElementById('mine-count');
+        const timeEl = document.getElementById('mine-time');
+
+        const GRID_SIZE = 10;
+        const CELL_SIZE = 30;
+        const MINE_COUNT = 4;
+
+        let grid = [];
+        let state = 0; // 0: Playing, 1: Won, 2: Lost
+        let time = 0;
+        let timerInterval;
+        let effects = [];
+
+        function initGrid() {
+            grid = [];
+            for (let r = 0; r < GRID_SIZE; r++) {
+                grid[r] = [];
+                for (let c = 0; c < GRID_SIZE; c++) {
+                    grid[r][c] = {
+                        mine: false,
+                        revealed: false,
+                        flagged: false,
+                        neighborMines: 0
+                    };
+                }
+            }
+
+            // Place mines
+            let placed = 0;
+            while (placed < MINE_COUNT) {
+                let r = Math.floor(Math.random() * GRID_SIZE);
+                let c = Math.floor(Math.random() * GRID_SIZE);
+                if (!grid[r][c].mine) {
+                    grid[r][c].mine = true;
+                    placed++;
+                }
+            }
+
+            // Calculate neighbors
+            for (let r = 0; r < GRID_SIZE; r++) {
+                for (let c = 0; c < GRID_SIZE; c++) {
+                    if (!grid[r][c].mine) {
+                        let count = 0;
+                        for (let dr = -1; dr <= 1; dr++) {
+                            for (let dc = -1; dc <= 1; dc++) {
+                                let nr = r + dr, nc = c + dc;
+                                if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE && grid[nr][nc].mine) count++;
+                            }
+                        }
+                        grid[r][c].neighborMines = count;
+                    }
+                }
+            }
+        }
+
+        function revealCell(r, c) {
+            if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE || grid[r][c].revealed || grid[r][c].flagged || state !== 0) return;
+
+            grid[r][c].revealed = true;
+
+            // Particles
+            for (let i = 0; i < 3; i++) {
+                effects.push({
+                    x: c * CELL_SIZE + CELL_SIZE / 2,
+                    y: r * CELL_SIZE + CELL_SIZE / 2,
+                    vx: (Math.random() - 0.5) * 3, vy: (Math.random() - 0.5) * 3,
+                    life: 1.0, color: '#00ffff'
+                });
+            }
+
+            if (grid[r][c].mine) {
+                state = 2; // Lost
+                clearInterval(timerInterval);
+                return;
+            }
+
+            if (grid[r][c].neighborMines === 0) {
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        revealCell(r + dr, c + dc);
+                    }
+                }
+            }
+
+            checkWin();
+        }
+
+        function toggleFlag(r, c) {
+            if (state !== 0 || grid[r][c].revealed) return;
+            grid[r][c].flagged = !grid[r][c].flagged;
+        }
+
+        function checkWin() {
+            let win = true;
+            for (let r = 0; r < GRID_SIZE; r++) {
+                for (let c = 0; c < GRID_SIZE; c++) {
+                    if (!grid[r][c].mine && !grid[r][c].revealed) win = false;
+                }
+            }
+            if (win) {
+                state = 1;
+                clearInterval(timerInterval);
+            }
+        }
+
+        canvas.onmousedown = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const c = Math.floor(x / CELL_SIZE);
+            const r = Math.floor(y / CELL_SIZE);
+
+            if (e.button === 0) revealCell(r, c);
+            else if (e.button === 2) {
+                e.preventDefault();
+                toggleFlag(r, c);
+            }
+        };
+        canvas.oncontextmenu = (e) => e.preventDefault();
+
+        function draw() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Grid
+            for (let r = 0; r < GRID_SIZE; r++) {
+                for (let c = 0; c < GRID_SIZE; c++) {
+                    let cell = grid[r][c];
+                    let x = c * CELL_SIZE;
+                    let y = r * CELL_SIZE;
+
+                    ctx.strokeStyle = '#111';
+                    ctx.strokeRect(x, y, CELL_SIZE, CELL_SIZE);
+
+                    if (cell.revealed) {
+                        ctx.fillStyle = cell.mine ? '#ff3131' : '#050510';
+                        ctx.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+                        if (!cell.mine && cell.neighborMines > 0) {
+                            ctx.fillStyle = '#00ffff';
+                            ctx.font = 'bold 14px Rajdhani';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(cell.neighborMines, x + CELL_SIZE / 2, y + 21);
+                        }
+                    } else {
+                        ctx.fillStyle = '#111';
+                        ctx.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+                        if (cell.flagged) {
+                            ctx.fillStyle = '#ffff00';
+                            ctx.beginPath();
+                            ctx.arc(x + CELL_SIZE / 2, y + CELL_SIZE / 2, 4, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+
+                    // Neon edges
+                    if (cell.revealed && !cell.mine) {
+                        ctx.strokeStyle = `rgba(0, 255, 255, ${0.1 + Math.sin(frame * 0.05) * 0.05})`;
+                        ctx.strokeRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+                    }
+                }
+            }
+
+            // Draw Effects
+            effects.forEach((eff, i) => {
+                eff.x += eff.vx; eff.y += eff.vy; eff.life -= 0.05;
+                if (eff.life <= 0) { effects.splice(i, 1); return; }
+                ctx.fillStyle = eff.color;
+                ctx.globalAlpha = eff.life;
+                ctx.fillRect(eff.x, eff.y, 2, 2);
+            });
+            ctx.globalAlpha = 1;
+
+            if (state === 1) {
+                ctx.fillStyle = 'rgba(0,255,0,0.8)';
+                ctx.font = 'bold 20px Orbitron';
+                ctx.textAlign = 'center';
+                ctx.fillText('SECTOR SECURED', canvas.width / 2, canvas.height / 2);
+            } else if (state === 2) {
+                ctx.fillStyle = 'rgba(255,0,0,0.8)';
+                ctx.font = 'bold 20px Orbitron';
+                ctx.textAlign = 'center';
+                ctx.fillText('CRITICAL FAILURE', canvas.width / 2, canvas.height / 2);
+            }
+
+            frame++;
+            if (modal.classList.contains('active')) requestAnimationFrame(draw);
+        }
+
+        let frame = 0;
+        initGrid();
+        timerInterval = setInterval(() => { if (state === 0) { time++; timeEl.textContent = time; } }, 1000);
+        draw();
+    }
 });
