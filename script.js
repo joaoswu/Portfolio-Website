@@ -2410,6 +2410,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let map = JSON.parse(JSON.stringify(originalMap));
         let state = 0; // 0: Ready, 1: Playing, 2: GameOver, 3: Win
         let frame = 0;
+        let powerTimer = 0;
         let pelletsLeft = 0;
         let totalPellets = 0;
         map.forEach(row => row.forEach(cell => { if (cell === 1 || cell === 2) totalPellets++; }));
@@ -2512,10 +2513,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.save();
                 let gx = g.x;
                 let gy = g.y;
-
                 let isFrightened = g.mode === 'frightened';
 
-                // Glitch effect when frightened
                 if (isFrightened) {
                     gx += (Math.random() - 0.5) * 2;
                     gy += (Math.random() - 0.5) * 2;
@@ -2528,7 +2527,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ctx.shadowBlur = 10;
                     ctx.shadowColor = g.color;
                 }
-                // ... body drawing same as before ...
+
                 ctx.beginPath();
                 ctx.arc(0, -2, TILE_SIZE / 2 - 2, Math.PI, 0);
                 ctx.lineTo(TILE_SIZE / 2 - 2, TILE_SIZE / 2 - 2);
@@ -2762,6 +2761,7 @@ document.addEventListener('DOMContentLoaded', () => {
             totalPellets = 0;
             map.forEach(row => row.forEach(cell => { if (cell === 1 || cell === 2) totalPellets++; }));
             pelletsLeft = totalPellets;
+            powerTimer = 0;
             effects = [];
             pacman = { x: 9 * TILE_SIZE, y: 15 * TILE_SIZE, dir: 0, nextDir: 0, speed: 1, anim: 0, trail: [] };
             ghosts = [
