@@ -2908,3 +2908,78 @@ body.light-mode .settings-sidebar {
 .tetris-controls b {
     color: var(--text-primary);
 }
+
+/* Flappy Bird Game Modal */
+.flappy-modal {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 100001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.flappy-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.flappy-content {
+    background: #05050a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 60px rgba(255, 215, 0, 0.1);
+    text-align: center;
+}
+
+.flappy-content h2 {
+    color: #FFD700;
+    font-family: var(--font-mono);
+    margin-top: 0;
+    margin-bottom: 20px;
+    letter-spacing: 4px;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+.flappy-scoreboard {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.flappy-scoreboard span {
+    color: #FFD700;
+    font-weight: bold;
+}
+
+#flappy-canvas {
+    background: #000;
+    border: 2px solid #1a1a1a;
+    border-radius: 4px;
+    display: block;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+.flappy-controls {
+    margin-top: 15px;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+}
+
+.flappy-controls b {
+    color: var(--text-primary);
+}

@@ -1777,6 +1777,195 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         gameLoopFunc();
     }
+
+    // --- 13. SECRET FLAPPY BIRD CODE ---
+    const flappyCode = ['f', 'l', 'a', 'p', 'p', 'y'];
+    let flappyIdx = 0;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === flappyCode[flappyIdx]) {
+            flappyIdx++;
+            if (flappyIdx === flappyCode.length) {
+                openFlappyBird();
+                flappyIdx = 0;
+            }
+        } else {
+            if (e.key.toLowerCase() === flappyCode[0]) { flappyIdx = 1; }
+            else { flappyIdx = 0; }
+        }
+    });
+
+    let flappyGameLoop;
+    function openFlappyBird() {
+        let modal = document.getElementById('flappy-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'flappy-modal';
+            modal.className = 'flappy-modal';
+            modal.innerHTML = '<div class=\"flappy-content\"><h2>FLAPPY BIRD</h2><div class=\"flappy-scoreboard\"><div>SCORE: <span id=\"flappy-score\">0</span></div><div>HIGH SCORE: <span id=\"flappy-highscore\">0</span></div></div><canvas id=\"flappy-canvas\" width=\"320\" height=\"480\"></canvas><div class=\"flappy-controls\"><b>SPACE / CLICK</b>: JUMP | <b>ESC</b>: EXIT</div></div>';
+            document.body.appendChild(modal);
+        }
+        modal.classList.add('active');
+        startFlappyBird();
+
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                modal.classList.remove('active');
+                cancelAnimationFrame(flappyGameLoop);
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+    }
+
+    function startFlappyBird() {
+        const canvas = document.getElementById('flappy-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let score = 0;
+        let highscore = localStorage.getItem('flappyHighscore') || 0;
+        document.getElementById('flappy-highscore').textContent = highscore;
+        const scoreEl = document.getElementById('flappy-score');
+
+        let bird = { x: 50, y: 150, width: 20, height: 20, gravity: 0.6, lift: -10, velocity: 0 };
+        let pipes = [];
+        let frame = 0;
+        let isGameOver = false;
+
+        function Pipe() {
+            this.top = Math.random() * (canvas.height / 2);
+            this.bottom = Math.random() * (canvas.height / 2);
+            this.x = canvas.width;
+            this.w = 50;
+            this.speed = 3;
+            this.passed = false;
+
+            this.show = function() {
+                const grad = ctx.createLinearGradient(this.x, 0, this.x + this.w, 0);
+                grad.addColorStop(0, '#FFD700');
+                grad.addColorStop(1, '#B8860B');
+                ctx.fillStyle = grad;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = 'rgba(255, 215, 0, 0.3)';
+                ctx.fillRect(this.x, 0, this.w, this.top);
+                ctx.fillRect(this.x, canvas.height - this.bottom, this.w, this.bottom);
+                ctx.shadowBlur = 0;
+            };
+
+            this.update = function() {
+                this.x -= this.speed;
+            };
+
+            this.offscreen = function() { return this.x < -this.w; };
+
+            this.hits = function(bird) {
+                if (bird.y < this.top || bird.y + bird.height > canvas.height - this.bottom) {
+                    if (bird.x + bird.width > this.x && bird.x < this.x + this.w) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+        }
+
+        function drawBird() {
+            ctx.fillStyle = '#FFD700';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#FFD700';
+            // Draw a cursor-like triangle
+            ctx.beginPath();
+            ctx.moveTo(bird.x, bird.y);
+            ctx.lineTo(bird.x + bird.width, bird.y + bird.height/2);
+            ctx.lineTo(bird.x, bird.y + bird.height);
+            ctx.closePath();
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        function update() {
+            if (isGameOver) {
+                if (score > highscore) { localStorage.setItem('flappyHighscore', score); }
+                ctx.fillStyle = 'rgba(0,0,0,0.8)';
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillStyle = '#fff';
+                ctx.font = '24px Orbitron';
+                ctx.textAlign = 'center';
+                ctx.fillText('CRITICAL CRASH', canvas.width/2, canvas.height/2);
+                ctx.font = '16px Rajdhani';
+                ctx.fillText('SCORE: ' + score, canvas.width/2, canvas.height/2 + 40);
+                ctx.fillStyle = '#888';
+                ctx.fillText('PRESS [SPACE] TO REBOOT', canvas.width/2, canvas.height/2 + 80);
+                return;
+            }
+
+            bird.velocity += bird.gravity;
+            bird.y += bird.velocity;
+
+            if (bird.y > canvas.height) { bird.y = canvas.height; bird.velocity = 0; isGameOver = true; }
+            if (bird.y < 0) { bird.y = 0; bird.velocity = 0; isGameOver = true; }
+
+            if (frame % 90 === 0) { pipes.push(new Pipe()); }
+
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Grid background lines
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.05)';
+            ctx.lineWidth = 1;
+            for(let i=0; i<canvas.width; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
+            for(let i=0; i<canvas.height; i+=40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
+
+            for (let i = pipes.length - 1; i >= 0; i--) {
+                pipes[i].show();
+                pipes[i].update();
+                if (pipes[i].hits(bird)) { isGameOver = true; }
+                if (pipes[i].offscreen()) { pipes.splice(i, 1); }
+                else if (!pipes[i].passed && pipes[i].x + pipes[i].w < bird.x) {
+                    pipes[i].passed = true;
+                    score++;
+                    scoreEl.textContent = score;
+                }
+            }
+
+            drawBird();
+            frame++;
+            flappyGameLoop = requestAnimationFrame(update);
+        }
+
+        function jump() {
+            if (isGameOver) {
+                isGameOver = false;
+                bird.y = 150;
+                bird.velocity = 0;
+                pipes = [];
+                score = 0;
+                scoreEl.textContent = 0;
+                frame = 0;
+                update();
+            } else {
+                bird.velocity += bird.lift;
+            }
+        }
+
+        const handleInput = (e) => {
+            if (e.code === 'Space') { e.preventDefault(); jump(); }
+        };
+        document.addEventListener('keydown', handleInput);
+        canvas.addEventListener('click', jump);
+
+        // Cleanup on escape
+        const originalEscape = document.onkeydown;
+        const checkEscape = (e) => {
+            if (e.key === 'Escape') {
+                document.removeEventListener('keydown', handleInput);
+                canvas.removeEventListener('click', jump);
+                document.removeEventListener('keydown', checkEscape);
+            }
+        };
+        document.addEventListener('keydown', checkEscape);
+
+        update();
+    }
     function stopSnakeGame() {
         clearInterval(snakeGameInterval);
     }
