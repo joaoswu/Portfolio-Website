@@ -2661,10 +2661,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fillStyle = '#00ff00';
                 ctx.font = 'bold 24px Orbitron';
                 ctx.textAlign = 'center';
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#00ff00';
                 ctx.fillText('CORE SECURED', canvas.width / 2, canvas.height / 2 - 20);
+                ctx.shadowBlur = 0;
                 ctx.fillStyle = '#fff';
                 ctx.font = '16px Rajdhani';
                 ctx.fillText('ALL DATA HARVESTED', canvas.width / 2, canvas.height / 2 + 20);
+                ctx.font = '12px Rajdhani';
+                ctx.fillStyle = '#888';
+                ctx.fillText('PRESS [SPACE] TO RE-RUN PROTOCOL', canvas.width / 2, canvas.height / 2 + 60);
             }
 
             frame++;
