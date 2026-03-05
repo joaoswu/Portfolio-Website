@@ -8,11 +8,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const TIKTOK_LIKES_COUNT = 7700000;
     const TIKTOK_VIDEOS_COUNT = 369;
 
-    const GRAVEYARD_PAGE_VISITS = 686;
-    const GRAVEYARD_PROFILE_HOVERS = 362;
-    const GRAVEYARD_SOCIAL_HOVERS = 129;
-    const GRAVEYARD_DISCORD_CLICKS = 7;
-    const GRAVEYARD_PC_HOVERS = 491;
+    // ==========================================
+    // FIREBASE INITIALIZATION & CONFIG
+    // ==========================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyDZqmGt7fJf_sbP6J3iXQXH9PLDSFj_ZJU",
+        authDomain: "portfolio-89aac.firebaseapp.com",
+        projectId: "portfolio-89aac",
+        storageBucket: "portfolio-89aac.firebasestorage.app",
+        messagingSenderId: "67486466015",
+        appId: "1:67486466015:web:cfe56106758741e4210e6a",
+        measurementId: "G-RJSH0B1NKS"
+    };
+
+    // Initialize Firebase if not already initialized
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+
+    // Session flags to prevent spamming
+    const sessionFlags = {
+        profileHovered: false,
+        socialHovered: false,
+        pcHovered: false
+    };
 
     // Use a bullet point (•) to separate spec items
     const PC_SPECS_TEXT = "• RTX 4070 • INTEL CORE i9-14900K • 32GB DDR5 RAM • 2TB NVME SSD • LIQUID COOLING • 900W PSU";
@@ -1073,7 +1093,7 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(tiktokSection);
     }
 
-    // --- 8. CURSOR GRAVEYARD & PC SPECS ---
+    // --- 8. CURSOR GRAVEYARD (FIREBASE LIVE STATS) ---
     const graveyardSection = document.getElementById('graveyard-section');
     const elPageVisits = document.getElementById('stats-page-visits');
     const elProfileHovers = document.getElementById('stats-profile-hovers');
@@ -1082,6 +1102,91 @@ document.addEventListener('DOMContentLoaded', () => {
     const elPcHovers = document.getElementById('stats-pc-hovers');
     let hasAnimatedGraveyard = false;
 
+    // Helper: Safely increment a counter in Firebase
+    function incrementStat(statName) {
+        const ref = db.ref('stats/' + statName);
+        ref.transaction((currentValue) => {
+            return (currentValue || 0) + 1;
+        });
+    }
+
+    // 1. EVENT LISTENERS FOR INCREMENTS
+    // Page visit - increment on load
+    incrementStat('page_visits');
+
+    // Profile hovers
+    const profileCard = document.querySelector('.profile-card');
+    if (profileCard) {
+        profileCard.addEventListener('mouseenter', () => {
+            if (!sessionFlags.profileHovered) {
+                sessionFlags.profileHovered = true;
+                incrementStat('profile_hovers');
+            }
+        });
+    }
+
+    // Social hovers
+    const socialLinks = document.querySelectorAll('.social-links a');
+    socialLinks.forEach(link => {
+        link.addEventListener('mouseenter', () => {
+            if (!sessionFlags.socialHovered) {
+                sessionFlags.socialHovered = true;
+                incrementStat('social_hovers');
+            }
+        });
+    });
+
+    // Discord Clicks
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('a');
+        if (target && target.href && target.href.includes('discord')) {
+            incrementStat('discord_clicks');
+        }
+    });
+
+    // PC Hovers
+    const specsSectionEl = document.getElementById('specs-section');
+    if (specsSectionEl) {
+        specsSectionEl.addEventListener('mouseenter', () => {
+            if (!sessionFlags.pcHovered) {
+                sessionFlags.pcHovered = true;
+                incrementStat('pc_hovers');
+            }
+        });
+    }
+
+    // 2. LIVE UI UPDATES
+    // Listen for realtime database changes
+    let currentStats = {
+        page_visits: 0,
+        profile_hovers: 0,
+        social_hovers: 0,
+        discord_clicks: 0,
+        pc_hovers: 0
+    };
+
+    db.ref('stats').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            currentStats = {
+                page_visits: data.page_visits || 0,
+                profile_hovers: data.profile_hovers || 0,
+                social_hovers: data.social_hovers || 0,
+                discord_clicks: data.discord_clicks || 0,
+                pc_hovers: data.pc_hovers || 0
+            };
+
+            // If we are already visible and animated, update instantly
+            if (hasAnimatedGraveyard) {
+                if (elPageVisits) elPageVisits.textContent = currentStats.page_visits.toLocaleString();
+                if (elProfileHovers) elProfileHovers.textContent = currentStats.profile_hovers.toLocaleString();
+                if (elSocialHovers) elSocialHovers.textContent = currentStats.social_hovers.toLocaleString();
+                if (elDiscordClicks) elDiscordClicks.textContent = currentStats.discord_clicks.toLocaleString();
+                if (elPcHovers) elPcHovers.textContent = currentStats.pc_hovers.toLocaleString();
+            }
+        }
+    });
+
     if (graveyardSection) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1089,12 +1194,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     entry.target.classList.add('scrolled-in');
                     if (!hasAnimatedGraveyard) {
                         hasAnimatedGraveyard = true;
-                        // Reusing the TikTok animation logic for graveyard numbers
-                        animateTikTokCounter(elPageVisits, GRAVEYARD_PAGE_VISITS);
-                        animateTikTokCounter(elProfileHovers, GRAVEYARD_PROFILE_HOVERS);
-                        animateTikTokCounter(elSocialHovers, GRAVEYARD_SOCIAL_HOVERS);
-                        animateTikTokCounter(elDiscordClicks, GRAVEYARD_DISCORD_CLICKS);
-                        animateTikTokCounter(elPcHovers, GRAVEYARD_PC_HOVERS);
+                        // Animate up to current live values
+                        animateTikTokCounter(elPageVisits, currentStats.page_visits);
+                        animateTikTokCounter(elProfileHovers, currentStats.profile_hovers);
+                        animateTikTokCounter(elSocialHovers, currentStats.social_hovers);
+                        animateTikTokCounter(elDiscordClicks, currentStats.discord_clicks);
+                        animateTikTokCounter(elPcHovers, currentStats.pc_hovers);
                     }
                     observer.unobserve(entry.target);
                 }
