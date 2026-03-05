@@ -3068,4 +3068,27 @@ document.addEventListener('DOMContentLoaded', () => {
         timerInterval = setInterval(() => { if (state === 0) { time++; timeEl.textContent = time; } }, 1000);
         draw();
     }
+
+    // --- 3D Tilt Effect for Project Cards ---
+    const tiltCards = document.querySelectorAll('.tilt-card');
+    tiltCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left; // x position within the element
+            const y = e.clientY - rect.top; // y position within the element
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -10; // Max rotation 10deg
+            const rotateY = ((x - centerX) / centerX) * 10;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        });
+    });
+
 });
