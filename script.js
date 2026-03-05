@@ -1818,7 +1818,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', handleEscape);
     }
 
-        function startFlappyBird() {
+    function startFlappyBird() {
         const canvas = document.getElementById('flappy-canvas');
         const ctx = canvas.getContext('2d');
         const scoreEl = document.getElementById('flappy-score');
@@ -1829,11 +1829,11 @@ document.addEventListener('DOMContentLoaded', () => {
         highscoreEl.textContent = highscore;
 
         // Constants
-        const GRAVITY = 0.3;
-        const JUMP = -6;
-        const PIPE_SPEED = 2.5;
-        const PIPE_SPAWN = 100; // frames
-        const PIPE_GAP = 160;
+        const GRAVITY = 0.2;
+        const JUMP = -5;
+        const PIPE_SPEED = 2.0;
+        const PIPE_SPAWN = 140; // frames
+        const PIPE_GAP = 190;
 
         let bird = { x: 50, y: canvas.height / 2, w: 30, h: 20, v: 0, tilt: 0 };
         let pipes = [];
@@ -1895,7 +1895,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fillRect(p.x, 0, 50, p.top);
                 // Bottom Pipe
                 ctx.fillRect(p.x, p.top + PIPE_GAP, 50, canvas.height - (p.top + PIPE_GAP));
-                
+
                 // Neon caps
                 ctx.fillStyle = "#FFF";
                 ctx.fillRect(p.x - 2, p.top - 5, 54, 5);
@@ -1907,25 +1907,25 @@ document.addEventListener('DOMContentLoaded', () => {
         function drawState() {
             if (state === 0) {
                 ctx.fillStyle = "rgba(0,0,0,0.4)";
-                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#FFF";
                 ctx.font = "bold 20px Orbitron";
                 ctx.textAlign = "center";
-                ctx.fillText("READY SYSTEM", canvas.width/2, canvas.height/2 - 20);
+                ctx.fillText("READY SYSTEM", canvas.width / 2, canvas.height / 2 - 20);
                 ctx.font = "14px Rajdhani";
-                ctx.fillText("PRESS [SPACE] TO ASCENT", canvas.width/2, canvas.height/2 + 20);
+                ctx.fillText("PRESS [SPACE] TO ASCENT", canvas.width / 2, canvas.height / 2 + 20);
             } else if (state === 2) {
                 ctx.fillStyle = "rgba(0,0,0,0.7)";
-                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#FF3131";
                 ctx.font = "bold 24px Orbitron";
                 ctx.textAlign = "center";
-                ctx.fillText("SYSTEM CRASHED", canvas.width/2, canvas.height/2 - 20);
+                ctx.fillText("SYSTEM CRASHED", canvas.width / 2, canvas.height / 2 - 20);
                 ctx.fillStyle = "#FFF";
                 ctx.font = "16px Rajdhani";
-                ctx.fillText("SCORE: " + score, canvas.width/2, canvas.height/2 + 20);
+                ctx.fillText("SCORE: " + score, canvas.width / 2, canvas.height / 2 + 20);
                 ctx.fillStyle = "#888";
-                ctx.fillText("PRESS [SPACE] TO REBOOT", canvas.width/2, canvas.height/2 + 60);
+                ctx.fillText("PRESS [SPACE] TO REBOOT", canvas.width / 2, canvas.height / 2 + 60);
             }
         }
 
@@ -1935,8 +1935,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Grid
             ctx.strokeStyle = "rgba(255, 215, 0, 0.05)";
-            for(let i=0; i<canvas.width; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
-            for(let i=0; i<canvas.height; i+=40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
+            for (let i = 0; i < canvas.width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke(); }
+            for (let i = 0; i < canvas.height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke(); }
 
             if (state === 1) {
                 bird.v += GRAVITY;
