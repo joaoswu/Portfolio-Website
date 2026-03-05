@@ -2303,9 +2303,16 @@ body.fade-out {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
-    transition: all 0.3s ease;
+    z-index: 1001;
+    /* Higher than sidebar at 1000 */
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     backdrop-filter: blur(5px);
+}
+
+/* Shift theme toggler when guestbook is active */
+#guestbook-sidebar.active~.theme-toggler {
+    right: 370px !important;
+    /* 350px sidebar width + 20px margin */
 }
 
 .theme-toggler:hover {
