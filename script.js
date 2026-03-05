@@ -2538,20 +2538,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.lineTo(-(TILE_SIZE / 2 - 2), TILE_SIZE / 2 - 2);
                 ctx.fill();
 
-                // Eyes
-                ctx.fillStyle = '#fff';
-                ctx.beginPath();
-                ctx.arc(-3, -4, 2, 0, Math.PI * 2);
-                ctx.arc(3, -4, 2, 0, Math.PI * 2);
-                ctx.fill();
+                // Eyes (Only if not frightened or white flash)
+                if (!isFrightened || (powerTimer < 90 && frame % 10 < 5)) {
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(-3, -4, 2, 0, Math.PI * 2);
+                    ctx.arc(3, -4, 2, 0, Math.PI * 2);
+                    ctx.fill();
 
-                ctx.fillStyle = '#000';
-                let ex = [1, 0, -1, 0][g.dir];
-                let ey = [0, 1, 0, -1][g.dir];
-                ctx.beginPath();
-                ctx.arc(-3 + ex, -4 + ey, 1, 0, Math.PI * 2);
-                ctx.arc(3 + ex, -4 + ey, 1, 0, Math.PI * 2);
-                ctx.fill();
+                    ctx.fillStyle = '#000';
+                    let ex = [1, 0, -1, 0][g.dir];
+                    let ey = [0, 1, 0, -1][g.dir];
+                    ctx.beginPath();
+                    ctx.arc(-3 + ex, -4 + ey, 1, 0, Math.PI * 2);
+                    ctx.arc(3 + ex, -4 + ey, 1, 0, Math.PI * 2);
+                    ctx.fill();
+                }
 
                 ctx.restore();
                 ctx.shadowBlur = 0;
@@ -2698,7 +2700,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Data Harvested UI
             ctx.fillStyle = 'rgba(0, 255, 255, 0.1)';
             ctx.fillRect(0, 0, canvas.width, 4);
-            let progress = (totalPellets - pelletsLeft) / totalPellets;
+            let progress = totalPellets > 0 ? (totalPellets - pelletsLeft) / totalPellets : 0;
             ctx.fillStyle = '#00ffff';
             ctx.shadowBlur = 5;
             ctx.shadowColor = '#00ffff';
