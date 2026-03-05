@@ -2410,18 +2410,20 @@ document.addEventListener('DOMContentLoaded', () => {
         let map = JSON.parse(JSON.stringify(originalMap));
         let state = 0; // 0: Ready, 1: Playing, 2: GameOver, 3: Win
         let frame = 0;
-        let powerTimer = 0;
         let pelletsLeft = 0;
+        let totalPellets = 0;
+        map.forEach(row => row.forEach(cell => { if (cell === 1 || cell === 2) totalPellets++; }));
+        pelletsLeft = totalPellets;
 
-        map.forEach(row => row.forEach(cell => { if (cell === 1 || cell === 2) pelletsLeft++; }));
-
+        let effects = [];
         let pacman = {
             x: 9 * TILE_SIZE,
             y: 15 * TILE_SIZE,
             dir: 0,
             nextDir: 0,
-            speed: 1, // Reduced from 2
-            anim: 0
+            speed: 1,
+            anim: 0,
+            trail: [] // NEW: Motion trail
         };
 
         const ghostBase = { x: 9 * TILE_SIZE, y: 9 * TILE_SIZE };
@@ -2467,37 +2469,66 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function drawPacman() {
+            // Motion Trail
+            pacman.trail.forEach((pos, i) => {
+                ctx.globalAlpha = i / pacman.trail.length * 0.3;
+                ctx.fillStyle = '#ffff00';
+                ctx.beginPath();
+                ctx.arc(pos.x + TILE_SIZE / 2, pos.y + TILE_SIZE / 2, (TILE_SIZE / 2 - 2) * (i / pacman.trail.length), 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+
             ctx.save();
             ctx.translate(pacman.x + TILE_SIZE / 2, pacman.y + TILE_SIZE / 2);
             const rotations = [0, 0.5, 1, 1.5]; // E, S, W, N
             ctx.rotate(rotations[pacman.dir] * Math.PI);
 
+            // Stretching animation
+            let stretchX = 1 + Math.abs(Math.sin(frame * 0.1)) * 0.1;
+            let stretchY = 1 - Math.abs(Math.sin(frame * 0.1)) * 0.1;
+            ctx.scale(stretchX, stretchY);
+
             ctx.fillStyle = '#ffff00';
-            ctx.shadowBlur = 10;
+            ctx.shadowBlur = 15;
             ctx.shadowColor = '#ffff00';
 
             let mouth = Math.abs(Math.sin(frame * 0.2)) * 0.25;
             ctx.beginPath();
             ctx.moveTo(0, 0);
-            ctx.arc(0, 0, TILE_SIZE / 2 - 2, mouth * Math.PI, (2 - mouth) * Math.PI);
+            ctx.arc(0, 0, (TILE_SIZE / 2 - 2), mouth * Math.PI, (2 - mouth) * Math.PI);
             ctx.fill();
             ctx.restore();
+            ctx.shadowBlur = 0;
+
+            if (state === 1) {
+                pacman.trail.push({ x: pacman.x, y: pacman.y });
+                if (pacman.trail.length > 8) pacman.trail.shift();
+            }
         }
 
         function drawGhosts() {
             ghosts.forEach(g => {
                 ctx.save();
-                ctx.translate(g.x + TILE_SIZE / 2, g.y + TILE_SIZE / 2);
+                let gx = g.x;
+                let gy = g.y;
 
                 let isFrightened = g.mode === 'frightened';
-                ctx.fillStyle = isFrightened ? (powerTimer < 60 && frame % 10 < 5 ? '#fff' : '#2222ff') : g.color;
+
+                // Glitch effect when frightened
+                if (isFrightened) {
+                    gx += (Math.random() - 0.5) * 2;
+                    gy += (Math.random() - 0.5) * 2;
+                }
+
+                ctx.translate(gx + TILE_SIZE / 2, gy + TILE_SIZE / 2);
+                ctx.fillStyle = isFrightened ? (powerTimer < 90 && frame % 10 < 5 ? '#fff' : '#2222ff') : g.color;
 
                 if (!isFrightened) {
                     ctx.shadowBlur = 10;
                     ctx.shadowColor = g.color;
                 }
-
-                // Body
+                // ... body drawing same as before ...
                 ctx.beginPath();
                 ctx.arc(0, -2, TILE_SIZE / 2 - 2, Math.PI, 0);
                 ctx.lineTo(TILE_SIZE / 2 - 2, TILE_SIZE / 2 - 2);
@@ -2524,6 +2555,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fill();
 
                 ctx.restore();
+                ctx.shadowBlur = 0;
             });
         }
 
@@ -2549,12 +2581,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let r = pacman.y / TILE_SIZE;
                 let c = pacman.x / TILE_SIZE;
-                if (map[r][c] === 1) {
-                    map[r][c] = 3; score += 10; pelletsLeft--;
-                } else if (map[r][c] === 2) {
-                    map[r][c] = 3; score += 50; pelletsLeft--;
-                    powerTimer = 300;
-                    ghosts.forEach(g => g.mode = 'frightened');
+                if (map[r][c] === 1 || map[r][c] === 2) {
+                    let isPower = map[r][c] === 2;
+                    map[r][c] = 3;
+                    score += isPower ? 50 : 10;
+                    pelletsLeft--;
+                    // Pixel Pop Particles
+                    for (let i = 0; i < 4; i++) {
+                        effects.push({
+                            x: pacman.x + TILE_SIZE / 2,
+                            y: pacman.y + TILE_SIZE / 2,
+                            vx: (Math.random() - 0.5) * 4,
+                            vy: (Math.random() - 0.5) * 4,
+                            life: 1.0,
+                            color: isPower ? '#00ffff' : '#ffff00'
+                        });
+                    }
+                    if (isPower) {
+                        powerTimer = 525; // 75% longer than 300
+                        ghosts.forEach(g => g.mode = 'frightened');
+                    }
                 }
                 scoreEl.textContent = score;
                 if (pelletsLeft === 0) state = 3;
@@ -2640,6 +2686,32 @@ document.addEventListener('DOMContentLoaded', () => {
             drawPacman();
             drawGhosts();
 
+            // Draw Effects
+            effects.forEach((eff, i) => {
+                eff.x += eff.vx; eff.y += eff.vy; eff.life -= 0.04;
+                if (eff.life <= 0) { effects.splice(i, 1); return; }
+                ctx.fillStyle = eff.color;
+                ctx.globalAlpha = eff.life;
+                ctx.fillRect(eff.x, eff.y, 2, 2);
+            });
+            ctx.globalAlpha = 1;
+
+            // Data Harvested UI
+            ctx.fillStyle = 'rgba(0, 255, 255, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, 4);
+            let progress = (totalPellets - pelletsLeft) / totalPellets;
+            ctx.fillStyle = '#00ffff';
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = '#00ffff';
+            ctx.fillRect(0, 0, canvas.width * progress, 4);
+            ctx.shadowBlur = 0;
+
+            // Scanlines
+            ctx.fillStyle = 'rgba(18, 16, 16, 0.1)';
+            for (let i = 0; i < canvas.height; i += 4) {
+                ctx.fillRect(0, i, canvas.width, 1);
+            }
+
             if (state === 0) {
                 ctx.fillStyle = 'rgba(0,0,0,0.7)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -2686,9 +2758,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function restart() {
             map = JSON.parse(JSON.stringify(originalMap));
-            score = 0; pelletsLeft = 0;
-            map.forEach(row => row.forEach(cell => { if (cell === 1 || cell === 2) pelletsLeft++; }));
-            pacman = { x: 9 * TILE_SIZE, y: 15 * TILE_SIZE, dir: 0, nextDir: 0, speed: 1, anim: 0 };
+            score = 0;
+            totalPellets = 0;
+            map.forEach(row => row.forEach(cell => { if (cell === 1 || cell === 2) totalPellets++; }));
+            pelletsLeft = totalPellets;
+            effects = [];
+            pacman = { x: 9 * TILE_SIZE, y: 15 * TILE_SIZE, dir: 0, nextDir: 0, speed: 1, anim: 0, trail: [] };
             ghosts = [
                 { x: 9 * TILE_SIZE, y: 7 * TILE_SIZE, color: '#ff0000', dir: 2, mode: 'chase', speed: 1, home: { x: 18, y: 0 } },
                 { x: 9 * TILE_SIZE, y: 9 * TILE_SIZE, color: '#ffb8ff', dir: 3, mode: 'chase', speed: 1, home: { x: 0, y: 0 } },
