@@ -2489,3 +2489,122 @@ body.light-mode .settings-sidebar {
     background: rgba(255, 255, 255, 0.15);
     transform: rotate(90deg) scale(1.1);
 }
+
+/* ========================================= */
+/*               GLOBAL FOOTER               */
+/* ========================================= */
+.global-footer {
+    width: 100%;
+    padding: 60px 20px 100px;
+    /* Lots of bottom padding for music visualizer */
+    display: flex;
+    justify-content: center;
+    background: transparent;
+    position: relative;
+    z-index: 10;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    max-width: 800px;
+    width: 100%;
+}
+
+.footer-logo-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+/* The abstract glowing ring logo from LABL */
+.abstract-logo {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.abstract-logo::before {
+    content: '';
+    position: absolute;
+    width: 140%;
+    height: 1px;
+    background: var(--text-primary);
+    transform: rotate(-15deg);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.abstract-logo::after {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 40px;
+    border-radius: 50%;
+    border-top: 1px solid var(--text-primary);
+    border-bottom: 1px solid var(--text-primary);
+    transform: rotate(15deg);
+    opacity: 0.5;
+}
+
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-brand {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    letter-spacing: 4px;
+    margin: 0;
+}
+
+.footer-copyright {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    margin: 0;
+    opacity: 0.7;
+}
+
+.footer-credit {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    margin: 0;
+    opacity: 0.7;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 12px;
+    margin-top: 5px;
+}
+
+.social-pill {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.social-pill:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
