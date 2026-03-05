@@ -1328,7 +1328,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div>HIGH SCORE: <span id="snake-high-score">0</span></div>
                     </div>
                     <canvas id="snake-canvas" width="400" height="400"></canvas>
-                    <p>Use Arrow Keys to move. Press [ESC] to exit.</p>
+                    <p>Use Arrow Keys to move. Press [SPACE] to restart. Press [ESC] to exit.</p>
                 </div>
             `;
             document.body.appendChild(modal);
@@ -1347,7 +1347,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', handleEscape);
     }
 
-    let snakeGameInterval;
+        let snakeGameInterval;
     function startSnakeGame() {
         const canvas = document.getElementById('snake-canvas');
         if (!canvas) return;
@@ -1355,7 +1355,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const box = 20;
         let score = 0;
         let highscore = localStorage.getItem('snakeHighscore') || 0;
-
+        let gameSpeed = 100;
+        let particles = [];
+        let isGameOver = false;
+        
         const scoreEl = document.getElementById('snake-current-score');
         const highscoreEl = document.getElementById('snake-high-score');
         if (highscoreEl) highscoreEl.textContent = highscore;
@@ -1366,14 +1369,75 @@ document.addEventListener('DOMContentLoaded', () => {
             y: Math.floor(Math.random() * 19 + 1) * box
         };
         let d;
+        let nextD;
 
         const direction = (e) => {
-            if (e.keyCode == 37 && d != "RIGHT") d = "LEFT";
-            else if (e.keyCode == 38 && d != "DOWN") d = "UP";
-            else if (e.keyCode == 39 && d != "LEFT") d = "RIGHT";
-            else if (e.keyCode == 40 && d != "UP") d = "DOWN";
+            // Prevent scrolling with arrow keys
+            if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
+
+            if (e.keyCode == 37 && d != "RIGHT") nextD = "LEFT";
+            else if (e.keyCode == 38 && d != "DOWN") nextD = "UP";
+            else if (e.keyCode == 39 && d != "LEFT") nextD = "RIGHT";
+            else if (e.keyCode == 40 && d != "UP") nextD = "DOWN";
+
+            if (isGameOver && e.keyCode == 32) { // Space to restart
+                clearInterval(snakeGameInterval);
+                document.removeEventListener("keydown", direction);
+                startSnakeGame();
+            }
         };
         document.addEventListener("keydown", direction);
+
+        function createParticles(x, y, color) {
+            for (let i = 0; i < 10; i++) {
+                particles.push({
+                    x: x + box / 2,
+                    y: y + box / 2,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    life: 1.0,
+                    color: color
+                });
+            }
+        }
+
+        function updateParticles() {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 0.05;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+        }
+
+        function drawParticles() {
+            particles.forEach(p => {
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1.0;
+        }
+
+        function drawGrid() {
+            ctx.strokeStyle = "rgba(76, 175, 80, 0.05)";
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= canvas.width; i += box) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+        }
 
         function collision(head, array) {
             for (let i = 0; i < array.length; i++) {
@@ -1382,19 +1446,49 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
 
-        function draw() {
+        function gameLoop() {
+            if (isGameOver) return;
+            
+            d = nextD;
+
+            // Background
             ctx.fillStyle = "#000";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
 
+            // Draw Snake
             for (let i = 0; i < snake.length; i++) {
-                ctx.fillStyle = (i == 0) ? "#4CAF50" : "#2E7D32";
-                ctx.fillRect(snake[i].x, snake[i].y, box, box);
-                ctx.strokeStyle = "#000";
-                ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+                const gradient = ctx.createLinearGradient(snake[i].x, snake[i].y, snake[i].x + box, snake[i].y + box);
+                if (i === 0) {
+                    gradient.addColorStop(0, "#4CAF50");
+                    gradient.addColorStop(1, "#81C784");
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = "#4CAF50";
+                } else {
+                    gradient.addColorStop(0, "#2E7D32");
+                    gradient.addColorStop(1, "#388E3C");
+                    ctx.shadowBlur = 0;
+                }
+                ctx.fillStyle = gradient;
+                ctx.fillRect(snake[i].x + 1, snake[i].y + 1, box - 2, box - 2);
             }
+            ctx.shadowBlur = 0;
 
-            ctx.fillStyle = "#f44336";
-            ctx.fillRect(food.x, food.y, box, box);
+            // Draw Food
+            const foodGrad = ctx.createRadialGradient(food.x + box/2, food.y + box/2, 2, food.x + box/2, food.y + box/2, box/2);
+            foodGrad.addColorStop(0, "#ff5252");
+            foodGrad.addColorStop(1, "#b71c1c");
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "#f44336";
+            ctx.fillStyle = foodGrad;
+            ctx.beginPath();
+            ctx.arc(food.x + box/2, food.y + box/2, box/2 - 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Update particles
+            updateParticles();
+            drawParticles();
 
             let snakeX = snake[0].x;
             let snakeY = snake[0].y;
@@ -1407,10 +1501,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (snakeX == food.x && snakeY == food.y) {
                 score++;
                 if (scoreEl) scoreEl.textContent = score;
+                createParticles(food.x, food.y, "#f44336");
                 food = {
                     x: Math.floor(Math.random() * 19 + 1) * box,
                     y: Math.floor(Math.random() * 19 + 1) * box
                 };
+                // Speed ramp
+                if (score % 5 === 0 && gameSpeed > 50) {
+                    gameSpeed -= 10;
+                    clearInterval(snakeGameInterval);
+                    snakeGameInterval = setInterval(gameLoop, gameSpeed);
+                }
             } else {
                 snake.pop();
             }
@@ -1418,24 +1519,33 @@ document.addEventListener('DOMContentLoaded', () => {
             let newHead = { x: snakeX, y: snakeY };
 
             if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
-                clearInterval(snakeGameInterval);
-                document.removeEventListener("keydown", direction);
-
+                isGameOver = true;
+                ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#fff";
+                ctx.font = "bold 30px Orbitron";
+                ctx.textAlign = "center";
+                ctx.fillText("CRITICAL FAILURE", canvas.width / 2, canvas.height / 2 - 20);
+                
+                ctx.font = "16px Rajdhani";
+                ctx.fillStyle = "#4CAF50";
                 if (score > highscore) {
                     localStorage.setItem('snakeHighscore', score);
-                    alert("NEW HIGH SCORE: " + score + "! Type SNAKE to try again.");
+                    ctx.fillText("NEW SYSTEM RECORD: " + score, canvas.width / 2, canvas.height / 2 + 20);
                 } else {
-                    alert("GAME OVER! Score: " + score + ". Type SNAKE to try again.");
+                    ctx.fillText("FINAL SCORE: " + score, canvas.width / 2, canvas.height / 2 + 20);
                 }
-
-                document.getElementById('snake-modal').classList.remove('active');
+                
+                ctx.fillStyle = "#888";
+                ctx.fillText("PRESS [SPACE] TO REBOOT", canvas.width / 2, canvas.height / 2 + 60);
+                return;
             }
 
             snake.unshift(newHead);
         }
 
         if (snakeGameInterval) clearInterval(snakeGameInterval);
-        snakeGameInterval = setInterval(draw, 100);
+        snakeGameInterval = setInterval(gameLoop, gameSpeed);
     }
 
     function stopSnakeGame() {
