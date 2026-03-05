@@ -1802,7 +1802,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modal = document.createElement('div');
             modal.id = 'flappy-modal';
             modal.className = 'flappy-modal';
-            modal.innerHTML = '<div class=\"flappy-content\"><h2>FLAPPY BIRD</h2><div class=\"flappy-scoreboard\"><div>SCORE: <span id=\"flappy-score\">0</span></div><div>HIGH SCORE: <span id=\"flappy-highscore\">0</span></div></div><canvas id=\"flappy-canvas\" width=\"320\" height=\"480\"></canvas><div class=\"flappy-controls\"><b>SPACE / CLICK</b>: JUMP | <b>ESC</b>: EXIT</div></div>';
+            modal.innerHTML = '<div class=\"flappy-content\"><h2>FLAPPY BIRD</h2><div class=\"flappy-scoreboard\"><div>SCORE: <span id=\"flappy-score\">0</span></div><div>HIGH SCORE: <span id=\"flappy-highscore\">0</span></div></div><canvas id=\"flappy-canvas\" width=\"800\" height=\"480\"></canvas><div class=\"flappy-controls\"><b>SPACE / CLICK</b>: JUMP | <b>ESC</b>: EXIT</div></div>';
             document.body.appendChild(modal);
         }
         modal.classList.add('active');
