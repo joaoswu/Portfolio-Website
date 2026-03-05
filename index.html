@@ -115,280 +115,203 @@
                 maxlength="100">
             <button type="submit" class="interactable">SEND</button>
         </form>
-    </aside> <!-- Loadout Arsenal Sidebar -->
-    <div id="settings-trigger" class="settings-trigger interactable" title="Loadout Arsenal">
-        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none">
-            <path
-                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z">
-            </path>
-        </svg>
-    </div>
-    <aside id="settings-sidebar" class="settings-sidebar">
-        <div class="settings-header">
-            <h3>Loadout Arsenal</h3>
-            <p>Core visual design engines.</p>
-        </div>
-        <div class="settings-body"
-            style="padding: 20px; display: flex; flex-direction: column; gap: 12px; background: rgba(5,5,10,0.95); overflow-y: auto;">
 
-            <div class="loadout-item interactable">
-                <div class="loadout-icon" style="color: #9999FF;">AE</div>
-                <div class="loadout-info">
-                    <h4>After Effects</h4>
-                    <p>Primary Engine</p>
+
+        <!-- Secret Admin Log (Hidden) -->
+        <div id="admin-log-modal" class="admin-log-modal hidden">
+            <div class="admin-log-content interactable">
+                <div class="admin-header">
+                    <h2>> ROOT ACCESS GRANTED</h2>
+                    <button id="close-admin">X</button>
                 </div>
-            </div>
-
-            <div class="loadout-item interactable">
-                <div class="loadout-icon" style="color: #00BFFF;">TV</div>
-                <div class="loadout-info">
-                    <h4>Topaz Video AI</h4>
-                    <p>Upscaling & Frame Generation</p>
-                </div>
-            </div>
-
-            <div class="loadout-item interactable">
-                <div class="loadout-icon" style="color: #FF5722;">MB</div>
-                <div class="loadout-info">
-                    <h4>Magic Bullet Looks</h4>
-                    <p>Color Science</p>
-                </div>
-            </div>
-
-            <div class="loadout-item interactable">
-                <div class="loadout-icon" style="color: #E040FB;">DG</div>
-                <div class="loadout-info">
-                    <h4>Deep Glow</h4>
-                    <p>Luminance Dynamics</p>
-                </div>
-            </div>
-
-            <div class="loadout-item interactable">
-                <div class="loadout-icon" style="color: #00E676;">SP</div>
-                <div class="loadout-info">
-                    <h4>Sapphire</h4>
-                    <p>Advanced VFX Suite</p>
-                </div>
-            </div>
-
-            <div class="loadout-item interactable">
-                <div class="loadout-icon" style="color: #F44336;">RG</div>
-                <div class="loadout-info">
-                    <h4>Red Giant Universe</h4>
-                    <p>Stylization & Transitions</p>
-                </div>
-            </div>
-
-            <div class="loadout-item interactable">
-                <div class="loadout-icon" style="color: #FFD600;">TW</div>
-                <div class="loadout-info">
-                    <h4>Twitch</h4>
-                    <p>Chaos & Glitch Injection</p>
-                </div>
-            </div>
-
-            <div class="loadout-item interactable">
-                <div class="loadout-icon" style="color: #00BCD4;">TC</div>
-                <div class="loadout-info">
-                    <h4>Trapcode</h4>
-                    <p>Particle Systems</p>
-                </div>
-            </div>
-
-        </div>
-    </aside>
-
-    <!-- Secret Admin Log (Hidden) -->
-    <div id="admin-log-modal" class="admin-log-modal hidden">
-        <div class="admin-log-content interactable">
-            <div class="admin-header">
-                <h2>> ROOT ACCESS GRANTED</h2>
-                <button id="close-admin">X</button>
-            </div>
-            <div class="admin-body">
-                <p class="admin-warning">WARNING: UNAUTHORIZED ACCESS ATTEMPT LOGGED.</p>
-                <p>Welcome back, Administrator.</p>
-                <div class="terminal-box">
-                    <span>> Fetching secure logs...</span>
-                    <span class="delay-show">> Webhook connection stable.</span>
-                    <br>
-                    <span class="highlight-text">Your Anonymous Questions are securely routed to your private Discord
-                        channel.</span>
-                    <br>
-                    <span>Please check the designated channel on your server to read them.</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Theme Toggler -->
-    <button id="theme-toggler" class="theme-toggler interactable">
-        <svg id="theme-icon-sun" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-            fill="none" class="css-i6dzq1" style="display: none;">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-        <svg id="theme-icon-moon" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-            fill="none" class="css-i6dzq1">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-    </button>
-
-    <main class="container">
-
-        <!-- Quote of the Day -->
-        <div class="quote-container interactable">
-            <span class="quote-label">My mood:</span>
-            <span class="quote-text" id="daily-quote">Loading quote...</span>
-        </div>
-
-        <div class="bento-grid">
-            <!-- Profile -->
-            <div class="bento-item profile-card interactable" data-tooltip="Personal Info & Bio">
-                <h1 class="name">joao</h1>
-                <p class="subtitle">My Information</p>
-            </div>
-
-            <!-- Weather -->
-            <div class="bento-item weather-card interactable" data-tooltip="Current Weather">
-                <div class="weather-label">Currently</div>
-                <div class="weather-temp" id="weather-temp">--°C</div>
-                <div class="weather-desc" id="weather-desc">Loading...</div>
-            </div>
-
-            <!-- Live Clock -->
-            <div class="bento-item clock-card interactable" data-tooltip="Local Time (GMT-3)">
-                <div class="clock-label" id="clock-date">Loading...</div>
-                <div class="clock-time" id="clock-time">00:00:00</div>
-                <div class="clock-timezone">Local Time</div>
-            </div>
-
-            <!-- Discord Status (Lanyard) -->
-            <div class="bento-item discord-status-card interactable" id="discord-card"
-                data-tooltip="Live Discord Status">
-                <!-- Views Overlay -->
-                <div class="card-overlay-stats" data-tooltip="Total Profile Views">
-                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                    <span id="view-count">...</span>
-                </div>
-                <div class="discord-profile">
-                    <div class="avatar-container">
-                        <img src="" alt="Discord Avatar" id="discord-avatar" class="discord-avatar"
-                            style="display: none;">
-                        <div class="status-indicator" id="status-dot"></div>
-                    </div>
-                    <div class="discord-info">
-                        <div class="status-text" id="status-text">Loading...</div>
-                        <div class="custom-status" id="custom-status"></div>
+                <div class="admin-body">
+                    <p class="admin-warning">WARNING: UNAUTHORIZED ACCESS ATTEMPT LOGGED.</p>
+                    <p>Welcome back, Administrator.</p>
+                    <div class="terminal-box">
+                        <span>> Fetching secure logs...</span>
+                        <span class="delay-show">> Webhook connection stable.</span>
+                        <br>
+                        <span class="highlight-text">Your Anonymous Questions are securely routed to your private
+                            Discord
+                            channel.</span>
+                        <br>
+                        <span>Please check the designated channel on your server to read them.</span>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Spotify (Lanyard) -->
-            <div class="bento-item spotify-card interactable" id="spotify-status" data-tooltip="Listening on Spotify">
-                <div class="spotify-info">
-                    <div class="spotify-label">Spotify</div>
-                    <div class="spotify-song" id="spotify-song">Not playing</div>
-                    <div class="spotify-artist" id="spotify-artist">-</div>
-                    <div class="spotify-progress-container" id="spotify-progress-container" style="display: none;">
-                        <div class="spotify-progress-bar" id="spotify-progress-bar"></div>
-                    </div>
-                </div>
-                <div class="album-art-container" id="album-art-container" style="display: none;">
-                    <img src="" alt="Album Art" id="spotify-album-art" class="album-art">
-                </div>
+        <!-- Theme Toggler -->
+        <button id="theme-toggler" class="theme-toggler interactable">
+            <svg id="theme-icon-sun" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                fill="none" class="css-i6dzq1" style="display: none;">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg id="theme-icon-moon" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                fill="none" class="css-i6dzq1">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+
+        <main class="container">
+
+            <!-- Quote of the Day -->
+            <div class="quote-container interactable">
+                <span class="quote-label">My mood:</span>
+                <span class="quote-text" id="daily-quote">Loading quote...</span>
             </div>
 
-            <!-- WakaTime Stats -->
-            <div class="bento-item wakatime-card interactable" data-tooltip="Coding Statistics">
-                <div class="wakatime-header">
-                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                    </svg>
-                    <span>Coding Activity (Last 7 Days)</span>
+            <div class="bento-grid">
+                <!-- Profile -->
+                <div class="bento-item profile-card interactable" data-tooltip="Personal Info & Bio">
+                    <h1 class="name">joao</h1>
+                    <p class="subtitle">My Information</p>
                 </div>
-                <div class="wakatime-stats" id="wakatime-stats">
-                    <div class="wakatime-skeleton">Fetching data...</div>
+
+                <!-- Weather -->
+                <div class="bento-item weather-card interactable" data-tooltip="Current Weather">
+                    <div class="weather-label">Currently</div>
+                    <div class="weather-temp" id="weather-temp">--°C</div>
+                    <div class="weather-desc" id="weather-desc">Loading...</div>
                 </div>
-            </div>
 
-            <!-- Socials -->
-            <a href="https://www.tiktok.com/@joao.sw" target="_blank" class="bento-item social-card tiktok interactable"
-                data-tooltip="Follow on TikTok">
-                <i class="icon">TikTok</i>
-            </a>
-            <a href="https://github.com/joaoswu" target="_blank" class="bento-item social-card github interactable"
-                data-tooltip="View GitHub Profile">
-                <i class="icon">GitHub</i>
-            </a>
+                <!-- Live Clock -->
+                <div class="bento-item clock-card interactable" data-tooltip="Local Time (GMT-3)">
+                    <div class="clock-label" id="clock-date">Loading...</div>
+                    <div class="clock-time" id="clock-time">00:00:00</div>
+                    <div class="clock-timezone">Local Time</div>
+                </div>
 
-            <!-- Social Discord -->
-            <a href="https://discord.gg/bd5GhG43" target="_blank"
-                class="bento-item social-card discord-invite interactable" data-tooltip="Add me on Discord">
-                <i class="icon">Discord</i>
-            </a>
-
-
-            <!-- Audio Control -->
-            <div class="bento-item music-card interactable" data-tooltip="Local Audio Player">
-                <div class="music-header">
-                    <div class="music-label">House Of Balloons</div>
-                    <button class="play-pause-btn interactable" id="music-toggle">
-                        <svg id="play-icon" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                            stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                            class="css-i6dzq1">
-                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                <!-- Discord Status (Lanyard) -->
+                <div class="bento-item discord-status-card interactable" id="discord-card"
+                    data-tooltip="Live Discord Status">
+                    <!-- Views Overlay -->
+                    <div class="card-overlay-stats" data-tooltip="Total Profile Views">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2"
+                            fill="none">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
                         </svg>
-                        <svg id="pause-icon" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
-                            stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                            class="css-i6dzq1" style="display: none;">
-                            <rect x="6" y="4" width="4" height="16"></rect>
-                            <rect x="14" y="4" width="4" height="16"></rect>
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="audio-progress-container interactable">
-                    <span id="audio-current-time" class="audio-time">0:00</span>
-                    <input type="range" id="audio-progress" min="0" max="100" value="0" class="interactable">
-                    <span id="audio-duration" class="audio-time">0:00</span>
-                </div>
-
-                <div class="volume-control interactable" style="margin-top: 15px;">
-                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"
-                        stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                    </svg>
-                    <input type="range" id="volume-slider" min="0" max="100" value="80" class="interactable">
-                </div>
-            </div>
-
-
-            <!-- Skills Marquee -->
-            <div class="bento-item skills-card interactable" data-tooltip="Technical Skillset">
-                <div class="skills-marquee">
-                    <div class="marquee-content">
-                        <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Python</span><span>Node.js</span><span>React</span><span>SQL</span><span>Git</span><span>Tailwind</span><span>APIs</span>
-                        <!-- Duplicate for infinite scroll loop -->
-                        <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Python</span><span>Node.js</span><span>React</span><span>SQL</span><span>Git</span><span>Tailwind</span><span>APIs</span>
+                        <span id="view-count">...</span>
+                    </div>
+                    <div class="discord-profile">
+                        <div class="avatar-container">
+                            <img src="" alt="Discord Avatar" id="discord-avatar" class="discord-avatar"
+                                style="display: none;">
+                            <div class="status-indicator" id="status-dot"></div>
+                        </div>
+                        <div class="discord-info">
+                            <div class="status-text" id="status-text">Loading...</div>
+                            <div class="custom-status" id="custom-status"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-    </main>
 
-    <canvas id="music-visualizer"></canvas>
-    <script src="script.js"></script>
+                <!-- Spotify (Lanyard) -->
+                <div class="bento-item spotify-card interactable" id="spotify-status"
+                    data-tooltip="Listening on Spotify">
+                    <div class="spotify-info">
+                        <div class="spotify-label">Spotify</div>
+                        <div class="spotify-song" id="spotify-song">Not playing</div>
+                        <div class="spotify-artist" id="spotify-artist">-</div>
+                        <div class="spotify-progress-container" id="spotify-progress-container" style="display: none;">
+                            <div class="spotify-progress-bar" id="spotify-progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="album-art-container" id="album-art-container" style="display: none;">
+                        <img src="" alt="Album Art" id="spotify-album-art" class="album-art">
+                    </div>
+                </div>
+
+                <!-- WakaTime Stats -->
+                <div class="bento-item wakatime-card interactable" data-tooltip="Coding Statistics">
+                    <div class="wakatime-header">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2"
+                            fill="none">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        <span>Coding Activity (Last 7 Days)</span>
+                    </div>
+                    <div class="wakatime-stats" id="wakatime-stats">
+                        <div class="wakatime-skeleton">Fetching data...</div>
+                    </div>
+                </div>
+
+                <!-- Socials -->
+                <a href="https://www.tiktok.com/@joao.sw" target="_blank"
+                    class="bento-item social-card tiktok interactable" data-tooltip="Follow on TikTok">
+                    <i class="icon">TikTok</i>
+                </a>
+                <a href="https://github.com/joaoswu" target="_blank" class="bento-item social-card github interactable"
+                    data-tooltip="View GitHub Profile">
+                    <i class="icon">GitHub</i>
+                </a>
+
+                <!-- Social Discord -->
+                <a href="https://discord.gg/bd5GhG43" target="_blank"
+                    class="bento-item social-card discord-invite interactable" data-tooltip="Add me on Discord">
+                    <i class="icon">Discord</i>
+                </a>
+
+
+                <!-- Audio Control -->
+                <div class="bento-item music-card interactable" data-tooltip="Local Audio Player">
+                    <div class="music-header">
+                        <div class="music-label">House Of Balloons</div>
+                        <button class="play-pause-btn interactable" id="music-toggle">
+                            <svg id="play-icon" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
+                                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                                class="css-i6dzq1">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            <svg id="pause-icon" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
+                                stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                                class="css-i6dzq1" style="display: none;">
+                                <rect x="6" y="4" width="4" height="16"></rect>
+                                <rect x="14" y="4" width="4" height="16"></rect>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="audio-progress-container interactable">
+                        <span id="audio-current-time" class="audio-time">0:00</span>
+                        <input type="range" id="audio-progress" min="0" max="100" value="0" class="interactable">
+                        <span id="audio-duration" class="audio-time">0:00</span>
+                    </div>
+
+                    <div class="volume-control interactable" style="margin-top: 15px;">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        </svg>
+                        <input type="range" id="volume-slider" min="0" max="100" value="80" class="interactable">
+                    </div>
+                </div>
+
+
+                <!-- Skills Marquee -->
+                <div class="bento-item skills-card interactable" data-tooltip="Technical Skillset">
+                    <div class="skills-marquee">
+                        <div class="marquee-content">
+                            <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Python</span><span>Node.js</span><span>React</span><span>SQL</span><span>Git</span><span>Tailwind</span><span>APIs</span>
+                            <!-- Duplicate for infinite scroll loop -->
+                            <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Python</span><span>Node.js</span><span>React</span><span>SQL</span><span>Git</span><span>Tailwind</span><span>APIs</span>
+                        </div>
+                    </div>
+                </div>
+        </main>
+
+        <canvas id="music-visualizer"></canvas>
+        <script src="script.js"></script>
 </body>
 
 </html>

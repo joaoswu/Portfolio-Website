@@ -2002,11 +2002,7 @@ body.light-mode .specs-marquee {
 
     /* Hide custom UI elements that interfere with touch */
     .cursor,
-    .cursor-ring,
-    .qa-trigger,
-    .qa-sidebar,
-    .settings-trigger,
-    .settings-sidebar {
+    .cursor-ring {
         display: none !important;
     }
 

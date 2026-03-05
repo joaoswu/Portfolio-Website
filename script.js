@@ -3181,11 +3181,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (guestbookTrigger && guestbookSidebar) {
         guestbookTrigger.addEventListener('click', () => {
             guestbookSidebar.classList.toggle('active');
-            // Reset other sidebars if open
-            const qaSidebar = document.getElementById('qa-sidebar');
-            const settingsSidebar = document.getElementById('settings-sidebar');
-            if (qaSidebar) qaSidebar.classList.remove('active');
-            if (settingsSidebar) settingsSidebar.classList.remove('active');
+
         });
     }
 
